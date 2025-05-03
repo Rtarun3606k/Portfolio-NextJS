@@ -22,9 +22,15 @@ export default function NavbarAuth() {
         </Link>
         <button
           onClick={() => signOut()}
-          className="text-white hover:bg-white hover:text-purple-500 px-3 py-2 md:px-4 md:py-2 rounded-full transition-all duration-300"
+          className="flex gap-1.5 px-3 py-2 items-center  w-[110px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
         >
-          Log Out
+          <Image
+            width="30"
+            height="6"
+            src="https://img.icons8.com/ios-filled/50/home.png"
+            alt="home"
+          />
+          <p>LogOut</p>
         </button>
       </>
     );
@@ -33,9 +39,15 @@ export default function NavbarAuth() {
   return (
     <button
       onClick={() => signIn("github")}
-      className="text-white hover:bg-white hover:text-purple-500 px-3 py-2 md:px-4 md:py-2 rounded-full transition-all duration-300"
+      className="flex gap-1.5 px-3 py-2 items-center  w-[180px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
     >
-      Sign In with GitHub
+      <Image
+        width="30"
+        height="6"
+        src="https://img.icons8.com/ios-filled/50/home.png"
+        alt="home"
+      />
+      <p>Sign In</p>
     </button>
   );
 }
