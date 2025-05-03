@@ -1,5 +1,11 @@
-import Image from "next/image";
+import Hero from "@/components/Hero";
+
+// import { SiMicrosoft } from "react-icons/si";
 
 export default function Home() {
-  return <>Home23</>;
+  return (
+    <>
+      <Hero />
+    </>
+  );
 }

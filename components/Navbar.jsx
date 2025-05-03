@@ -19,7 +19,7 @@ const Navbar = ({ userSession }) => {
 
   return (
     <center
-      className={` z-50 w-full bottom-2 mt-4 hover:shadow-2xl transition-all duration-300 hover:translate-y-2 ${
+      className={`z-[100] sticky w-full top-2 mt-4 hover:shadow-2xl transition-all duration-300 hover:translate-y-2 ${
         mounted ? "animate-fadeIn" : "opacity-0"
       }`}
     >
