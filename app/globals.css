@@ -46,6 +46,19 @@ body {
   font-family: var(--font-tagesschrift);
 }
 
+/* Default state - white icon */
+.nav-icon {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%)
+    contrast(100%);
+  transition: filter 0.3s ease;
+}
+
+/* When parent link is hovered, change icon to purple */
+.nav-link:hover .nav-icon {
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(233deg)
+    brightness(100%) contrast(94%);
+}
+
 @media screen and (max-width: 640px) {
   .flex-coll {
     flex-direction: column;

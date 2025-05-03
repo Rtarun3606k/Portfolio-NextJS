@@ -5,10 +5,12 @@ import { useState, useEffect } from "react";
 import NavbarAuth from "./NavbarAuth";
 import { SessionProvider } from "next-auth/react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Navbar = ({ userSession }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   // Add fade-in effect on component mount
   useEffect(() => {
@@ -17,7 +19,7 @@ const Navbar = ({ userSession }) => {
 
   return (
     <center
-      className={`w-full bottom-2 mt-4 hover:shadow-2xl transition-all duration-300 hover:translate-y-2 ${
+      className={` z-50 w-full bottom-2 mt-4 hover:shadow-2xl transition-all duration-300 hover:translate-y-2 ${
         mounted ? "animate-fadeIn" : "opacity-0"
       }`}
     >
@@ -67,26 +69,63 @@ const Navbar = ({ userSession }) => {
             } md:block mobile-menu-nav`}
           >
             <ul className="flex flex-col md:flex-row gap-3 md:gap-6 items-center">
-              {["Home", "About", "Contact", "Blog", "Projects", "Events"].map(
-                (item) => (
-                  <li key={item}>
+              {[
+                {
+                  name: "Home",
+                  path: "/",
+                  icon: "https://img.icons8.com/ios-filled/50/home.png",
+                },
+                {
+                  name: "About",
+                  path: "/About",
+                  icon: "https://img.icons8.com/ios-filled/50/user.png",
+                },
+                {
+                  name: "Contact",
+                  path: "/Contact",
+                  icon: "https://img.icons8.com/ios-filled/50/phone.png",
+                },
+                {
+                  name: "Blog",
+                  path: "/Blog",
+                  icon: "https://img.icons8.com/ios-filled/50/blog.png",
+                },
+                {
+                  name: "Projects",
+                  path: "/Projects",
+                  icon: "https://img.icons8.com/ios-filled/50/briefcase.png",
+                },
+                {
+                  name: "Events",
+                  path: "/Events",
+                  icon: "https://img.icons8.com/ios-filled/50/calendar.png",
+                },
+              ].map((item) => {
+                const isActive = pathname === item.path;
+                return (
+                  <li key={item.name}>
                     <Link
-                      href={`/${
-                        item.toLowerCase() === "home" ? "" : item.toLowerCase()
+                      href={item.path}
+                      className={`nav-link flex gap-1.5 px-3 py-2 items-center w-[110px] rounded-full transition-all duration-300 ${
+                        isActive
+                          ? "bg-white text-purple-500"
+                          : "hover:bg-white hover:text-purple-500"
                       }`}
-                      className="flex gap-1.5 px-3 py-2 items-center w-[110px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
                     >
                       <Image
                         width="30"
                         height="6"
-                        src="https://img.icons8.com/ios-filled/50/home.png"
-                        alt="home"
+                        src={item.icon}
+                        className={`nav-icon transition-all duration-300 ${
+                          isActive ? "filter-purple" : "filter-white"
+                        }`}
+                        alt={item.name.toLowerCase()}
                       />
-                      <p>{item}</p>
+                      <p>{item.name}</p>
                     </Link>
                   </li>
-                )
-              )}
+                );
+              })}
               <SessionProvider>
                 <NavbarAuth />
               </SessionProvider>
@@ -95,7 +134,7 @@ const Navbar = ({ userSession }) => {
         </div>
       </header>
 
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -107,6 +146,23 @@ const Navbar = ({ userSession }) => {
 
         .animate-fadeIn {
           animation: fadeIn 0.8s forwards;
+        }
+
+        /* Icon filters */
+        .filter-white {
+          filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg)
+            brightness(100%) contrast(100%);
+        }
+
+        .filter-purple {
+          filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(233deg)
+            brightness(100%) contrast(94%);
+        }
+
+        /* When parent link is hovered, change icon to purple */
+        .nav-link:hover .nav-icon.filter-white {
+          filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(233deg)
+            brightness(100%) contrast(94%);
         }
 
         /* Apply transition styles only on mobile */

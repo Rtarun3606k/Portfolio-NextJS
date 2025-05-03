@@ -22,13 +22,14 @@ export default function NavbarAuth() {
         </Link>
         <button
           onClick={() => signOut()}
-          className="flex gap-1.5 px-3 py-2 items-center  w-[110px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
+          className="nav-link flex gap-1.5 px-3 py-2 items-center w-[110px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
         >
           <Image
             width="30"
             height="6"
             src="https://img.icons8.com/ios-filled/50/home.png"
-            alt="home"
+            alt="logout"
+            className="nav-icon filter-white transition-all duration-300"
           />
           <p>LogOut</p>
         </button>
@@ -39,13 +40,14 @@ export default function NavbarAuth() {
   return (
     <button
       onClick={() => signIn("github")}
-      className="flex gap-1.5 px-3 py-2 items-center  w-[180px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
+      className="nav-link flex gap-1.5 px-3 py-2 items-center w-[180px] rounded-full hover:bg-white hover:text-purple-500 transition-all duration-300"
     >
       <Image
         width="30"
         height="6"
         src="https://img.icons8.com/ios-filled/50/home.png"
-        alt="home"
+        alt="sign in"
+        className="nav-icon filter-white transition-all duration-300"
       />
       <p>Sign In</p>
     </button>
