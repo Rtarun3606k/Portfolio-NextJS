@@ -8,6 +8,7 @@ import Projects from "@/components/Projects";
 import BlogsAndPosts from "@/components/BlogsAndPosts";
 import Events from "@/components/Events";
 import Contact from "@/components/Constact";
+import Services from "@/components/Services";
 
 const AnimatedSection = ({ children, delay = 0.2 }) => {
   const ref = useRef(null);
@@ -50,6 +51,9 @@ export default function Home() {
       <Hero />
 
       {/* Stats section with scroll animation */}
+      <AnimatedSection>
+        <Services />
+      </AnimatedSection>
       <AnimatedSection>
         <StatsPage />
       </AnimatedSection>

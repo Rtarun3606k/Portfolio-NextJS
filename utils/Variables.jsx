@@ -215,6 +215,309 @@ export const EventsData = [
   },
 ];
 
+export const ServicesData = [
+  {
+    id: 1,
+    title: "Full Stack Web Development (MERN)",
+    description:
+      "Custom web applications built with MongoDB, Express.js, React, and Node.js. Includes responsive design, authentication, and database integration.",
+    price: "$2,500 - $10,000",
+    timeframe: "4-12 weeks",
+    category: "web",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 2,
+    title: "WordPress Development",
+    description:
+      "Custom WordPress websites with responsive design, SEO optimization, and plugin integration. Perfect for blogs, business sites, or e-commerce stores.",
+    price: "$1,200 - $5,000",
+    timeframe: "2-6 weeks",
+    category: "cms",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 3,
+    title: "Shopify Store Development",
+    description:
+      "Custom Shopify stores with theme development, product setup, and payment gateway integration. Includes mobile optimization and SEO best practices.",
+    price: "$1,500 - $6,000",
+    timeframe: "2-8 weeks",
+    category: "cms",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 4,
+    title: "Video Editing (DaVinci Resolve)",
+    description:
+      "Professional video editing services using DaVinci Resolve. Includes color grading, visual effects, audio enhancement, and final export in multiple formats.",
+    price: "$300 - $1,500 per video",
+    timeframe: "3-14 days",
+    category: "video",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 5,
+    title: "Full Stack Development (Django)",
+    description:
+      "Scalable web applications built with Django and Python. Includes database design, API development, user authentication, and front-end integration.",
+    price: "$3,000 - $12,000",
+    timeframe: "5-14 weeks",
+    category: "web",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 6,
+    title: "FastAPI Backend Development",
+    description:
+      "High-performance API development using FastAPI and Python. Perfect for microservices, data-intensive applications, and real-time systems.",
+    price: "$2,000 - $8,000",
+    timeframe: "3-10 weeks",
+    category: "web",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 7,
+    title: "Go Lang (Gin) Backend Development",
+    description:
+      "Highly efficient and scalable web services built with Go and Gin framework. Ideal for high-traffic applications requiring optimal performance.",
+    price: "$3,500 - $15,000",
+    timeframe: "4-12 weeks",
+    category: "web",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 8,
+    title: "Mobile App Development (React Native)",
+    description:
+      "Cross-platform mobile applications for iOS and Android using React Native. Includes UI/UX design, API integration, and app store deployment.",
+    price: "$4,000 - $15,000",
+    timeframe: "6-16 weeks",
+    category: "app",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 9,
+    title: "AWS Cloud Solutions & Deployment",
+    description:
+      "Complete AWS cloud architecture and deployment services. Includes EC2, S3, Lambda, RDS setup, and CloudFront CDN configuration with CI/CD pipelines.",
+    price: "$1,500 - $7,000",
+    timeframe: "1-6 weeks",
+    category: "cloud",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 10,
+    title: "Azure Cloud Solutions",
+    description:
+      "Microsoft Azure cloud architecture and deployment services. Includes Azure App Service, Functions, SQL Database, Blob Storage, and DevOps setup.",
+    price: "$1,800 - $8,000",
+    timeframe: "1-6 weeks",
+    category: "cloud",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 11,
+    title: "Flask Web Application Development",
+    description:
+      "Lightweight web applications built with Flask and Python. Perfect for startups and MVPs requiring quick deployment and flexibility.",
+    price: "$2,000 - $7,000",
+    timeframe: "3-8 weeks",
+    category: "web",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+        ></path>
+      </svg>
+    ),
+  },
+  {
+    id: 12,
+    title: "Google Cloud Platform Solutions",
+    description:
+      "GCP architecture and deployment services. Includes Compute Engine, Cloud Run, Cloud Functions, Firebase integration, and CI/CD setup.",
+    price: "$1,600 - $7,500",
+    timeframe: "1-6 weeks",
+    category: "cloud",
+    icon: (
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+        ></path>
+      </svg>
+    ),
+  },
+];
+
 export async function GetStatistics() {
   try {
     // You would normally fetch these from APIs or databases
