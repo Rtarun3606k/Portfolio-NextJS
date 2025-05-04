@@ -18,12 +18,12 @@ const Navbar = ({ userSession }) => {
   }, []);
 
   return (
-    <center
-      className={`z-[100] sticky w-full top-2 mt-4 hover:shadow-2xl transition-all duration-300 hover:translate-y-2 ${
+    <div
+      className={`z-[100] sticky w-full top-3 transition-all duration-300 hover:translate-y-2 ${
         mounted ? "animate-fadeIn" : "opacity-0"
       }`}
     >
-      <header className="animate-fade-slide bg-[#4169E1] text-white p-2 shadow-lg flex justify-between flex-coll items-center relative top-[5%] w-[98%] rounded-4xl">
+      <header className="animate-fade-slide  bg-gradient-to-r from-purple-600/60 to-blue-600/60 border border-white/20 mt-4 text-white p-2 shadow-lg flex justify-between flex-coll items-center relative top-[5%] w-[98%] mx-auto rounded-4xl backdrop-blur-[20px]">
         <div className="flex items-center justify-between w-full font-poppins">
           <Link
             href="/"
@@ -108,8 +108,8 @@ const Navbar = ({ userSession }) => {
                       href={item.path}
                       className={`nav-link flex gap-1.5 px-3 py-2 items-center w-[110px] rounded-full transition-all duration-300 ${
                         isActive
-                          ? "bg-white text-purple-500"
-                          : "hover:bg-white hover:text-purple-500"
+                          ? "bg-white/30 backdrop-blur-sm text-white font-semibold"
+                          : "hover:bg-white/20 hover:text-white"
                       }`}
                     >
                       <Image
@@ -117,7 +117,7 @@ const Navbar = ({ userSession }) => {
                         height="6"
                         src={item.icon}
                         className={`nav-icon transition-all duration-300 ${
-                          isActive ? "filter-purple" : "filter-white"
+                          isActive ? "filter-white" : "filter-white opacity-80"
                         }`}
                         alt={item.name.toLowerCase()}
                       />
@@ -154,17 +154,6 @@ const Navbar = ({ userSession }) => {
             brightness(100%) contrast(100%);
         }
 
-        .filter-purple {
-          filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(233deg)
-            brightness(100%) contrast(94%);
-        }
-
-        /* When parent link is hovered, change icon to purple */
-        .nav-link:hover .nav-icon.filter-white {
-          filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(233deg)
-            brightness(100%) contrast(94%);
-        }
-
         /* Apply transition styles only on mobile */
         @media (max-width: 768px) {
           .mobile-menu-nav {
@@ -176,7 +165,8 @@ const Navbar = ({ userSession }) => {
           .mobile-menu-open {
             display: block;
             opacity: 1;
-            max-height: 600px; /* Adjusted higher for smoother animation */
+            max-height: 600px;
+            backdrop-filter: blur(8px);
           }
 
           .mobile-menu-closed {
@@ -189,7 +179,7 @@ const Navbar = ({ userSession }) => {
           }
         }
       `}</style>
-    </center>
+    </div>
   );
 };
 

@@ -13,6 +13,7 @@ import {
   FaServer,
   FaDatabase,
 } from "react-icons/fa";
+import { Technology } from "@/utils/Variables";
 
 const Hero = () => {
   const techStackRef = useRef(null);
@@ -64,92 +65,7 @@ const Hero = () => {
   }, []);
 
   // Technology stack data
-  const technologies = [
-    {
-      name: "React",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-      color: "#61DAFB",
-    },
-    {
-      name: "Next.js",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-      color: "#000000",
-    },
-    {
-      name: "TypeScript",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-      color: "#3178C6",
-    },
-    {
-      name: "JavaScript",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-      color: "#F7DF1E",
-    },
-    {
-      name: "Node.js",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-      color: "#339933",
-    },
-    {
-      name: "Python",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
-      color: "#3776AB",
-    },
-    {
-      name: "Tailwind CSS",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
-      color: "#38B2AC",
-    },
-    {
-      name: "MongoDB",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-      color: "#47A248",
-    },
-    {
-      name: "GraphQL",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg",
-      color: "#E10098",
-    },
-    {
-      name: "Azure",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg",
-      color: "#0078D4",
-    },
-    {
-      name: "AWS",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg",
-      color: "#FF9900",
-    },
-    {
-      name: "Docker",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-      color: "#2496ED",
-    },
-    {
-      name: "Kubernetes",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
-      color: "#326CE5",
-    },
-    {
-      name: "Azure DevOps",
-      iconUrl:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg",
-      color: "#0078D7",
-    },
-  ];
+  const technologies = Technology;
 
   return (
     <section className="bg-[#C7D2FE] text-[#1C1C1C] min-h-screen flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 py-10 sm:py-16 font-poppins relative overflow-hidden">
@@ -228,8 +144,90 @@ const Hero = () => {
           style={{ animationDelay: "1.8s" }}
         ></div>
       </div>
-      {/* Left content section */}
-      <div className="w-full md:w-1/2 z-10 mb-10 md:mb-0 flex flex-col space-y-4 sm:space-y-6">
+      {/* Image section - now FIRST on mobile */}
+      <div
+        className={`w-full md:w-1/2 md:order-2 flex flex-col items-center mb-8 md:mb-0 ${
+          isVisible ? "animate-fade-in-delayed" : "opacity-0"
+        }`}
+        style={{ animationDelay: "1.8s" }}
+      >
+        <div className="relative w-full max-w-md mx-auto">
+          {/* Image with animation */}
+          <div
+            className={
+              isVisible ? "animate-float-in" : "opacity-0 translate-y-8"
+            }
+            style={{ animationDelay: "2.0s" }}
+          >
+            <Image
+              src="/coding-illustration.svg"
+              alt="Tarun Nayaka - Web Developer and Cloud Architect"
+              className="w-full drop-shadow-lg"
+              width={500}
+              height={400}
+              priority={true}
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
+
+          {/* Project count bubble with bounce animation */}
+          <div
+            className={`absolute -top-2 sm:-top-4 -right-2 sm:-right-4 bg-[#4169E1] text-white rounded-full h-16 sm:h-20 w-16 sm:w-20 flex flex-col items-center justify-center text-center transform rotate-12 ${
+              isVisible ? "animate-bounce-in-delayed" : "opacity-0 scale-0"
+            }`}
+            style={{ animationDelay: "2.5s" }}
+          >
+            <span className="text-base sm:text-lg font-bold">15+</span>
+            <span className="text-[10px] sm:text-xs">Projects</span>
+          </div>
+        </div>
+
+        {/* Stats grid with staggered animations - HIDDEN on mobile */}
+        <div className="hidden md:grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6 w-full max-w-md mx-auto">
+          {[
+            {
+              icon: (
+                <FaServer
+                  className="mx-auto text-[#4169E1] text-lg sm:text-xl"
+                  aria-hidden="true"
+                />
+              ),
+              label: "Cloud Architecture",
+            },
+            {
+              icon: (
+                <FaLaptopCode
+                  className="mx-auto text-[#4169E1] text-lg sm:text-xl"
+                  aria-hidden="true"
+                />
+              ),
+              label: "Full-Stack Dev",
+            },
+            {
+              icon: (
+                <FaDatabase
+                  className="mx-auto text-[#4169E1] text-lg sm:text-xl"
+                  aria-hidden="true"
+                />
+              ),
+              label: "Database Design",
+            },
+          ].map((stat, index) => (
+            <div
+              key={stat.label}
+              className={`bg-white/60 backdrop-blur-sm p-2 sm:p-3 rounded-lg text-center hover:bg-white hover:scale-105 transition-all ${
+                isVisible ? "animate-scale-in" : "opacity-0 scale-90"
+              }`}
+              style={{ animationDelay: `${2.8 + index * 0.2}s` }}
+            >
+              {stat.icon}
+              <p className="text-xs sm:text-sm mt-1">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Left content section - now SECOND on mobile */}
+      <div className="w-full md:w-1/2 md:order-1 z-10 flex flex-col space-y-4 sm:space-y-6">
         {/* Hero header and intro with animations */}
         <div>
           {/* Animated name with typing effect */}
@@ -461,88 +459,6 @@ const Hero = () => {
             >
               {social.icon}
             </a>
-          ))}
-        </div>
-      </div>
-      {/* Right illustration and stats section */}
-      <div
-        className={`w-full md:w-1/2 mt-6 md:mt-0 flex flex-col items-center ${
-          isVisible ? "animate-fade-in-delayed" : "opacity-0"
-        }`}
-        style={{ animationDelay: "1.8s" }}
-      >
-        <div className="relative w-full max-w-md mx-auto">
-          {/* Image with animation */}
-          <div
-            className={
-              isVisible ? "animate-float-in" : "opacity-0 translate-y-8"
-            }
-            style={{ animationDelay: "2.0s" }}
-          >
-            <Image
-              src="/coding-illustration.svg"
-              alt="Tarun Nayaka - Web Developer and Cloud Architect"
-              className="w-full drop-shadow-lg"
-              width={500}
-              height={400}
-              priority={true}
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-
-          {/* Project count bubble with bounce animation */}
-          <div
-            className={`absolute -top-2 sm:-top-4 -right-2 sm:-right-4 bg-[#4169E1] text-white rounded-full h-16 sm:h-20 w-16 sm:w-20 flex flex-col items-center justify-center text-center transform rotate-12 ${
-              isVisible ? "animate-bounce-in-delayed" : "opacity-0 scale-0"
-            }`}
-            style={{ animationDelay: "2.5s" }}
-          >
-            <span className="text-base sm:text-lg font-bold">15+</span>
-            <span className="text-[10px] sm:text-xs">Projects</span>
-          </div>
-        </div>
-
-        {/* Stats grid with staggered animations */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6 w-full max-w-md mx-auto">
-          {[
-            {
-              icon: (
-                <FaServer
-                  className="mx-auto text-[#4169E1] text-lg sm:text-xl"
-                  aria-hidden="true"
-                />
-              ),
-              label: "Cloud Architecture",
-            },
-            {
-              icon: (
-                <FaLaptopCode
-                  className="mx-auto text-[#4169E1] text-lg sm:text-xl"
-                  aria-hidden="true"
-                />
-              ),
-              label: "Full-Stack Dev",
-            },
-            {
-              icon: (
-                <FaDatabase
-                  className="mx-auto text-[#4169E1] text-lg sm:text-xl"
-                  aria-hidden="true"
-                />
-              ),
-              label: "Database Design",
-            },
-          ].map((stat, index) => (
-            <div
-              key={stat.label}
-              className={`bg-white/60 backdrop-blur-sm p-2 sm:p-3 rounded-lg text-center hover:bg-white hover:scale-105 transition-all ${
-                isVisible ? "animate-scale-in" : "opacity-0 scale-90"
-              }`}
-              style={{ animationDelay: `${2.8 + index * 0.2}s` }}
-            >
-              {stat.icon}
-              <p className="text-xs sm:text-sm mt-1">{stat.label}</p>
-            </div>
           ))}
         </div>
       </div>
