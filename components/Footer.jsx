@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/About" },
@@ -16,37 +16,37 @@ const Footer = () => {
     { name: "Projects", path: "/Projects" },
     { name: "Events", path: "/Events" },
   ];
-  
+
   const socialLinks = [
     {
       name: "LinkedIn",
       icon: "/linkedin.svg",
       url: "https://linkedin.com/in/tarunnayaka",
-      color: "#0077b5"
+      color: "#0077b5",
     },
     {
       name: "GitHub",
       icon: "/github.svg",
       url: "https://github.com/tarunnayaka",
-      color: "#333"
+      color: "#333",
     },
     {
       name: "Twitter",
       icon: "/twitter.svg",
       url: "https://twitter.com/tarunnayaka",
-      color: "#1DA1F2"
+      color: "#1DA1F2",
     },
     {
       name: "Medium",
       icon: "/medium.svg",
       url: "https://medium.com/@tarunnayaka",
-      color: "#00AB6C"
+      color: "#00AB6C",
     },
     {
       name: "Instagram",
       icon: "/instagram.svg",
       url: "https://instagram.com/tarunnayaka",
-      color: "#E1306C"
+      color: "#E1306C",
     },
   ];
 
@@ -64,7 +64,7 @@ const Footer = () => {
           {/* Branding and description */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <motion.div 
+              <motion.div
                 className="flex items-center"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -73,12 +73,14 @@ const Footer = () => {
                 <div className="p-2 bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED] rounded-xl mr-2">
                   <span className="text-2xl font-playfair font-bold">TR</span>
                 </div>
-                <span className="text-xl font-poppins font-semibold">Tarun Nayaka R</span>
+                <span className="text-xl font-poppins font-semibold">
+                  Tarun Nayaka R
+                </span>
               </motion.div>
             </Link>
             <p className="text-gray-300 mb-6">
-              Creating innovative solutions through code, design, and continuous learning.
-              Connect with me to collaborate on exciting projects.
+              Creating innovative solutions through code, design, and continuous
+              learning. Connect with me to collaborate on exciting projects.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
@@ -92,9 +94,9 @@ const Footer = () => {
                   className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
                   aria-label={social.name}
                 >
-                  <svg 
-                    className="w-5 h-5" 
-                    style={{ fill: social.color }} 
+                  <svg
+                    className="w-5 h-5"
+                    style={{ fill: social.color }}
                     viewBox="0 0 24 24"
                   >
                     {social.name === "LinkedIn" && (
@@ -120,11 +122,13 @@ const Footer = () => {
 
           {/* Navigation */}
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-semibold mb-4 font-poppins text-white">Navigation</h3>
+            <h3 className="text-lg font-semibold mb-4 font-poppins text-white">
+              Navigation
+            </h3>
             <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={link.name}>
-                  <Link 
+                  <Link
                     href={link.path}
                     className="text-gray-300 hover:text-white hover:underline transition-colors inline-block py-1"
                   >
@@ -137,26 +141,66 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-semibold mb-4 font-poppins text-white">Contact</h3>
+            <h3 className="text-lg font-semibold mb-4 font-poppins text-white">
+              Contact
+            </h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-[#6A0DAD] mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                <svg
+                  className="w-5 h-5 text-[#6A0DAD] mt-0.5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  ></path>
                 </svg>
-                <a href="mailto:tarun@example.com" className="text-gray-300 hover:text-white transition-colors">
+                <a
+                  href="mailto:tarun@example.com"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
                   tarun@example.com
                 </a>
               </li>
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-[#6A0DAD] mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                <svg
+                  className="w-5 h-5 text-[#6A0DAD] mt-0.5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  ></path>
                 </svg>
                 <span className="text-gray-300">+1 (555) 123-4567</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-[#6A0DAD] mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <svg
+                  className="w-5 h-5 text-[#6A0DAD] mt-0.5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  ></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
                 </svg>
                 <span className="text-gray-300">San Francisco, CA</span>
               </li>
@@ -165,41 +209,71 @@ const Footer = () => {
 
           {/* Newsletter Subscription */}
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-semibold mb-4 font-poppins text-white">Stay Updated</h3>
-            <p className="text-gray-300 mb-4">Subscribe to my newsletter for the latest updates on tech articles, events and projects.</p>
+            <h3 className="text-lg font-semibold mb-4 font-poppins text-white">
+              Stay Updated
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Subscribe to my newsletter for the latest updates on tech
+              articles, events and projects.
+            </p>
             <form className="space-y-3">
               <div className="flex">
-                <input 
-                  type="email" 
-                  placeholder="Your email" 
+                <input
+                  type="email"
+                  placeholder="Your email"
                   className="px-4 py-2 w-full bg-white/10 border border-white/10 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#6A0DAD] text-white"
                   required
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="bg-[#6A0DAD] hover:bg-[#7C3AED] px-4 py-2 rounded-r-md transition-colors"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    ></path>
                   </svg>
                 </button>
               </div>
             </form>
           </div>
         </div>
-        
+
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent my-8"></div>
-        
+
         {/* Bottom section with copyright and additional links */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
           <div className="mb-4 md:mb-0">
             <p>&copy; {currentYear} Tarun Nayaka R. All rights reserved.</p>
           </div>
           <div className="flex space-x-6">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/Contact" className="hover:text-white transition-colors">Contact</Link>
+            <Link
+              href="/privacy-policy"
+              className="hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/terms-of-service"
+              className="hover:text-white transition-colors"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              href="/Contact"
+              className="hover:text-white transition-colors"
+            >
+              Contact
+            </Link>
           </div>
         </div>
       </div>
