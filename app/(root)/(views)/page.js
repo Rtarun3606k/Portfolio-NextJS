@@ -10,9 +10,9 @@ import Events from "@/components/Events";
 import Contact from "@/components/Constact";
 import Services from "@/components/Services";
 
-const AnimatedSection = ({ children, delay = 0.2 }) => {
+const AnimatedSection = ({ children, delay = 0.2, viewportAmount = 0.1 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: viewportAmount });
   const controls = useAnimation();
 
   useEffect(() => {
@@ -38,6 +38,7 @@ const AnimatedSection = ({ children, delay = 0.2 }) => {
           },
         },
       }}
+      className="w-full"
     >
       {children}
     </motion.div>
@@ -50,10 +51,14 @@ export default function Home() {
       {/* Hero section doesn't need scroll animation since it's visible on page load */}
       <Hero />
 
-      {/* Stats section with scroll animation */}
-      <AnimatedSection>
-        <Services />
+      {/* Services section with increased visibility threshold for mobile */}
+      <AnimatedSection viewportAmount={0.05}>
+        <div className="w-full">
+          <Services />
+        </div>
       </AnimatedSection>
+
+      {/* Stats section with scroll animation */}
       <AnimatedSection>
         <StatsPage />
       </AnimatedSection>
