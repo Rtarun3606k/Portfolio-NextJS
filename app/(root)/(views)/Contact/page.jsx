@@ -1,7 +1,12 @@
+import Contact from "@/components/Constact";
 import React from "react";
 
 const page = () => {
-  return <div>Conatactr</div>;
+  return (
+    <div>
+      <Contact />
+    </div>
+  );
 };
 
 export default page;

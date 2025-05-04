@@ -86,6 +86,11 @@ const Navbar = ({ userSession }) => {
                   icon: "https://img.icons8.com/ios-filled/50/phone.png",
                 },
                 {
+                  name: "Services",
+                  path: "/Services",
+                  icon: "https://img.icons8.com/ios-filled/50/services.png",
+                },
+                {
                   name: "Blog",
                   path: "/Blog",
                   icon: "https://img.icons8.com/ios-filled/50/blog.png",
