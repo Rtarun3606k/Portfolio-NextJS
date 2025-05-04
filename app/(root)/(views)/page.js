@@ -5,6 +5,7 @@ import { motion, useInView, useAnimation } from "framer-motion";
 import Hero from "@/components/Hero";
 import StatsPage from "@/components/Statistics";
 import Projects from "@/components/Projects";
+import BlogsAndPosts from "@/components/BlogsAndPosts";
 
 const AnimatedSection = ({ children, delay = 0.2 }) => {
   const ref = useRef(null);
@@ -53,6 +54,10 @@ export default function Home() {
 
       <AnimatedSection delay={0.3}>
         <Projects />
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.3}>
+        <BlogsAndPosts />
       </AnimatedSection>
       {/* You can add more sections with scroll animations */}
       {/* 

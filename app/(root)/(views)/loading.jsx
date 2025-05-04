@@ -3,17 +3,20 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const Loading = () => {
+const Loading = ({ isPageTransition = false }) => {
   const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
     // Set a timeout to display the full name after the initial animation
-    const timer = setTimeout(() => {
-      setAnimationComplete(true);
-    }, 10000); // 10 seconds
+    const timer = setTimeout(
+      () => {
+        setAnimationComplete(true);
+      },
+      isPageTransition ? 1000 : 10000
+    ); // Shorter time for page transitions
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isPageTransition]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-[#e0f7fa] to-[#fce4ec] z-50">
@@ -25,7 +28,10 @@ const Loading = () => {
             <motion.span
               initial={{ opacity: 1, x: 0, y: 0 }}
               animate={{ opacity: 0, x: 80, y: 0 }}
-              transition={{ duration: 1, delay: 1 }}
+              transition={{
+                duration: isPageTransition ? 0.5 : 1,
+                delay: isPageTransition ? 0.2 : 1,
+              }}
               className="text-5xl md:text-7xl font-bold text-[#5E60CE] absolute"
             >
               T
@@ -35,7 +41,10 @@ const Loading = () => {
             <motion.span
               initial={{ opacity: 1, x: 40, y: 0 }}
               animate={{ opacity: 0, x: 40, y: -40 }}
-              transition={{ duration: 1, delay: 1 }}
+              transition={{
+                duration: isPageTransition ? 0.5 : 1,
+                delay: isPageTransition ? 0.2 : 1,
+              }}
               className="text-5xl md:text-7xl font-bold text-[#7209B7] absolute"
             >
               N
@@ -45,7 +54,10 @@ const Loading = () => {
             <motion.span
               initial={{ opacity: 1, x: 80, y: 0 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 1 }}
+              transition={{
+                duration: isPageTransition ? 0.5 : 1,
+                delay: isPageTransition ? 0.2 : 1,
+              }}
               className="text-5xl md:text-7xl font-bold text-[#C71585] absolute"
             >
               R
@@ -55,7 +67,10 @@ const Loading = () => {
             <motion.span
               initial={{ opacity: 0, x: 0, y: 0 }}
               animate={{ opacity: 1, x: 40, y: 0 }}
-              transition={{ duration: 1, delay: 1.5 }}
+              transition={{
+                duration: isPageTransition ? 0.5 : 1,
+                delay: isPageTransition ? 0.5 : 1.5,
+              }}
               className="text-5xl md:text-7xl font-bold text-[#5E60CE] absolute"
             >
               T
@@ -65,7 +80,10 @@ const Loading = () => {
             <motion.span
               initial={{ opacity: 0, x: 40, y: -40 }}
               animate={{ opacity: 1, x: 80, y: 0 }}
-              transition={{ duration: 1, delay: 1.5 }}
+              transition={{
+                duration: isPageTransition ? 0.5 : 1,
+                delay: isPageTransition ? 0.5 : 1.5,
+              }}
               className="text-5xl md:text-7xl font-bold text-[#7209B7] absolute"
             >
               N
@@ -86,7 +104,7 @@ const Loading = () => {
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: "auto", opacity: 1 }}
-                transition={{ duration: 1 }}
+                transition={{ duration: isPageTransition ? 0.5 : 1 }}
                 className="overflow-hidden whitespace-nowrap"
               >
                 <span className="text-4xl md:text-6xl font-playfair font-bold text-[#5E60CE]">
@@ -101,7 +119,10 @@ const Loading = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
+              transition={{
+                delay: isPageTransition ? 0.3 : 0.8,
+                duration: 0.5,
+              }}
               className="mt-4 text-gray-600"
             >
               <div className="flex items-center justify-center space-x-4">

@@ -3,36 +3,43 @@
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Loading from "../app/(root)/(views)/loading";
+import { useRouter } from "next/navigation";
 
 export default function PageTransition() {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
+  // Handle route changes
   useEffect(() => {
-    const handleStartLoading = () => {
+    const handleRouteChangeStart = () => {
       setIsLoading(true);
     };
 
-    const handleStopLoading = () => {
-      // Using a timeout to ensure the loading animation shows for a minimum time
+    const handleRouteChangeComplete = () => {
+      // Ensure minimum loading time for better UX
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000); // Minimum display of 1 second after page loads
+      }, 1000);
     };
 
-    // Subscribe to navigation events
-    document.addEventListener("nextjs:page-loading", handleStartLoading);
-    document.addEventListener("nextjs:page-loaded", handleStopLoading);
+    // Listen for router events
+    window.addEventListener("beforeunload", handleRouteChangeStart);
+    router?.events?.on?.("routeChangeStart", handleRouteChangeStart);
+    router?.events?.on?.("routeChangeComplete", handleRouteChangeComplete);
+    router?.events?.on?.("routeChangeError", handleRouteChangeComplete);
 
     return () => {
-      // Clean up event listeners
-      document.removeEventListener("nextjs:page-loading", handleStartLoading);
-      document.removeEventListener("nextjs:page-loaded", handleStopLoading);
+      window.removeEventListener("beforeunload", handleRouteChangeStart);
+      router?.events?.off?.("routeChangeStart", handleRouteChangeStart);
+      router?.events?.off?.("routeChangeComplete", handleRouteChangeComplete);
+      router?.events?.off?.("routeChangeError", handleRouteChangeComplete);
     };
-  }, []);
+  }, [router]);
 
-  // Also detect route changes with pathname and searchParams
+  // Alternative method using pathname and searchParams changes
+  // This will also detect route changes in the App Router
   useEffect(() => {
     setIsLoading(true);
 
