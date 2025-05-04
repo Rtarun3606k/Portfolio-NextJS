@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "framer-motion": "^12.9.4",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.14.1",
     "next": "15.3.1",
     "next-auth": "^5.0.0-beta.27",
     "react": "^19.0.0",
