@@ -140,6 +140,81 @@ export const Stats = [
 ];
 // This file handles fetching statistics from various sources
 
+export const EventsData = [
+  {
+    id: 1,
+    name: "React Advanced Conference",
+    host: "TechEvents Global",
+    date: "June 15-17, 2025",
+    image:
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop",
+    registerLink: "https://reactadvanced.com/register",
+    location: "San Francisco, CA",
+    skills: ["React", "JavaScript", "Web Development"],
+    category: "upcoming",
+  },
+  {
+    id: 2,
+    name: "Machine Learning Summit 2025",
+    host: "DataScience Foundation",
+    date: "July 5-8, 2025",
+    image:
+      "https://images.unsplash.com/photo-1591779051696-1c3fa6469309?q=80&w=2070&auto=format&fit=crop",
+    registerLink: "https://mlsummit.org/register",
+    location: "Boston, MA",
+    skills: ["Machine Learning", "AI", "Data Science"],
+    category: "upcoming",
+  },
+  {
+    id: 3,
+    name: "Developer Week Hackathon",
+    host: "DeveloperWeek",
+    date: "May 12-14, 2025",
+    image:
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2070&auto=format&fit=crop",
+    registerLink: "https://developerweek.com/hackathon",
+    location: "Online",
+    skills: ["Coding", "Problem Solving", "Teamwork"],
+    category: "upcoming",
+  },
+  {
+    id: 4,
+    name: "Cloud Architecture Summit",
+    host: "CloudTech Alliance",
+    date: "March 21-23, 2025",
+    image:
+      "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop",
+    registerLink: null, // Past event, no registration
+    location: "Seattle, WA",
+    skills: ["Cloud Computing", "Architecture", "DevOps"],
+    category: "past",
+  },
+  {
+    id: 5,
+    name: "UX/UI Design Workshop",
+    host: "Design Masters",
+    date: "January 10, 2025",
+    image:
+      "https://images.unsplash.com/photo-1559223607-a43c990c692c?q=80&w=2070&auto=format&fit=crop",
+    registerLink: null, // Past event, no registration
+    location: "Chicago, IL",
+    skills: ["UI/UX", "Design", "User Research"],
+    category: "past",
+  },
+  {
+    id: 6,
+    name: "Blockchain & Web3 Conference",
+    host: "Decentralized Future",
+    date: "August 18-20, 2025",
+    image:
+      "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?q=80&w=2071&auto=format&fit=crop",
+    registerLink: "https://blockchain-web3-conf.io/register",
+    location: "Miami, FL",
+    skills: ["Blockchain", "Web3", "Smart Contracts"],
+    category: "upcoming",
+  },
+];
+
 export async function GetStatistics() {
   try {
     // You would normally fetch these from APIs or databases

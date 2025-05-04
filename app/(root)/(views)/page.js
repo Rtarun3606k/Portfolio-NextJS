@@ -6,6 +6,8 @@ import Hero from "@/components/Hero";
 import StatsPage from "@/components/Statistics";
 import Projects from "@/components/Projects";
 import BlogsAndPosts from "@/components/BlogsAndPosts";
+import Events from "@/components/Events";
+import Contact from "@/components/Constact";
 
 const AnimatedSection = ({ children, delay = 0.2 }) => {
   const ref = useRef(null);
@@ -58,6 +60,14 @@ export default function Home() {
 
       <AnimatedSection delay={0.3}>
         <BlogsAndPosts />
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.3}>
+        <Events />
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.3}>
+        <Contact />
       </AnimatedSection>
       {/* You can add more sections with scroll animations */}
       {/* 
