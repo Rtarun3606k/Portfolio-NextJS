@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.27.0",
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.5.0",
     "framer-motion": "^12.9.4",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",

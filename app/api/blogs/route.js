@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { MongoClient, ObjectId } from "mongodb";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+// import { auth } from "../../../auth";
+import { auth } from "@/app/auth";
 
 // Get environment variables
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017";
@@ -34,7 +34,7 @@ export async function GET(request) {
 // POST a new blog post
 export async function POST(request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     // Check if user is authenticated
     if (!session) {

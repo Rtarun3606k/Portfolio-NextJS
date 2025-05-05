@@ -27,6 +27,11 @@ const nextConfig = {
         hostname: "fonts.googleapis.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "**blob.core.windows.net",
+        pathname: "**",
+      },
     ],
   },
 };

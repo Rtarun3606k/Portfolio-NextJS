@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,10 +17,14 @@ const BlogsManagement = () => {
     link: "",
     views: 0,
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
   const [showForm, setShowForm] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("");
   const router = useRouter();
 
   // Fetch blogs on component mount
@@ -50,6 +54,60 @@ const BlogsManagement = () => {
     setNewBlog((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file is an image
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file");
+      return;
+    }
+
+    setImageFile(file);
+    setUploadStatus("File selected: " + file.name);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target.result);
+      // Update the newBlog state with the preview for display purposes
+      setNewBlog((prev) => ({ ...prev, image: e.target.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Upload image to Azure Blob Storage
+  const uploadImageToAzure = async (file) => {
+    if (!file) return null;
+
+    setUploadStatus("Uploading image to Azure...");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to upload image");
+      }
+
+      const data = await response.json();
+      setUploadStatus("Image uploaded successfully");
+      return data.url;
+    } catch (error) {
+      console.error("Upload error:", error);
+      setUploadStatus(`Upload failed: ${error.message}`);
+      return null;
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,12 +115,35 @@ const BlogsManagement = () => {
     setError("");
 
     try {
+      // If we have a file, upload it to Azure first
+      let finalImageUrl = newBlog.image;
+
+      if (imageFile) {
+        const uploadedImageUrl = await uploadImageToAzure(imageFile);
+        if (uploadedImageUrl) {
+          finalImageUrl = uploadedImageUrl;
+        } else {
+          // If upload failed but the user entered a direct URL, use that
+          if (!newBlog.image) {
+            throw new Error(
+              "Failed to upload image and no direct URL provided"
+            );
+          }
+        }
+      }
+
+      // Create the blog post with the image URL (either from Azure or direct input)
+      const blogData = {
+        ...newBlog,
+        image: finalImageUrl,
+      };
+
       const response = await fetch("/api/blogs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newBlog),
+        body: JSON.stringify(blogData),
       });
 
       if (!response.ok) {
@@ -79,6 +160,11 @@ const BlogsManagement = () => {
         link: "",
         views: 0,
       });
+      setImageFile(null);
+      setImagePreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
       setShowForm(false);
       setShowPreview(false);
 
@@ -183,9 +269,9 @@ const BlogsManagement = () => {
             <div className="mb-6">
               <div className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-[#6A0DAD]/10 max-w-sm mx-auto">
                 <div className="h-48 relative overflow-hidden">
-                  {newBlog.image ? (
+                  {imagePreview || newBlog.image ? (
                     <Image
-                      src={newBlog.image}
+                      src={imagePreview || newBlog.image}
                       alt={newBlog.title}
                       fill
                       style={{ objectFit: "cover" }}
@@ -196,7 +282,7 @@ const BlogsManagement = () => {
                     />
                   ) : (
                     <div className="h-full w-full bg-gray-200 flex items-center justify-center text-gray-500">
-                      No image URL provided
+                      No image provided
                     </div>
                   )}
                 </div>
@@ -282,25 +368,6 @@ const BlogsManagement = () => {
 
                 <div className="mb-4">
                   <label
-                    htmlFor="image"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Image URL *
-                  </label>
-                  <input
-                    type="url"
-                    id="image"
-                    name="image"
-                    required
-                    value={newBlog.image}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#6A0DAD] focus:border-[#6A0DAD] outline-none transition-colors"
-                    placeholder="https://example.com/image.jpg"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label
                     htmlFor="author"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
@@ -315,6 +382,41 @@ const BlogsManagement = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#6A0DAD] focus:border-[#6A0DAD] outline-none transition-colors"
                   />
+                </div>
+
+                <div className="mb-4 md:col-span-2">
+                  <label
+                    htmlFor="imageUpload"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Upload Image *
+                  </label>
+                  <div className="flex flex-col space-y-2">
+                    <input
+                      type="file"
+                      id="imageUpload"
+                      name="imageUpload"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#6A0DAD] focus:border-[#6A0DAD] outline-none transition-colors"
+                    />
+                    {uploadStatus && (
+                      <p className="text-sm text-blue-600">{uploadStatus}</p>
+                    )}
+                    <p className="text-xs text-gray-500">
+                      Or provide a direct image URL:
+                    </p>
+                    <input
+                      type="url"
+                      id="image"
+                      name="image"
+                      value={newBlog.image}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#6A0DAD] focus:border-[#6A0DAD] outline-none transition-colors"
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-4">
@@ -335,7 +437,7 @@ const BlogsManagement = () => {
                   />
                 </div>
 
-                <div className="mb-4 md:col-span-2">
+                <div className="mb-4 md:col-span-1">
                   <label
                     htmlFor="link"
                     className="block text-sm font-medium text-gray-700 mb-1"
@@ -362,7 +464,7 @@ const BlogsManagement = () => {
                     // Basic validation before showing preview
                     if (
                       !newBlog.title ||
-                      !newBlog.image ||
+                      (!imageFile && !newBlog.image) ||
                       !newBlog.author ||
                       !newBlog.link
                     ) {

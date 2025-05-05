@@ -381,13 +381,20 @@ const Projects = () => {
                     } shadow-xl transition-all duration-500 flex flex-col`}
                   >
                     {/* Project Image */}
-                    <div className="relative h-[35%] w-full bg-gray-200 overflow-hidden">
+                    <div className="relative h-[55%] w-full bg-gray-200 overflow-hidden">
                       {/* Reduced height from 40% to 35% */}
                       {/* Replace with actual images */}
                       <div className="w-full h-full bg-gradient-to-r from-[#5E60CE]/20 to-[#7209B7]/20 flex items-center justify-center">
-                        <span className="text-[#5E60CE] opacity-60 text-5xl font-light">
+                        {/* <span className="text-[#5E60CE] opacity-60 text-5xl font-light">
+
                           {project.title[0]}
-                        </span>
+                        </span> */}
+                        {/* <img src={project?.imageUrl} alt="no image" /> */}
+
+                        <img
+                          src="https://walkez.blob.core.windows.net/projects/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png"
+                          alt="no iamge"
+                        />
                       </div>
                     </div>
 
@@ -544,131 +551,6 @@ const Projects = () => {
           </Link>
         </div>
       </div>
-
-      <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        /* Additional styles to force opacity */
-        .opacity-100 {
-          opacity: 1 !important;
-        }
-
-        /* Animation keyframes for circles if not already defined elsewhere */
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-15px);
-          }
-        }
-
-        @keyframes float-delayed {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        @keyframes float-slow {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
-        }
-
-        @keyframes float-reverse {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(12px);
-          }
-        }
-
-        @keyframes float-diagonal {
-          0%,
-          100% {
-            transform: translate(0, 0);
-          }
-          50% {
-            transform: translate(-10px, -10px);
-          }
-        }
-
-        @keyframes float-diagonal-reverse {
-          0%,
-          100% {
-            transform: translate(0, 0);
-          }
-          50% {
-            transform: translate(8px, -8px);
-          }
-        }
-
-        @keyframes float-circular {
-          0% {
-            transform: rotate(0) translateX(10px) rotate(0);
-          }
-          100% {
-            transform: rotate(360deg) translateX(10px) rotate(-360deg);
-          }
-        }
-
-        @keyframes pulsate {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 0.7;
-          }
-          50% {
-            transform: scale(1.05);
-            opacity: 0.9;
-          }
-        }
-
-        /* Animation classes if not already defined in your Tailwind config */
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .animate-float-delayed {
-          animation: float-delayed 7s ease-in-out infinite;
-        }
-
-        .animate-float-slow {
-          animation: float-slow 8s ease-in-out infinite;
-        }
-
-        .animate-float-reverse {
-          animation: float-reverse 7s ease-in-out infinite;
-        }
-
-        .animate-float-diagonal {
-          animation: float-diagonal 8s ease-in-out infinite;
-        }
-
-        .animate-float-diagonal-reverse {
-          animation: float-diagonal-reverse 6s ease-in-out infinite;
-        }
-
-        .animate-float-circular {
-          animation: float-circular 12s linear infinite;
-        }
-
-        .animate-pulsate {
-          animation: pulsate 4s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 };

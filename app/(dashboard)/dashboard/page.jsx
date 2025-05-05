@@ -155,6 +155,36 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Statistics Card */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-transparent hover:border-[#C71585] transition-all duration-300">
+          <div className="h-3 bg-[#C71585]"></div>
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-[#1C1C1C]">Blogs</h3>
+              <div className="bg-[#C71585]/10 p-3 rounded-full">
+                <FaChartPie className="text-[#C71585]" />
+              </div>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Add and manage statistics to highlight your Blogs.
+            </p>
+            <div className="flex justify-between items-center">
+              <Link
+                href="/dashboard/statistics"
+                className="bg-white text-[#C71585] border border-[#C71585] hover:bg-[#C71585] hover:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center"
+              >
+                <span>Manage Statistics</span>
+              </Link>
+              <Link
+                href="/dashboard/blogs/"
+                className="bg-[#C71585]/10 p-2 rounded-full text-[#C71585] hover:bg-[#C71585]/20 transition-colors duration-200"
+              >
+                <FaPlus />
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Recent Activity Section - Optional */}

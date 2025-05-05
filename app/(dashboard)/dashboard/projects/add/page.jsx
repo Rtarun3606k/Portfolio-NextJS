@@ -87,10 +87,12 @@ export default function AddProjectForm() {
         }
       });
 
-      // Append image file if exists
+      // Append image file if exists (just once)
       if (imageFile) {
+        console.log("Appending image file:", imageFile.name);
         formDataToSend.append("image", imageFile);
       }
+      console.log("Form data to send:", formDataToSend);
 
       const response = await fetch("/api/projects", {
         method: "POST",

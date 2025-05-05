@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { getDatabases } from "@/utils/Mongodb";
 import { withAuth } from "@/utils/auth";
+import { uploadToAzure } from "../Components/Azure";
 
 // Helper for multipart form data
 async function parseMultipartForm(request) {
   try {
     const formData = await request.formData();
+    console.log(
+      "Form data entries:",
+      [...formData.entries()].map(([k, v]) =>
+        k === "image" ? `${k}: [File]` : `${k}: ${v}`
+      )
+    );
 
     // Extract form fields
     const data = {
@@ -17,8 +24,14 @@ async function parseMultipartForm(request) {
       tags: JSON.parse(formData.get("tags") || "[]"),
     };
 
-    // Handle image file if present
-    const imageFile = formData.get("projectImage");
+    // Handle image file if present - use "image" field name to match frontend
+    const imageFile = formData.get("image");
+    console.log(
+      "Image file found:",
+      imageFile
+        ? `${imageFile.name} (${imageFile.size} bytes)`
+        : "No image file"
+    );
 
     return { data, imageFile };
   } catch (error) {
@@ -34,6 +47,11 @@ async function postHandler(request) {
 
     // For multipart form data with image upload
     const { data, imageFile } = await parseMultipartForm(request);
+    console.log("Parsed form data:", data);
+    console.log(
+      "Parsed image file:",
+      imageFile ? `${imageFile.name} (${imageFile.size} bytes)` : "None"
+    );
 
     // Validate required fields
     if (
@@ -63,19 +81,30 @@ async function postHandler(request) {
 
     // Handle image upload if provided
     if (imageFile && imageFile.size > 0) {
-      // TODO: In a real implementation, you'd upload this to a blob storage service
-      // For now, we'll simulate it with a placeholder URL
-      // In production, use Azure Blob Storage or similar service
+      try {
+        console.log("Uploading image to Azure:", imageFile.name);
+        const uploadResult = await uploadToAzure(imageFile, imageFile.name);
+        console.log("Azure upload result:", uploadResult);
 
-      // For now, set a placeholder URL (this would be replaced with the actual URL after upload)
-      projectData.imageUrl = `/projects/${Date.now()}-${imageFile.name}`;
-
-      // You would also save the image to your storage here
-      // const uploadResult = await uploadToStorage(imageFile);
-      // projectData.imageUrl = uploadResult.url;
+        if (uploadResult.success) {
+          // Set the image URL from Azure
+          projectData.imageUrl = uploadResult.url;
+          console.log("Successfully set imageUrl:", uploadResult.url);
+        } else {
+          console.error(
+            "Azure upload failed but continuing with null image URL:",
+            uploadResult.error
+          );
+          // Don't return early, just log the error and continue with null imageUrl
+        }
+      } catch (uploadError) {
+        console.error("Error during image upload:", uploadError);
+        // Don't return early, just log the error and continue with null imageUrl
+      }
     }
 
-    // Insert into database
+    // Insert into database regardless of image upload success
+    console.log("Inserting project with data:", JSON.stringify(projectData));
     const result = await projectsCollection.insertOne(projectData);
 
     // Return success response
@@ -83,6 +112,7 @@ async function postHandler(request) {
       {
         message: "Project created successfully",
         projectId: result.insertedId,
+        imageUrl: projectData.imageUrl, // Return the image URL in the response
       },
       { status: 201 }
     );
