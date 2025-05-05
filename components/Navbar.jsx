@@ -131,9 +131,9 @@ const Navbar = ({ userSession }) => {
                   </li>
                 );
               })}
-              <SessionProvider>
+              {/* <SessionProvider>
                 <NavbarAuth />
-              </SessionProvider>
+              </SessionProvider> */}
             </ul>
           </nav>
         </div>

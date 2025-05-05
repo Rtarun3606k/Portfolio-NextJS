@@ -18,11 +18,13 @@ export default function ProjectsList() {
           throw new Error("Failed to fetch projects");
         }
         const data = await response.json();
+        console.log("Fetched projects:", data);
         setProjects(data.projects || []);
       } catch (err) {
         console.error("Error fetching projects:", err);
         setError("Failed to load projects. Please try again later.");
       } finally {
+        console.log("Fetched projects:", projects);
         setLoading(false);
       }
     }
@@ -190,12 +192,18 @@ export default function ProjectsList() {
 
               {/* Project Image */}
               <div className="relative h-[35%] w-full overflow-hidden">
-                {project.imageUrl ? (
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
+                {/* <Image src={project && project.imageUrl} /> */}
+                {console.log("Project image URL:", project.imageUrl)}
+                {project && project.imageUrl ? (
+                  <img
+                    src={project.imageUrl || "/placeholder.png"}
+                    alt={project.title + "shsdjhshdjsahjdsa"}
+                    // layout="fill"
+                    // objectFit="cover"
+                    className=" transition-transform duration-500 w-full h-full bg-gradient-to-r from-[#5E60CE]/20 to-[#7209B7]/20 flex items-center justify-center "
+                    // onError={(e) => {
+                    //   console.error("Error loading image:", e);
+                    // }}
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-r from-[#5E60CE]/20 to-[#7209B7]/20 flex items-center justify-center">

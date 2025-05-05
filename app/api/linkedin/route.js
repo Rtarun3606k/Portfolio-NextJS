@@ -1,72 +1,105 @@
 import { NextResponse } from "next/server";
-import { MongoClient, ObjectId } from "mongodb";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
-
-// Get environment variables
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017";
-const dbName = process.env.MONGODB_DB || "portfolio";
-
-// MongoDB Client
-const client = new MongoClient(uri);
+import { getDatabases } from "@/utils/Mongodb";
+import { withAuth } from "@/utils/auth";
+import { uploadToAzure } from "../Components/Azure";
 
 // GET all LinkedIn posts
-export async function GET(request) {
+async function getHandler() {
   try {
-    await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection("linkedin");
+    const { linkedinCollection } = await getDatabases();
 
-    const linkedinPosts = await collection.find({}).toArray();
+    // Get all LinkedIn posts
+    const posts = await linkedinCollection
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
 
-    return NextResponse.json(linkedinPosts, { status: 200 });
+    return NextResponse.json({ posts }, { status: 200 });
   } catch (error) {
     console.error("Error fetching LinkedIn posts:", error);
     return NextResponse.json(
       { error: "Failed to fetch LinkedIn posts" },
       { status: 500 }
     );
-  } finally {
-    await client.close();
   }
 }
 
 // POST a new LinkedIn post
-export async function POST(request) {
+async function postHandler(request) {
   try {
-    const session = await getServerSession(authOptions);
+    const { linkedinCollection } = await getDatabases();
 
-    // Check if user is authenticated
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Parse form data for image upload
+    const formData = await request.formData();
 
-    const body = await request.json();
+    // Extract form fields
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const link = formData.get("link");
+    const imageFile = formData.get("image");
 
     // Validate required fields
-    if (!body.title || !body.image || !body.description) {
+    if (!title || !description) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Title and description are required" },
         { status: 400 }
       );
     }
 
-    // Add created date
-    const linkedinPost = {
-      ...body,
-      createdAt: new Date(),
+    // Prepare the LinkedIn post data
+    const postData = {
+      title,
+      description,
+      link: link || "",
+      image: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection("linkedin");
+    // Upload image to Azure Blob Storage if provided
+    if (imageFile && imageFile.size > 0) {
+      try {
+        console.log("Uploading LinkedIn post image to Azure:", imageFile.name);
 
-    const result = await collection.insertOne(linkedinPost);
+        // Use the specific "linkedinevents" container for LinkedIn post images
+        const uploadResult = await uploadToAzure(
+          imageFile,
+          imageFile.name,
+          "linkedinevents"
+        );
+
+        if (uploadResult.success) {
+          // Set the image URL
+          postData.image = uploadResult.url;
+          console.log(
+            "LinkedIn post image uploaded successfully:",
+            uploadResult.url
+          );
+        } else {
+          console.error("Azure upload failed:", uploadResult.error);
+          return NextResponse.json(
+            { error: "Failed to upload image" },
+            { status: 500 }
+          );
+        }
+      } catch (uploadError) {
+        console.error("Error uploading LinkedIn post image:", uploadError);
+        return NextResponse.json(
+          { error: "Error uploading image: " + uploadError.message },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Insert the LinkedIn post into the database
+    console.log("Inserting LinkedIn post with data:", JSON.stringify(postData));
+    const result = await linkedinCollection.insertOne(postData);
 
     return NextResponse.json(
       {
         message: "LinkedIn post created successfully",
-        id: result.insertedId,
+        postId: result.insertedId,
+        post: postData,
       },
       { status: 201 }
     );
@@ -76,7 +109,9 @@ export async function POST(request) {
       { error: "Failed to create LinkedIn post" },
       { status: 500 }
     );
-  } finally {
-    await client.close();
   }
 }
+
+// Export the handlers with authentication middleware
+export const GET = getHandler; // Anyone can view LinkedIn posts
+export const POST = withAuth(postHandler); // Only authenticated users can create posts

@@ -9,15 +9,18 @@ async function uploadHandler(request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
+    // Get the container name from the form data, default to "projects" if not provided
+    const container = formData.get("container");
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     console.log("Received file for upload:", file.name, "Size:", file.size);
+    console.log("Using container:", container || "default");
 
-    // Upload to Azure Blob Storage
-    const result = await uploadToAzure(file, file.name);
+    // Upload to Azure Blob Storage with the specified container
+    const result = await uploadToAzure(file, file.name, container);
 
     if (!result.success) {
       console.error("Upload to Azure failed:", result.error);

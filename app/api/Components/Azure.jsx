@@ -1,6 +1,6 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 
-export async function uploadToAzure(file, fileName) {
+export async function uploadToAzure(file, fileName, container) {
   try {
     // Enhanced debugging
     console.log("Starting Azure upload process for:", fileName);
@@ -10,8 +10,8 @@ export async function uploadToAzure(file, fileName) {
     // Get connection string from environment variables
     const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
     // Use consistent container name across functions
-    const containerName =
-      process.env.AZURE_STORAGE_CONTAINER_NAME || "projects";
+
+    const containerName = container || "projects";
 
     if (!connectionString) {
       console.error(
