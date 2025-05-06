@@ -171,13 +171,13 @@ export default function Dashboard() {
             </p>
             <div className="flex justify-between items-center">
               <Link
-                href="/dashboard/statistics"
+                href="/dashboard/blogs"
                 className="bg-white text-[#C71585] border border-[#C71585] hover:bg-[#C71585] hover:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center"
               >
-                <span>Manage Statistics</span>
+                <span>Manage Blogs</span>
               </Link>
               <Link
-                href="/dashboard/blogs/"
+                href="/dashboard/blogs/add"
                 className="bg-[#C71585]/10 p-2 rounded-full text-[#C71585] hover:bg-[#C71585]/20 transition-colors duration-200"
               >
                 <FaPlus />
@@ -200,13 +200,13 @@ export default function Dashboard() {
             </p>
             <div className="flex justify-between items-center">
               <Link
-                href="/dashboard/statistics"
+                href="/dashboard/events"
                 className="bg-white text-[#C71585] border border-[#C71585] hover:bg-[#C71585] hover:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center"
               >
-                <span>Manage Statistics</span>
+                <span>Manage events</span>
               </Link>
               <Link
-                href="/dashboard/events/"
+                href="/dashboard/events/add"
                 className="bg-[#C71585]/10 p-2 rounded-full text-[#C71585] hover:bg-[#C71585]/20 transition-colors duration-200"
               >
                 <FaPlus />
@@ -228,13 +228,13 @@ export default function Dashboard() {
             </p>
             <div className="flex justify-between items-center">
               <Link
-                href="/dashboard/statistics"
+                href="/dashboard/linkedin"
                 className="bg-white text-[#C71585] border border-[#C71585] hover:bg-[#C71585] hover:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center"
               >
-                <span>Manage Statistics</span>
+                <span>Manage LinkedIn</span>
               </Link>
               <Link
-                href="/dashboard/linkedin/"
+                href="/dashboard/linkedin/add"
                 className="bg-[#C71585]/10 p-2 rounded-full text-[#C71585] hover:bg-[#C71585]/20 transition-colors duration-200"
               >
                 <FaPlus />

@@ -3,16 +3,17 @@ import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import { commands } from "@uiw/react-md-editor";
 import { FaImage } from "react-icons/fa";
-import { auth } from "@/app/auth";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
   ssr: false,
 });
 
-export default function MarkdownEditor() {
+export default function MarkdownEditor({ id }) {
+  const router = useRouter();
   const [value, setValue] = useState("**Hello Markdown!**");
   const [blogDetails, setBlogDetails] = useState({
     title: "",
@@ -22,8 +23,43 @@ export default function MarkdownEditor() {
   const [blogImageUrl, setBlogImageUrl] = useState("");
   const [isImageHovered, setIsImageHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Handle image upload to Azure Blob Storage
+  // Fetch blog data if ID is provided (edit mode)
+  useEffect(() => {
+    const fetchBlog = async () => {
+      if (!id || id === "new") return;
+
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/blogs/${id}`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch blog: ${res.status}`);
+        }
+        const data = await res.json();
+
+        // Populate form with existing blog data
+        setValue(data.content || "");
+        setBlogDetails({
+          title: data.title || "",
+          author: data.author || "",
+        });
+        setBlogImageUrl(data.featuredImage || "");
+        setIsEditing(true);
+      } catch (error) {
+        console.error("Error fetching blog:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [id]);
+
+  // Handle image upload to Azure Blob Storage with best practices
   const uploadImageToAzure = async (file) => {
     if (!file) return null;
 
@@ -33,15 +69,30 @@ export default function MarkdownEditor() {
       const formData = new FormData();
       formData.append("file", file);
 
-      // Get current timestamp for unique blob naming
+      // Azure best practice: Use content-addressable storage pattern
+      // Generate a unique hash-based filename using timestamp and original name
       const timestamp = new Date().getTime();
-      const fileExtension = file.name.split(".").pop();
-      const fileName = `blog-${timestamp}.${fileExtension}`;
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+
+      // Azure best practice: Organize blobs in logical hierarchy
+      const fileName = `${new Date().getFullYear()}/${
+        new Date().getMonth() + 1
+      }/${timestamp}-${file.name.replace(/\s+/g, "-")}`;
       formData.append("fileName", fileName);
 
-      // Include content type to ensure proper MIME type is set
+      // Azure best practice: Set proper content type for CDN optimization
       const contentType = file.type;
       formData.append("contentType", contentType);
+
+      // Azure best practice: Add metadata for better management
+      formData.append(
+        "metadata",
+        JSON.stringify({
+          uploadedAt: new Date().toISOString(),
+          originalName: file.name,
+          fileSize: file.size,
+        })
+      );
 
       // Make API call to upload to Azure Blob Storage
       const response = await fetch("/api/blogs/image", {
@@ -95,39 +146,80 @@ export default function MarkdownEditor() {
       const tempMarkdown = `![Uploading...](${tempUrl})\n`;
       api.replaceSelection(tempMarkdown);
 
-      // Upload to Azure Blob Storage
+      // Upload to Azure Blob Storage with retry mechanism (best practice)
       setIsUploading(true);
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
+      let retries = 0;
+      const maxRetries = 3;
 
-        // Include metadata for Azure Blob Storage best practices
-        const timestamp = new Date().getTime();
-        const fileExtension = file.name.split(".").pop();
-        const fileName = `content-${timestamp}.${fileExtension}`;
-        formData.append("fileName", fileName);
-        formData.append("contentType", file.type);
+      while (retries < maxRetries) {
+        try {
+          const formData = new FormData();
+          formData.append("file", file);
 
-        const res = await fetch("/api/blogs/image", {
-          method: "POST",
-          body: formData,
-        });
+          // Include metadata for Azure Blob Storage best practices
+          const timestamp = new Date().getTime();
+          const fileExtension = file.name.split(".").pop().toLowerCase();
+          const fileName = `content/${new Date().getFullYear()}/${
+            new Date().getMonth() + 1
+          }/${timestamp}-${file.name.replace(/\s+/g, "-")}`;
+          formData.append("fileName", fileName);
+          formData.append("contentType", file.type);
 
-        if (!res.ok) {
-          throw new Error("Image upload failed");
+          // Add additional metadata as a JSON string - Azure requires string values
+          const metadata = {
+            uploadedAt: new Date().toISOString(),
+            context: "blog-content-image",
+            position: state.selection ? String(state.selection.start) : "0",
+            fileSize: String(file.size),
+          };
+
+          formData.append("metadata", JSON.stringify(metadata));
+
+          const res = await fetch("/api/blogs/image", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            if (res.status >= 500 && retries < maxRetries - 1) {
+              // Retry server errors
+              retries++;
+              // Exponential backoff
+              await new Promise((r) =>
+                setTimeout(r, 1000 * Math.pow(2, retries))
+              );
+              continue;
+            }
+            throw new Error(`Image upload failed: ${res.status}`);
+          }
+
+          const data = await res.json();
+          if (data?.url) {
+            const finalMarkdown = `![Image](${data.url})\n`;
+            api.replaceSelection(finalMarkdown);
+          }
+          break; // Success, exit retry loop
+        } catch (error) {
+          console.error(
+            `Error uploading image (attempt ${retries + 1}):`,
+            error
+          );
+          if (retries >= maxRetries - 1) {
+            api.replaceSelection(`![Upload failed]()\n`);
+            alert(
+              `Image upload failed after ${maxRetries} attempts: ${error.message}`
+            );
+          } else {
+            retries++;
+            // Exponential backoff
+            await new Promise((r) =>
+              setTimeout(r, 1000 * Math.pow(2, retries))
+            );
+          }
         }
-
-        const data = await res.json();
-        if (data?.url) {
-          const finalMarkdown = `![Image](${data.url})\n`;
-          api.replaceSelection(finalMarkdown);
-        }
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        api.replaceSelection(`![Upload failed]()\n`);
-      } finally {
-        setIsUploading(false);
       }
+
+      setIsUploading(false);
     },
   };
 
@@ -143,30 +235,26 @@ export default function MarkdownEditor() {
   const onSave = async () => {
     try {
       // Validate required fields
-      if (
-        !blogDetails.title ||
-        !blogDetails.author ||
-        !value ||
-        !blogImageUrl
-      ) {
-        alert("Title and Author are required fields");
+      if (!blogDetails.title || !blogDetails.author || !value) {
+        alert("Title, author, and content are required fields");
         return;
       }
-
-      // Get session info if authentication is required
-      //   const session = await auth();
 
       const body = {
         title: blogDetails.title,
         author: blogDetails.author,
         content: value,
         featuredImage: blogImageUrl,
-        // userId: session?.user?.id,
+        updatedAt: new Date().toISOString(),
       };
 
-      console.log("Creating blog post:", body);
-      const res = await fetch("/api/blogs", {
-        method: "POST",
+      // Determine if we're creating or updating
+      const endpoint = isEditing ? `/api/blogs/${id}` : "/api/blogs";
+      const method = isEditing ? "PATCH" : "POST";
+
+      console.log(`${isEditing ? "Updating" : "Creating"} blog post:`, body);
+      const res = await fetch(endpoint, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -175,23 +263,26 @@ export default function MarkdownEditor() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to create blog post");
+        throw new Error(
+          errorData.error ||
+            `Failed to ${isEditing ? "update" : "create"} blog post`
+        );
       }
 
       const data = await res.json();
-      console.log("Blog post created successfully:", data);
-      alert("Blog post created successfully");
+      console.log(
+        `Blog post ${isEditing ? "updated" : "created"} successfully:`,
+        data
+      );
+      alert(`Blog post ${isEditing ? "updated" : "created"} successfully`);
 
-      // Optional: Clear form after successful submission
-      setBlogDetails({
-        title: "",
-        author: "",
-      });
-      setValue("");
-      setBlogImage(null);
-      setBlogImageUrl("");
+      // Navigate back to blogs dashboard
+      router.push("/dashboard/blogs");
     } catch (error) {
-      console.error("Error creating blog post:", error.message);
+      console.error(
+        `Error ${isEditing ? "updating" : "creating"} blog post:`,
+        error.message
+      );
       alert(`Error: ${error.message}`);
     }
   };
@@ -205,10 +296,36 @@ export default function MarkdownEditor() {
     };
   }, [blogImageUrl]);
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto p-4 flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5E60CE]"></div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-red-100 p-4 rounded-lg text-red-700">
+          <h3 className="font-bold">Error</h3>
+          <p>{error}</p>
+          <Link href="/dashboard/blogs">
+            <button className="mt-4 px-4 py-2 bg-[#5E60CE] hover:bg-[#7209B7] text-white rounded transition-colors duration-300">
+              Back to Blogs
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-4 bg-gradient-to-r from-[#e0f7fa] to-[#fce4ec] min-h-screen">
       <h1 className="text-center font-playfair text-black text-3xl m-3">
-        Blog Editor
+        {isEditing ? "Edit Blog" : "Create New Blog"}
       </h1>
       <div className="mb-4 space-y-2">
         <input
@@ -241,6 +358,22 @@ export default function MarkdownEditor() {
             <span className="text-sm text-[#5E60CE]">Uploading...</span>
           )}
         </div>
+
+        {/* Show current featured image if editing */}
+        {isEditing && blogImageUrl && !blogImageUrl.startsWith("blob:") && (
+          <div className="mt-2">
+            <p className="text-sm text-gray-600 mb-1">
+              Current featured image:
+            </p>
+            <div className="h-24 w-full relative rounded overflow-hidden">
+              <img
+                src={blogImageUrl}
+                alt="Current featured image"
+                className="h-full w-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <MDEditor
@@ -280,9 +413,7 @@ export default function MarkdownEditor() {
                 <img
                   src={blogImageUrl}
                   alt={blogDetails.title || "Blog featured image"}
-                  className={`w-full h-full object-cover transition-transform duration-300 ${
-                    isImageHovered ? "scale-130" : "scale-100"
-                  }`}
+                  className={`w-full h-full object-cover transition-transform duration-300`}
                   style={{
                     objectFit: "cover",
                     transform: isImageHovered ? "scale(1.3)" : "scale(1)",
@@ -307,21 +438,19 @@ export default function MarkdownEditor() {
                 source={value}
                 wrapperElement={{ "data-color-mode": "light" }}
                 style={{ backgroundColor: "white", color: "black" }}
-                maximumLines={3}
               />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 flex  justify-between ">
+      <div className="mt-4 flex justify-between">
         <Link href="/dashboard/blogs">
           <button
-            className="px-4 py-2 bg-[#5E60CE] hover:bg-[#7209B7] text-white rounded transition-colors duration-300"
-            //   onClick={onSave}
+            className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded transition-colors duration-300"
             disabled={isUploading}
           >
-            {"<- Back"}
+            Cancel
           </button>
         </Link>
         <button
@@ -329,7 +458,11 @@ export default function MarkdownEditor() {
           onClick={onSave}
           disabled={isUploading}
         >
-          {isUploading ? "Uploading..." : "Save Blog"}
+          {isUploading
+            ? "Uploading..."
+            : isEditing
+            ? "Update Blog"
+            : "Save Blog"}
         </button>
       </div>
     </div>

@@ -200,7 +200,7 @@ const BlogsManagement = () => {
                       </svg>
                     </button>
                     <Link
-                      href={`/blogs/${blog._id}`}
+                      href={`/Blog/${blog._id}`}
                       className="text-[#FF4ECD] hover:text-[#FF6FD8]"
                     >
                       <svg
