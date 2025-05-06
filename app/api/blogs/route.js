@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { MongoClient, ObjectId } from "mongodb";
+import { getDatabases } from "@/utils/Mongodb";
 // import { auth } from "../../../auth";
 import { auth } from "@/app/auth";
 
@@ -13,11 +14,9 @@ const client = new MongoClient(uri);
 // GET all blog posts
 export async function GET(request) {
   try {
-    await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection("blogs");
+    const { blogsCollection } = await getDatabases();
 
-    const blogs = await collection.find({}).toArray();
+    const blogs = await blogsCollection.find({}).toArray();
 
     return NextResponse.json(blogs, { status: 200 });
   } catch (error) {
@@ -34,22 +33,17 @@ export async function GET(request) {
 // POST a new blog post
 export async function POST(request) {
   try {
-    const session = await auth();
-
-    // Check if user is authenticated
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const body = await request.json();
 
     // Validate required fields
-    if (!body.title || !body.image || !body.author) {
+    if (!body.title || !body.author) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
+
+    console.log("Creating blog post:", body);
 
     // Add created date
     const blogPost = {
@@ -58,11 +52,9 @@ export async function POST(request) {
       views: 0, // Initialize with zero views
     };
 
-    await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection("blogs");
+    const { blogsCollection } = await getDatabases();
 
-    const result = await collection.insertOne(blogPost);
+    const result = await blogsCollection.insertOne(blogPost);
 
     return NextResponse.json(
       {
