@@ -407,7 +407,7 @@ const Hero = () => {
             <span>Download Resume</span>
           </a>
           <Link
-            href="/contact"
+            href="https://www.linkedin.com/in/tarun-nayaka-r-28612a27a/"
             className={`border-2 border-[#4169E1] text-[#4169E1] px-4 sm:px-6 py-1.5 sm:py-2.5 rounded-full hover:bg-[#4169E1] hover:text-white transition-all hover:scale-105 text-sm sm:text-base ${
               isVisible ? "animate-bounce-in" : "opacity-0 scale-90"
             }`}
