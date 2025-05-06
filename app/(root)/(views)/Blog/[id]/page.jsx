@@ -33,6 +33,23 @@ const Page = () => {
   const [blog, setBlog] = useState({});
   const [suggestedBlogs, setSuggestedBlogs] = useState([]);
 
+  const addViews = async () => {
+    try {
+      const res = await fetch(`/api/blogs/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ views: blog.views }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to update views");
+      }
+    } catch (error) {
+      console.error("Error updating views:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchBlog = async () => {
       setLoading(true);
@@ -67,6 +84,7 @@ const Page = () => {
 
     if (id) {
       fetchBlog();
+      addViews();
       fetchSuggestedBlogs();
     }
   }, [id]);
@@ -211,7 +229,7 @@ const Page = () => {
         transition={{ duration: 0.6, delay: 0.5 }}
         className="text-center mt-12"
       >
-        <Link href="/Blogs" className="inline-flex items-center group relative">
+        <Link href="/Blog" className="inline-flex items-center group relative">
           <span className="text-[#6A0DAD] font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
             Back to Blogs
           </span>
