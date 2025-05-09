@@ -10,7 +10,10 @@ const Events = () => {
   const [activeFilter, setActiveFilter] = useState("all");
 
   // Sample events data
-  const events = EventsData;
+  const events =
+    JSON.parse(localStorage.getItem("data")).value[2].events || EventsData;
+  // console.log(events.value[2].events, "events");
+  // console.log(events, "events");
 
   const filteredEvents =
     activeFilter === "all"
@@ -138,7 +141,7 @@ const Events = () => {
         >
           {filteredEvents.map((event) => (
             <motion.div
-              key={event.id}
+              key={event.id || event._id}
               variants={itemVariants}
               className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 flex flex-col h-full"
             >

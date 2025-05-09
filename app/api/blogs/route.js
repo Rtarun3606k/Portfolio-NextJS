@@ -16,9 +16,11 @@ export async function GET(request) {
   try {
     const { blogsCollection } = await getDatabases();
 
-    const blogs = await blogsCollection.find({}).toArray();
+    const blogs = await blogsCollection
+      .find({}, { projection: { content: 0 } })
+      .toArray();
 
-    return NextResponse.json(blogs, { status: 200 });
+    return NextResponse.json({ blogs: blogs }, { status: 200 });
   } catch (error) {
     console.error("Error fetching blogs:", error);
     return NextResponse.json(

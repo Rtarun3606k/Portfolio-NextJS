@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 
 // Sample project data - replace with your actual projects
-const projectData = [
+const projectData1 = [
   {
     id: 1,
     title: "E-Commerce Platform",
@@ -70,6 +70,9 @@ const projectData = [
   },
 ];
 
+// const projectData =
+//   JSON.parse(localStorage.getItem("data")).value[4].projects || projectData1;
+
 const Projects = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [width, setWidth] = useState(0);
@@ -78,6 +81,9 @@ const Projects = () => {
   const [autoRotate, setAutoRotate] = useState(true);
   const autoRotateRef = useRef(null);
   const carouselRef = useRef(null);
+  const [projectData, setProjectData] = useState(
+    JSON.parse(localStorage.getItem("data")).value[4].projects || projectData1
+  );
 
   // Handle window resize and set responsive state
   useEffect(() => {
@@ -343,7 +349,7 @@ const Projects = () => {
 
               return (
                 <motion.div
-                  key={project.id}
+                  key={project.id || project._id}
                   custom={project.position}
                   variants={isMobile ? mobileCardVariants : cardVariants}
                   initial={

@@ -21,7 +21,8 @@ const BlogsManagement = () => {
           throw new Error("Failed to fetch blogs");
         }
         const data = await response.json();
-        setBlogs(data);
+        console.log(data.blogs);
+        setBlogs(data.blogs);
       } catch (error) {
         console.error("Error:", error);
         setError("Failed to load blogs");

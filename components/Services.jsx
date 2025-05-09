@@ -1,12 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ServicesData } from "@/_utils/Variables";
 
 const Services = () => {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [services, setServices] = useState(ServicesData); // fallback
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const data = localStorage.getItem("data");
+      if (data) {
+        const parsed = JSON.parse(data);
+        const servicesFromStorage = parsed?.value?.[5]?.services;
+        if (servicesFromStorage) {
+          setServices(servicesFromStorage);
+        }
+      }
+    }
+  }, []);
 
   // Categories of services
   const categories = [
@@ -19,7 +33,7 @@ const Services = () => {
   ];
 
   // Service offerings with details
-  const services = ServicesData;
+
   const filteredServices =
     activeCategory === "all"
       ? services
@@ -107,7 +121,7 @@ const Services = () => {
               <div className="inline-flex bg-white/50 backdrop-blur-sm rounded-full shadow-sm p-1.5 min-w-max">
                 {categories.map((category) => (
                   <motion.button
-                    key={category.id}
+                    key={category.id || category._id}
                     variants={tabVariants}
                     animate={
                       activeCategory === category.id ? "active" : "inactive"
@@ -136,7 +150,7 @@ const Services = () => {
         >
           {filteredServices.map((service) => (
             <motion.div
-              key={service.id}
+              key={service.id || service._id}
               variants={itemVariants}
               className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 h-full"
             >

@@ -9,7 +9,7 @@ const BlogsAndPosts = () => {
   const [activeTab, setActiveTab] = useState("blogs");
 
   // Sample blog data
-  const blogs = [
+  const blogs1 = [
     {
       id: 1,
       title: "Building Scalable React Applications",
@@ -51,6 +51,9 @@ const BlogsAndPosts = () => {
       views: 3840,
     },
   ];
+
+  const blogs =
+    JSON.parse(localStorage.getItem("data")).value[1].blogs || blogs1;
 
   // Sample LinkedIn posts data
   const linkedinPosts = [
@@ -205,21 +208,20 @@ const BlogsAndPosts = () => {
           >
             {blogs.map((blog) => (
               <motion.div
-                key={blog.id}
+                key={blog.id || blog._id}
                 variants={itemVariants}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10"
               >
                 <Link
-                  href={blog.link}
+                  href={blog.link || "https://medium.com/@tarunnayaka"}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <div className="h-48 relative overflow-hidden">
-                    <Image
-                      src={blog.image}
+                    <img
+                      src={blog.featuredImage || blog.image}
                       alt={blog.title}
-                      fill
                       style={{ objectFit: "cover" }}
                       className="transition-transform duration-500 hover:scale-105"
                     />

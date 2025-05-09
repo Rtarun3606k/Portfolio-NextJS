@@ -147,7 +147,7 @@ export default function Dashboard() {
                 <span>Manage Statistics</span>
               </Link>
               <Link
-                href="/dashboard/blogs/add"
+                href="/dashboard/statistics/add"
                 className="bg-[#C71585]/10 p-2 rounded-full text-[#C71585] hover:bg-[#C71585]/20 transition-colors duration-200"
               >
                 <FaPlus />
