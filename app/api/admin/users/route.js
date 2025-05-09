@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDatabases } from "@/utils/Mongodb";
-import { withAuth } from "@/utils/auth";
+import { getDatabases } from "@/_utils/Mongodb";
+import { withAuth } from "@/_utils/auth";
 
 // Handler for the request
 async function handler(request) {

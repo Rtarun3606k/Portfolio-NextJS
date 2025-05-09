@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ServicesData } from "@/utils/Variables";
+import { ServicesData } from "@/_utils/Variables";
 
 const Services = () => {
   const [activeCategory, setActiveCategory] = useState("all");

@@ -13,7 +13,7 @@ import {
   FaServer,
   FaDatabase,
 } from "react-icons/fa";
-import { Technology } from "@/utils/Variables";
+import { Technology } from "@/_utils/Variables";
 
 const Hero = () => {
   const techStackRef = useRef(null);

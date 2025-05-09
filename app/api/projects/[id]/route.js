@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDatabases } from "@/utils/Mongodb";
-import { withAuth } from "@/utils/auth";
+import { getDatabases } from "@/_utils/Mongodb";
+import { withAuth } from "@/_utils/auth";
 import { ObjectId } from "mongodb";
 
 // Handler function for deleting a project

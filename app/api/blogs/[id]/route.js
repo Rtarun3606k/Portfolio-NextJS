@@ -1,4 +1,4 @@
-import { getDatabases } from "@/utils/Mongodb";
+import { getDatabases } from "@/_utils/Mongodb";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 

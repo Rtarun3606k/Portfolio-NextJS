@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { MongoClient, ObjectId } from "mongodb";
-import { getDatabases } from "@/utils/Mongodb";
+import { getDatabases } from "@/_utils/Mongodb";
 // import { auth } from "../../../auth";
 import { auth } from "@/app/auth";
 

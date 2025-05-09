@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { Stats } from "@/utils/Variables";
+import { Stats } from "@/_utils/Variables";
 
 // Client component since we're using hooks and animations
 export default function StatsPage() {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/utils/auth";
+import { withAuth } from "@/_utils/auth";
 import { uploadToAzure } from "../Components/Azure";
 
 /**

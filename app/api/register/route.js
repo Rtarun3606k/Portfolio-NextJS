@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDatabases } from "@/utils/Mongodb";
+import { getDatabases } from "@/_utils/Mongodb";
 import bcrypt from "bcrypt";
 
 export async function POST(request) {
