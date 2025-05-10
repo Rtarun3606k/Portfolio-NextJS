@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PageTransition from "@/components/PageTransition";
+import ClientPageTransition from "@/components/ClientPageTransition";
 
 import { auth } from "../auth";
 
@@ -10,7 +10,7 @@ const Layout = async ({ children }) => {
   return (
     <>
       <Navbar userSession={session} />
-      <PageTransition />
+      <ClientPageTransition />
       {children}
       <Footer />
     </>

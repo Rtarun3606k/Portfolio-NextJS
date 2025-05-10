@@ -1,13 +1,28 @@
-import LoginForm from "@/components/LoginForm";
-import RegisterForm from "@/components/RegisterForm";
-import React from "react";
+"use client";
 
-const page = () => {
+import React from "react";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import the RegisterForm component
+const RegisterForm = dynamic(() => import("@/components/RegisterForm"));
+
+const RegisterPage = () => {
   return (
     <div>
-      <RegisterForm />
+      <Suspense
+        fallback={
+          <div className="min-h-[50vh] flex items-center justify-center">
+            <div className="animate-pulse text-purple-600">
+              Loading registration form...
+            </div>
+          </div>
+        }
+      >
+        <RegisterForm />
+      </Suspense>
     </div>
   );
 };
 
-export default page;
+export default RegisterPage;

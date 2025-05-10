@@ -1,9 +1,11 @@
-import dynamic from "next/dynamic";
+"use client";
+
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import React from "react";
 
-// Dynamically import the StatsPage component with no SSR
-const StatsPage = dynamic(() => import("@/components/Statistics"));
+// Dynamically import the Statistics component
+const StatsWrapper = dynamic(() => import("@/components/Statistics"));
 
 const Page = () => {
   return (
@@ -17,7 +19,7 @@ const Page = () => {
           </div>
         }
       >
-        <StatsPage />
+        <StatsWrapper />
       </Suspense>
     </div>
   );

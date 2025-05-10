@@ -1,7 +1,9 @@
+"use client";
+
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 
-// Dynamically import LoginForm with client-side rendering only
+// Dynamically import LoginForm component
 const LoginForm = dynamic(() => import("@/components/LoginForm"));
 
 export default function LoginPage() {

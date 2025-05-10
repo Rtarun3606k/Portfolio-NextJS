@@ -1,13 +1,28 @@
-import Contact from "@/components/Constact";
-import ContactForm from "@/components/ContactForm";
-import React from "react";
+"use client";
 
-const page = () => {
+import React from "react";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import the Contact component
+const Contact = dynamic(() => import("@/components/Constact"));
+
+const ContactPage = () => {
   return (
-    <div className="">
-      <Contact />
+    <div>
+      <Suspense
+        fallback={
+          <div className="min-h-[50vh] flex items-center justify-center">
+            <div className="animate-pulse text-purple-600">
+              Loading contact form...
+            </div>
+          </div>
+        }
+      >
+        <Contact />
+      </Suspense>
     </div>
   );
 };
 
-export default page;
+export default ContactPage;
