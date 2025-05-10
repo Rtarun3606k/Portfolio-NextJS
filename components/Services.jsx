@@ -157,7 +157,9 @@ const Services = () => {
               <div className="p-6 h-full flex flex-col">
                 <div className="flex items-center mb-4">
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#6A0DAD]/10 to-[#FF4ECD]/20 flex items-center justify-center mr-4 text-[#6A0DAD]">
-                    {service.icon}
+                    {typeof service.icon === "string"
+                      ? service.icon.slice(1, -1)
+                      : ""}
                   </div>
                   <h3 className="text-xl font-semibold text-[#1F1F1F] font-poppins">
                     {service.title}

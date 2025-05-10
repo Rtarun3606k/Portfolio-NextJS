@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,12 +8,28 @@ import { EventsData } from "@/_utils/Variables";
 
 const Events = () => {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [events, setEvents] = useState(EventsData);
 
   // Sample events data
-  const events =
-    JSON.parse(localStorage.getItem("data")).value[2].events || EventsData;
+  // const events =
+  //   JSON.parse(localStorage.getItem("data")).value[2].events || EventsData;
   // console.log(events.value[2].events, "events");
   // console.log(events, "events");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("data");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        const blogsFromStorage = parsed?.value[2]?.events;
+        if (blogsFromStorage) {
+          setEvents(blogsFromStorage);
+        }
+      } catch (err) {
+        console.error("Failed to parse localStorage data:", err);
+      }
+    }
+  }, []);
 
   const filteredEvents =
     activeFilter === "all"

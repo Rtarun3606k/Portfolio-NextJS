@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
 const BlogsAndPosts = () => {
   const [activeTab, setActiveTab] = useState("blogs");
+  const [blogs, setBlogs] = useState([]);
+  const [isClient, setIsClient] = useState(false);
 
   // Sample blog data
   const blogs1 = [
@@ -52,8 +54,32 @@ const BlogsAndPosts = () => {
     },
   ];
 
-  const blogs =
-    JSON.parse(localStorage.getItem("data")).value[1].blogs || blogs1;
+  // Start with sample data to avoid hydration mismatch
+  useEffect(() => {
+    // Mark that we're on the client
+    setIsClient(true);
+
+    // Safely try to get data from localStorage in the client
+    try {
+      const storedData = localStorage.getItem("data");
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData?.value?.[1]?.blogs) {
+          setBlogs(parsedData.value[1].blogs);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error accessing localStorage:", error);
+    }
+
+    // Fallback to default blogs data if localStorage access fails
+    setBlogs(blogs1);
+  }, []);
+
+  // Always use the sample data for initial render to prevent hydration mismatch
+  // The useEffect above will update with localStorage data on the client only
+  const displayBlogs = isClient ? blogs : blogs1;
 
   // Sample LinkedIn posts data
   const linkedinPosts = [
@@ -206,7 +232,7 @@ const BlogsAndPosts = () => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {blogs.map((blog) => (
+            {displayBlogs.map((blog) => (
               <motion.div
                 key={blog.id || blog._id}
                 variants={itemVariants}

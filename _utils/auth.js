@@ -6,58 +6,36 @@ const JWT_SECRET =
   process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
 /**
- * Verifies a JWT token from the Authorization header or cookie
+ * Previously verified a JWT token, now always returns a default public user
  * @param {Request} request - The Next.js request object
- * @returns {Object} - The decoded token payload or null if invalid
+ * @returns {Object} - A default public user object
  */
 export function verifyAuth(request) {
-  try {
-    // Try to get token from Authorization header first
-    let token = request.headers.get("Authorization")?.split(" ")[1];
-
-    // If no token in header, try to get from cookies
-    if (!token) {
-      token = request.cookies.get("authToken")?.value;
-    }
-
-    if (!token) {
-      return null;
-    }
-
-    // Verify the token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    return decoded;
-  } catch (error) {
-    console.error("Token verification failed:", error.message);
-    return null;
-  }
+  // Always return a default public user object
+  return {
+    id: "public-user",
+    name: "Public User",
+    email: "public@example.com",
+    role: "user",
+  };
 }
 
 /**
- * Middleware function to protect API routes
+ * Middleware function that used to protect API routes but now allows all access
  * @param {Function} handler - The API route handler
- * @param {Object} options - Options for the auth check
+ * @param {Object} options - Options for the auth check (ignored now)
  * @returns {Function} - A wrapped handler function
  */
 export function withAuth(handler, options = {}) {
   return async function (request, ...args) {
-    const user = verifyAuth(request);
-
-    // Handle unauthorized requests
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check role if required
-    if (options.requiredRole && user.role !== options.requiredRole) {
-      return NextResponse.json(
-        { error: "Insufficient permissions" },
-        { status: 403 }
-      );
-    }
-
-    // Attach user info to request for use in the handler
-    request.user = user;
+    // No authentication checks - simply call the handler directly
+    // Add a default public user to maintain compatibility with any code that expects request.user
+    request.user = {
+      id: "public-user",
+      name: "Public User",
+      email: "public@example.com",
+      role: "user",
+    };
 
     // Call the original handler with the updated request
     return handler(request, ...args);
@@ -66,8 +44,9 @@ export function withAuth(handler, options = {}) {
 
 /**
  * Gets the current authenticated user from the request
+ * Now always returns a default public user
  * @param {Request} request - The Next.js request object
- * @returns {Object|null} - The user object or null if not authenticated
+ * @returns {Object} - A default public user object
  */
 export function getCurrentUser(request) {
   return verifyAuth(request);

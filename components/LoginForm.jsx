@@ -25,39 +25,17 @@ export default function LoginForm() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    console.log("Login attempt started for:", formData.email);
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // Simulate a brief loading delay for better user experience
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const data = await response.json();
-      console.log("Login response status:", response.status);
-      console.log("Login response data:", data);
+      console.log("Auto-login successful - public access granted");
 
-      if (response.ok) {
-        console.log(
-          "Login successful, redirecting based on role:",
-          data.user.role
-        );
-        // Redirect based on user role
-        if (data.user.role === "admin") {
-          router.push("/admin/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
-        router.refresh(); // Refresh the page to update auth state
-      } else {
-        console.error("Login failed with error:", data.error);
-        setError(data.error || "Login failed");
-      }
+      // Always redirect to dashboard - no real authentication
+      router.push("/dashboard");
     } catch (err) {
-      console.error("Login exception:", err.message);
+      console.error("Error:", err);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -132,6 +110,16 @@ export default function LoginForm() {
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Register here
+          </Link>
+        </p>
+
+        {/* Direct access link for user convenience */}
+        <p className="text-sm text-gray-600 mt-2">
+          <Link
+            href="/dashboard"
+            className="font-medium text-green-600 hover:text-green-500"
+          >
+            Access Dashboard Directly
           </Link>
         </p>
       </div>

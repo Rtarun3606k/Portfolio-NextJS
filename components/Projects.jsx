@@ -81,9 +81,22 @@ const Projects = () => {
   const [autoRotate, setAutoRotate] = useState(true);
   const autoRotateRef = useRef(null);
   const carouselRef = useRef(null);
-  const [projectData, setProjectData] = useState(
-    JSON.parse(localStorage.getItem("data")).value[4].projects || projectData1
-  );
+  const [projectData, setProjectData] = useState(projectData1);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("data");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        const blogsFromStorage = parsed?.value[4]?.projects;
+        if (blogsFromStorage) {
+          setProjectData(blogsFromStorage);
+        }
+      } catch (err) {
+        console.error("Failed to parse localStorage data:", err);
+      }
+    }
+  }, []);
 
   // Handle window resize and set responsive state
   useEffect(() => {
@@ -94,6 +107,9 @@ const Projects = () => {
 
     handleResize();
     window.addEventListener("resize", handleResize);
+    // setProjectData(
+    //   JSON.parse(localStorage.getItem("data")).value[4].projects || projectData1
+    // );
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
