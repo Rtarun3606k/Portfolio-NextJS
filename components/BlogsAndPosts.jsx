@@ -359,7 +359,7 @@ const BlogsAndPosts = () => {
           >
             {linkedinPosts.map((post) => (
               <motion.div
-                key={post.id}
+                key={post.id || post._id}
                 variants={itemVariants}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row border border-[#6A0DAD]/10"
