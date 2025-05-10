@@ -171,7 +171,6 @@ const Navbar = ({ userSession }) => {
             display: block;
             opacity: 1;
             max-height: 600px;
-            backdrop-filter: blur(8px);
           }
 
           .mobile-menu-closed {

@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { getData, storeData } from "@/_utils/LocalStorage";
 
 const BlogsAndPosts = () => {
   const [activeTab, setActiveTab] = useState("blogs");
-  const [blogs, setBlogs] = useState([]);
   const [isClient, setIsClient] = useState(false);
 
   // Sample blog data
@@ -54,6 +54,36 @@ const BlogsAndPosts = () => {
     },
   ];
 
+  const [blogs, setBlogs] = useState(blogs1);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        if (getData("blogs") !== null) {
+          const data = getData("blogs");
+          console.log("Fetched services from localStorage:", data);
+          setBlogs(data);
+          return;
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs` // Replace with your API endpoint
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.blogs);
+          storeData("blogs", data.blogs);
+          setBlogs(data.blogs);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
   // Start with sample data to avoid hydration mismatch
   useEffect(() => {
     // Mark that we're on the client
@@ -82,7 +112,7 @@ const BlogsAndPosts = () => {
   const displayBlogs = isClient ? blogs : blogs1;
 
   // Sample LinkedIn posts data
-  const linkedinPosts = [
+  const linkeddinPosts = [
     {
       id: 1,
       title: "Reflections on Building Tech Communities",
@@ -120,6 +150,36 @@ const BlogsAndPosts = () => {
       link: "https://linkedin.com/in/tarunnayaka/posts/embracing-ai-tools-dev-workflows",
     },
   ];
+
+  const [linkedinPosts, setLinkedinPosts] = useState(linkeddinPosts);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        if (getData("linkedinPosts") !== null) {
+          const data = getData("linkedinPosts");
+          console.log("Fetched services from localStorage:", data);
+          setLinkedinPosts(data);
+          return;
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/linkedin` // Replace with your API endpoint
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.posts);
+          storeData("linkedinPosts", data.posts);
+          setLinkedinPosts(data.posts);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -240,8 +300,7 @@ const BlogsAndPosts = () => {
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10"
               >
                 <Link
-                  href={blog.link || "https://medium.com/@tarunnayaka"}
-                  target="_blank"
+                  href={blog.link || "/Blog/" + blog._id}
                   rel="noopener noreferrer"
                 >
                   <div className="h-48 relative overflow-hidden">

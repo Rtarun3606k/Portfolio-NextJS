@@ -1,4 +1,4 @@
-import Loading from "./loading.jsx";
+import Loading from "@/app/(dashboard)/dashboard/loading";
 
 export default function AppRouterLoading() {
   // Note: The "use client" directive is not needed here

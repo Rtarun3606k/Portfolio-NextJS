@@ -4,22 +4,53 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ServicesData } from "@/_utils/Variables";
+import { getData, storeData } from "@/_utils/LocalStorage";
+import { get } from "mongoose";
+import parse from "html-react-parser"; // Import parse function
 
 const Services = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [services, setServices] = useState(ServicesData); // fallback
 
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const data = localStorage.getItem("data");
+  //     if (data) {
+  //       const parsed = JSON.parse(data);
+  //       const servicesFromStorage = parsed?.value?.[5]?.services;
+  //       if (servicesFromStorage) {
+  //         setServices(servicesFromStorage);
+  //       }
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const data = localStorage.getItem("data");
-      if (data) {
-        const parsed = JSON.parse(data);
-        const servicesFromStorage = parsed?.value?.[5]?.services;
-        if (servicesFromStorage) {
-          setServices(servicesFromStorage);
+    const fetchServices = async () => {
+      try {
+        if (getData("services") !== null) {
+          const data = getData("services");
+          console.log("Fetched services from localStorage:", data);
+          setServices(data);
+          return;
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/services` // Replace with your API endpoint
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.services);
+          storeData("services", data.services);
+          setServices(data.services);
         }
+      } catch (error) {
+        console.error("Error fetching services:", error);
       }
-    }
+    };
+
+    fetchServices();
   }, []);
 
   // Categories of services
@@ -157,9 +188,17 @@ const Services = () => {
               <div className="p-6 h-full flex flex-col">
                 <div className="flex items-center mb-4">
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#6A0DAD]/10 to-[#FF4ECD]/20 flex items-center justify-center mr-4 text-[#6A0DAD]">
-                    {typeof service.icon === "string"
+                    <div className="w-14 h-14 flex items-center justify-center">
+                      {typeof service.iconPath === "string"
+                        ? parse(String(service.iconPath))
+                        : service.iconPath}
+                    </div>
+                    {/* {console.log(typeof service.icon)}
+                    {console.log(typeof service.iconPath)}
+                    {console.log(parse(String(service.icon)))} */}
+                    {/* {typeof service.icon === "string"
                       ? service.icon.slice(1, -1)
-                      : ""}
+                      : ""} */}
                   </div>
                   <h3 className="text-xl font-semibold text-[#1F1F1F] font-poppins">
                     {service.title}

@@ -56,7 +56,7 @@ async function getHandler() {
     const statistics = await statsCollection.find({}).toArray();
 
     // Return statistics
-    return NextResponse.json({ statistics }, { status: 200 });
+    return NextResponse.json({ statistics: statistics }, { status: 200 });
   } catch (error) {
     console.error("Error fetching statistics:", error);
     return NextResponse.json(

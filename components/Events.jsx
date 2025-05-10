@@ -5,10 +5,39 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { EventsData } from "@/_utils/Variables";
+import { getData, storeData } from "@/_utils/LocalStorage";
 
 const Events = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [events, setEvents] = useState(EventsData);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        if (getData("events") !== null) {
+          const data = getData("events");
+          console.log("Fetched services from localStorage:", data);
+          setEvents(data);
+          return;
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/events` // Replace with your API endpoint
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.events);
+          storeData("events", data.events);
+          setEvents(data.events);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   // Sample events data
   // const events =

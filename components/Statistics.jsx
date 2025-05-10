@@ -5,17 +5,39 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Stats } from "@/_utils/Variables";
+import { getData, storeData } from "@/_utils/LocalStorage";
 
 // Client component since we're using hooks and animations
 export default function StatsPage() {
-  const [stats, setStats] = useState({
-    websiteVisitors: 12450,
-    linkedinFollowers: 852,
-    profileViews: 3280,
-    projectsCompleted: 15,
-    clientSatisfaction: "98%",
-    countriesReached: 12,
-  });
+  const [stats, setStats] = useState();
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        if (getData("statistics") !== null) {
+          const data = getData("statistics");
+          console.log("Fetched services from localStorage:", data);
+          setStats(data);
+          return;
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/statistics` // Replace with your API endpoint
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.statistics);
+          storeData("statistics", data.statistics);
+          setStats(data.statistics);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -140,9 +162,9 @@ export default function StatsPage() {
 
   // Initialize animated stats with zeros
   useEffect(() => {
-    if (Stats && Stats.length > 0) {
+    if (stats && stats.length > 0) {
       const initialAnimatedValues = {};
-      Stats.forEach((stat) => {
+      stats.forEach((stat) => {
         // Only init numeric values - improved parsing to avoid negative numbers
         const numericValue = parseFloat(
           stat.value
@@ -179,25 +201,27 @@ export default function StatsPage() {
       const easedProgress = customEaseInOutBack(progress); // Use custom easing function
 
       const newAnimatedValues = {};
-      Stats.forEach((stat) => {
-        // Improved number parsing to handle negative numbers correctly
-        const rawValue = stat.value.toString().replace(/,/g, "");
-        const targetValue = parseFloat(rawValue.replace(/[^-\d.]/g, ""));
 
-        if (!isNaN(targetValue)) {
-          // For negative numbers, we need to ensure we animate in the right direction
-          const isNegative = targetValue < 0;
-          // Use absolute values for animation calculation
-          const absTarget = Math.abs(targetValue);
-          const currentValue = Math.round(easedProgress * absTarget);
-          // Apply sign back if original was negative
-          newAnimatedValues[stat.title] = isNegative
-            ? -currentValue
-            : currentValue;
-        } else {
-          newAnimatedValues[stat.title] = stat.value;
-        }
-      });
+      stats &&
+        stats.forEach((stat) => {
+          // Improved number parsing to handle negative numbers correctly
+          const rawValue = stat.value.toString().replace(/,/g, "");
+          const targetValue = parseFloat(rawValue.replace(/[^-\d.]/g, ""));
+
+          if (!isNaN(targetValue)) {
+            // For negative numbers, we need to ensure we animate in the right direction
+            const isNegative = targetValue < 0;
+            // Use absolute values for animation calculation
+            const absTarget = Math.abs(targetValue);
+            const currentValue = Math.round(easedProgress * absTarget);
+            // Apply sign back if original was negative
+            newAnimatedValues[stat.title] = isNegative
+              ? -currentValue
+              : currentValue;
+          } else {
+            newAnimatedValues[stat.title] = stat.value;
+          }
+        });
 
       setAnimatedStats(newAnimatedValues);
 
@@ -330,7 +354,7 @@ export default function StatsPage() {
           )}
 
           {/* Added a check to confirm Stats exists and has items */}
-          {Stats && Stats.length > 0 ? (
+          {stats && stats.length > 0 ? (
             <motion.div
               ref={scrollContainerRef}
               variants={containerVariants}
@@ -357,7 +381,7 @@ export default function StatsPage() {
               onTouchMove={handleContainerInteraction}
               onClick={handleContainerInteraction}
             >
-              {Stats.map((stat, index) => (
+              {stats.map((stat, index) => (
                 <motion.div
                   key={stat.title}
                   variants={itemVariants}
@@ -424,7 +448,7 @@ export default function StatsPage() {
           className="text-center"
         >
           <Link
-            href="/about"
+            href="/About"
             className="inline-flex items-center group relative"
           >
             <span className="text-[#5E60CE] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">

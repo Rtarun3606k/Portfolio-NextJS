@@ -10,6 +10,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import { getData, storeData } from "@/_utils/LocalStorage";
 
 // Sample project data - replace with your actual projects
 const projectData1 = [
@@ -84,18 +85,31 @@ const Projects = () => {
   const [projectData, setProjectData] = useState(projectData1);
 
   useEffect(() => {
-    const stored = localStorage.getItem("data");
-    if (stored) {
+    const fetchServices = async () => {
       try {
-        const parsed = JSON.parse(stored);
-        const blogsFromStorage = parsed?.value[4]?.projects;
-        if (blogsFromStorage) {
-          setProjectData(blogsFromStorage);
+        if (getData("projects") !== null) {
+          const data = getData("projects");
+          console.log("Fetched services from localStorage:", data);
+          setProjectData(data);
+          return;
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects` // Replace with your API endpoint
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.projects);
+          storeData("projects", data.projects);
+          setProjectData(data.projects);
         }
-      } catch (err) {
-        console.error("Failed to parse localStorage data:", err);
+      } catch (error) {
+        console.error("Error fetching services:", error);
       }
-    }
+    };
+
+    fetchServices();
   }, []);
 
   // Handle window resize and set responsive state
