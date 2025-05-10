@@ -34,7 +34,9 @@ export default function MarkdownEditor({ id }) {
 
       setLoading(true);
       try {
-        const res = await fetch(`/api/blogs/${id}`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/${id}`
+        );
         if (!res.ok) {
           throw new Error(`Failed to fetch blog: ${res.status}`);
         }
@@ -95,10 +97,13 @@ export default function MarkdownEditor({ id }) {
       );
 
       // Make API call to upload to Azure Blob Storage
-      const response = await fetch("/api/blogs/image", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/image`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -175,10 +180,13 @@ export default function MarkdownEditor({ id }) {
 
           formData.append("metadata", JSON.stringify(metadata));
 
-          const res = await fetch("/api/blogs/image", {
-            method: "POST",
-            body: formData,
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/image`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
 
           if (!res.ok) {
             if (res.status >= 500 && retries < maxRetries - 1) {
@@ -249,7 +257,9 @@ export default function MarkdownEditor({ id }) {
       };
 
       // Determine if we're creating or updating
-      const endpoint = isEditing ? `/api/blogs/${id}` : "/api/blogs";
+      const endpoint = isEditing
+        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/${id}`
+        : `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`;
       const method = isEditing ? "PATCH" : "POST";
 
       console.log(`${isEditing ? "Updating" : "Creating"} blog post:`, body);

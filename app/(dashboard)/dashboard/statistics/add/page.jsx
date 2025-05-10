@@ -11,7 +11,7 @@ export default function AddStatistic() {
     value: "",
     description: "",
     icon: "📊",
-    color: "from-[#5E60CE]/20 to-[#7209B7]/20"
+    color: "from-[#5E60CE]/20 to-[#7209B7]/20",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", content: "" });
@@ -30,13 +30,16 @@ export default function AddStatistic() {
     setMessage({ type: "", content: "" });
 
     try {
-      const response = await fetch("/api/statistics", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/statistics`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
@@ -51,7 +54,7 @@ export default function AddStatistic() {
           value: "",
           description: "",
           icon: "📊",
-          color: "from-[#5E60CE]/20 to-[#7209B7]/20"
+          color: "from-[#5E60CE]/20 to-[#7209B7]/20",
         });
       } else {
         setMessage({
@@ -73,8 +76,14 @@ export default function AddStatistic() {
   const colorOptions = [
     { label: "Purple to Pink", value: "from-[#5E60CE]/20 to-[#7209B7]/20" },
     { label: "Pink to Purple", value: "from-[#7209B7]/20 to-[#5E60CE]/20" },
-    { label: "Purple to Purple (Light)", value: "from-[#5E60CE]/20 to-[#5E60CE]/10" },
-    { label: "Pink to Pink (Light)", value: "from-[#7209B7]/20 to-[#7209B7]/10" },
+    {
+      label: "Purple to Purple (Light)",
+      value: "from-[#5E60CE]/20 to-[#5E60CE]/10",
+    },
+    {
+      label: "Pink to Pink (Light)",
+      value: "from-[#7209B7]/20 to-[#7209B7]/10",
+    },
     { label: "Blue to Purple", value: "from-[#4CC9F0]/20 to-[#5E60CE]/20" },
     { label: "Green to Blue", value: "from-[#4CAF50]/20 to-[#4CC9F0]/20" },
     { label: "Yellow to Orange", value: "from-[#FFCA28]/20 to-[#FF9800]/20" },
@@ -82,14 +91,36 @@ export default function AddStatistic() {
   ];
 
   const iconOptions = [
-    "📊", "📈", "📉", "🚀", "⭐", "👥", "👁️", "🌍", "🌎", "🏆", "💼", "📱", "💻", "🔧", "⚙️", "📢", "📝", "✅", "🔔"
+    "📊",
+    "📈",
+    "📉",
+    "🚀",
+    "⭐",
+    "👥",
+    "👁️",
+    "🌍",
+    "🌎",
+    "🏆",
+    "💼",
+    "📱",
+    "💻",
+    "🔧",
+    "⚙️",
+    "📢",
+    "📝",
+    "✅",
+    "🔔",
   ];
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gradient-to-br from-white to-purple-50 rounded-xl shadow-lg">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-[#5E60CE] mb-2">Add New Statistic</h1>
-        <p className="text-gray-600">Add a new statistic to showcase on your site</p>
+        <h1 className="text-4xl font-bold text-[#5E60CE] mb-2">
+          Add New Statistic
+        </h1>
+        <p className="text-gray-600">
+          Add a new statistic to showcase on your site
+        </p>
       </div>
 
       <div className="flex justify-end mb-6">
@@ -127,7 +158,10 @@ export default function AddStatistic() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-sm">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 bg-white p-6 rounded-lg shadow-sm"
+      >
         <div>
           <label
             htmlFor="title"
@@ -203,7 +237,14 @@ export default function AddStatistic() {
               >
                 {iconOptions.map((icon) => (
                   <option key={icon} value={icon}>
-                    {icon} {icon === "🚀" ? "- Rocket" : icon === "⭐" ? "- Star" : icon === "🌎" ? "- Globe" : ""}
+                    {icon}{" "}
+                    {icon === "🚀"
+                      ? "- Rocket"
+                      : icon === "⭐"
+                      ? "- Star"
+                      : icon === "🌎"
+                      ? "- Globe"
+                      : ""}
                   </option>
                 ))}
               </select>
@@ -268,7 +309,7 @@ export default function AddStatistic() {
             <h3 className="text-lg font-medium text-[#5E60CE]">Preview</h3>
           </div>
           <div className="flex justify-center">
-            <div 
+            <div
               className={`bg-gradient-to-br ${formData.color} p-6 rounded-xl w-64`}
             >
               <div className="text-3xl mb-2">{formData.icon}</div>

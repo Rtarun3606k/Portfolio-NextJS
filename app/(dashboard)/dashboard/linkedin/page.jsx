@@ -14,7 +14,9 @@ export default function LinkedInPosts() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch("/api/linkedin");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/linkedin`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch LinkedIn posts");
         }

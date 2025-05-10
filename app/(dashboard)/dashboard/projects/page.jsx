@@ -13,7 +13,9 @@ export default function ProjectsList() {
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const response = await fetch("/api/projects");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -35,9 +37,12 @@ export default function ProjectsList() {
   const handleDeleteProject = async (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
-        const response = await fetch(`/api/projects/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (response.ok) {
           // Remove the deleted project from the state

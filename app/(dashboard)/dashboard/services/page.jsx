@@ -11,7 +11,9 @@ export default function ServicesList() {
   useEffect(() => {
     async function fetchServices() {
       try {
-        const response = await fetch("/api/services");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/services`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch services");
         }
@@ -31,9 +33,12 @@ export default function ServicesList() {
   const handleDeleteService = async (id) => {
     if (window.confirm("Are you sure you want to delete this service?")) {
       try {
-        const response = await fetch(`/api/services/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/services/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (response.ok) {
           // Remove the deleted service from the state

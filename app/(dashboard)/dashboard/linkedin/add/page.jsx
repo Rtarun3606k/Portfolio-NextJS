@@ -91,10 +91,13 @@ export default function AddLinkedInPost() {
       }
 
       // Send POST request to create LinkedIn post
-      const response = await fetch("/api/linkedin", {
-        method: "POST",
-        body: formDataToSend,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/linkedin`,
+        {
+          method: "POST",
+          body: formDataToSend,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

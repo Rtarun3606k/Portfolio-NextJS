@@ -7,11 +7,13 @@ export default function StatisticsList() {
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+
   useEffect(() => {
     async function fetchStats() {
       try {
-        const response = await fetch("/api/statistics");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/statistics`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch statistics");
         }
@@ -24,20 +26,20 @@ export default function StatisticsList() {
         setLoading(false);
       }
     }
-    
+
     fetchStats();
   }, []);
-  
+
   const handleDeleteStat = async (id) => {
     if (window.confirm("Are you sure you want to delete this statistic?")) {
       try {
         const response = await fetch(`/api/statistics/${id}`, {
           method: "DELETE",
         });
-        
+
         if (response.ok) {
           // Remove the deleted statistic from the state
-          setStats(stats.filter(stat => stat._id !== id));
+          setStats(stats.filter((stat) => stat._id !== id));
         } else {
           const data = await response.json();
           throw new Error(data.error || "Failed to delete statistic");
@@ -48,7 +50,7 @@ export default function StatisticsList() {
       }
     }
   };
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -78,7 +80,7 @@ export default function StatisticsList() {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="max-w-4xl mx-auto p-6">
@@ -94,7 +96,7 @@ export default function StatisticsList() {
       </div>
     );
   }
-  
+
   return (
     <div className="max-w-5xl mx-auto p-6 bg-gradient-to-br from-white to-purple-50 rounded-xl shadow-lg">
       <div className="mb-8 text-center">
@@ -147,7 +149,8 @@ export default function StatisticsList() {
             No Statistics Found
           </h3>
           <p className="text-gray-500 mb-6">
-            You haven't added any statistics yet. Click the button above to add your first statistic.
+            You haven't added any statistics yet. Click the button above to add
+            your first statistic.
           </p>
           <Link
             href="/dashboard/statistics/add"
@@ -175,7 +178,9 @@ export default function StatisticsList() {
           {stats.map((stat) => (
             <div
               key={stat._id}
-              className={`bg-gradient-to-br ${stat.color || "from-purple-100 to-purple-50"} p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow relative group`}
+              className={`bg-gradient-to-br ${
+                stat.color || "from-purple-100 to-purple-50"
+              } p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow relative group`}
             >
               <button
                 onClick={() => handleDeleteStat(stat._id)}

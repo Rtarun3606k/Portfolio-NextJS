@@ -16,7 +16,9 @@ const BlogsManagement = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch("/api/blogs");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch blogs");
         }
@@ -37,9 +39,12 @@ const BlogsManagement = () => {
   const handleDelete = async (blogId) => {
     if (confirm("Are you sure you want to delete this blog post?")) {
       try {
-        const response = await fetch(`/api/blogs/${blogId}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/${blogId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to delete blog");

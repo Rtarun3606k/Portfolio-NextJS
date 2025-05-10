@@ -94,11 +94,14 @@ export default function AddProjectForm() {
       }
       console.log("Form data to send:", formDataToSend);
 
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        body: formDataToSend,
-        // Don't set Content-Type header when using FormData, it will automatically set to multipart/form-data
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`,
+        {
+          method: "POST",
+          body: formDataToSend,
+          // Don't set Content-Type header when using FormData, it will automatically set to multipart/form-data
+        }
+      );
 
       const data = await response.json();
 
