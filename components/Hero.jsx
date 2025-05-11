@@ -160,7 +160,7 @@ const Hero = () => {
             style={{ animationDelay: "2.0s" }}
           >
             <Image
-              src="/coding-illustration.svg"
+              src="/tarun.png"
               alt="Tarun Nayaka - Web Developer and Cloud Architect"
               className="w-full drop-shadow-lg"
               width={500}
@@ -367,6 +367,18 @@ const Hero = () => {
           style={{ animationDelay: "2.3s" }}
         >
           {[
+            "Python",
+            "JavaScript",
+            "Django",
+            "Flask",
+            "GO Lang",
+            "Express.js",
+            "MongoDB",
+            "MySQL",
+            "PostgreSQL",
+            "GraphQL",
+            "REST APIs",
+
             "Next.js",
             "React",
             "Azure",
@@ -422,17 +434,17 @@ const Hero = () => {
           {[
             {
               icon: <FaLinkedin aria-hidden="true" />,
-              url: "https://linkedin.com/in/yourprofile",
+              url: "https://linkedin.com/in/tarun-nayaka-r-28612a27a",
               label: "LinkedIn profile",
             },
             {
               icon: <FaGithub aria-hidden="true" />,
-              url: "https://github.com/yourusername",
+              url: "https://github.com/Rtarun3606k",
               label: "GitHub profile",
             },
             {
               icon: <FaGoogle aria-hidden="true" />,
-              url: "mailto:your.email@example.com",
+              url: "mailto:r.tarunnayaka25042005@gmail.com",
               label: "Email contact",
             },
             {
@@ -442,7 +454,7 @@ const Hero = () => {
             },
             {
               icon: <FaWhatsapp aria-hidden="true" />,
-              url: "https://wa.me/yournumber",
+              url: "https://wa.me/7483997976",
               label: "WhatsApp contact",
             },
           ].map((social, index) => (
