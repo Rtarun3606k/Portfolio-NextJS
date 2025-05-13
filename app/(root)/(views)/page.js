@@ -68,7 +68,7 @@ export default function Home() {
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
-        <BlogsAndPosts />
+        <BlogsAndPosts limited={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>

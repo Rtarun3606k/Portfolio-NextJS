@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getData, storeData } from "@/_utils/LocalStorage";
 
-const BlogsAndPosts = () => {
+const BlogsAndPosts = ({ limited = false }) => {
   const [activeTab, setActiveTab] = useState("blogs");
   const [isClient, setIsClient] = useState(false);
 
@@ -270,7 +270,7 @@ const BlogsAndPosts = () => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {blogs.map((blog) => (
+            {(limited ? blogs.slice(0, 8) : blogs).map((blog) => (
               <motion.div
                 key={blog.id || blog._id}
                 variants={itemVariants}
@@ -335,74 +335,76 @@ const BlogsAndPosts = () => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
-            {linkedinPosts.map((post) => (
-              <motion.div
-                key={post.id || post._id}
-                variants={itemVariants}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row border border-[#6A0DAD]/10"
-              >
-                <Link
-                  href={post.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full md:w-2/5 h-48 md:h-auto relative"
+            {(limited ? linkedinPosts.slice(0, 6) : linkedinPosts).map(
+              (post) => (
+                <motion.div
+                  key={post.id || post._id}
+                  variants={itemVariants}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row border border-[#6A0DAD]/10"
                 >
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    className="transition-transform duration-500 hover:scale-105"
-                  />
-                </Link>
-                <div className="p-5 w-full md:w-3/5 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-poppins font-semibold text-lg text-[#1F1F1F] mb-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-[#6B7280] text-sm line-clamp-2 mb-3">
-                      {post.description}
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <div className="flex items-center">
-                      <svg
-                        className="h-5 w-5 text-[#0077b5]"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                      </svg>
-                      <span className="ml-1 text-xs text-[#6B7280]">
-                        LinkedIn
-                      </span>
+                  <Link
+                    href={post.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full md:w-2/5 h-48 md:h-auto relative"
+                  >
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-500 hover:scale-105"
+                    />
+                  </Link>
+                  <div className="p-5 w-full md:w-3/5 flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-poppins font-semibold text-lg text-[#1F1F1F] mb-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-[#6B7280] text-sm line-clamp-2 mb-3">
+                        {post.description}
+                      </p>
                     </div>
-                    <Link
-                      href={post.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#FF4ECD] hover:underline text-sm font-semibold flex items-center group"
-                    >
-                      Read more
-                      <svg
-                        className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="flex items-center">
+                        <svg
+                          className="h-5 w-5 text-[#0077b5]"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                        </svg>
+                        <span className="ml-1 text-xs text-[#6B7280]">
+                          LinkedIn
+                        </span>
+                      </div>
+                      <Link
+                        href={post.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#FF4ECD] hover:underline text-sm font-semibold flex items-center group"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
-                      </svg>
-                    </Link>
+                        Read more
+                        <svg
+                          className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            )}
           </motion.div>
         )}
 
