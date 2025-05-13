@@ -271,7 +271,9 @@ const Events = () => {
                 </div>
 
                 <div
-                  className={`mt-2 ${event.registerLink ? "" : "opacity-60"}`}
+                  className={`mt-2 ${
+                    event.registerLink ? "" : "opacity-60"
+                  } gap-1`}
                 >
                   {event.registerLink ? (
                     <Link
@@ -300,6 +302,28 @@ const Events = () => {
                       Event Completed
                     </div>
                   )}
+
+                  <Link
+                    href={`/Events/${event._id || null}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#dfd8e4e0] to-[#b9a9d3db] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
+                  >
+                    Learn More
+                    <svg
+                      className="w-4 h-4 ml-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      ></path>
+                    </svg>
+                  </Link>
                 </div>
               </div>
             </motion.div>

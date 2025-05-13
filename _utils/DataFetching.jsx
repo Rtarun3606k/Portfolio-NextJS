@@ -19,3 +19,17 @@ export const ParallelFetch = async (tasks) => {
 
   return results;
 };
+
+export const EventIDFetch = async (id) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${id}`
+  );
+
+  if (!response.ok) {
+    console.log("Error fetching event data:", response);
+    throw new Error("Failed to fetch event data");
+  }
+
+  const data = await response.json();
+  return data;
+};

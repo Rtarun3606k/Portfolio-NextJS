@@ -9,6 +9,7 @@ async function getHandler(request, { params }) {
   try {
     const { eventsCollection } = await getDatabases();
     const id = params.id;
+    console.log("Fetching event with ID:", id);
 
     // Check if ID is valid ObjectId
     if (!ObjectId.isValid(id)) {
@@ -16,6 +17,7 @@ async function getHandler(request, { params }) {
     }
 
     const event = await eventsCollection.findOne({ _id: new ObjectId(id) });
+    console.log("Event fetched:", event);
 
     if (!event) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 });

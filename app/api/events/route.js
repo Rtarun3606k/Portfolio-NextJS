@@ -38,7 +38,8 @@ async function postHandler(request) {
       !eventData.image ||
       !eventData.skills ||
       !Array.isArray(eventData.skills) ||
-      !eventData.category
+      !eventData.category ||
+      !eventData.description
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaPlus, FaTimes } from "react-icons/fa";
+import EventDescription from "@/components/EventDescription";
 
 export default function AddEventForm() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function AddEventForm() {
     registerLink: "",
     category: "upcoming",
     skills: [],
+    description: "", // Added description field for Markdown content
   });
 
   const [skillInput, setSkillInput] = useState("");
@@ -226,6 +228,7 @@ export default function AddEventForm() {
         registerLink: "",
         category: "upcoming",
         skills: [],
+        description: "",
       });
       setImageFile(null);
       setImagePreview(null);
@@ -459,6 +462,29 @@ export default function AddEventForm() {
               </div>
             </div>
 
+            <div className="mb-6">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Event Description
+              </label>
+              <EventDescription
+                value={formData.description}
+                onChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: value,
+                  }))
+                }
+                placeholder="Describe your event in detail. You can use Markdown formatting for rich text..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Use Markdown to format your description. Add headings with #,
+                lists with *, and more.
+              </p>
+            </div>
+
             <div>
               <label
                 htmlFor="eventImage"
@@ -605,6 +631,17 @@ export default function AddEventForm() {
                     </span>
                   )}
                 </div>
+
+                {formData.description && (
+                  <div className="mb-4">
+                    <p className="text-sm text-[#6B7280] line-clamp-3">
+                      {formData.description.replace(/[*#\[\]()!]/g, "")}
+                    </p>
+                    <span className="text-xs text-[#6A0DAD]">
+                      {formData.description.length > 120 ? "Read more..." : ""}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div
