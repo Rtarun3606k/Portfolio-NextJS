@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { getData, storeData } from "@/_utils/LocalStorage";
+// Assuming this is where your localStorage functions are
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -11,10 +13,46 @@ const Contact = () => {
     email: "",
     type: "professional", // Default value
     description: "",
+    serviceId: "", // New field for selected service
+    appointmentDate: "", // New field for appointment date
+    appointmentTime: "", // New field for appointment time
   });
 
   const [errors, setErrors] = useState({});
   const [formStatus, setFormStatus] = useState(null); // null, 'submitting', 'success', 'error'
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch services from localStorage or API
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        if (getData("services") !== null) {
+          const data = getData("services");
+          console.log("Fetched services from localStorage:", data);
+          setServices(data);
+        } else {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/services`
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Fetched services:", data.services);
+          storeData("services", data.services);
+          setServices(data.services);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -41,6 +79,17 @@ const Contact = () => {
       newErrors.description = "Message is required";
     } else if (formData.description.trim().length < 10) {
       newErrors.description = "Message should be at least 10 characters";
+    }
+
+    // If user selected a service, validate appointment details
+    if (formData.serviceId) {
+      if (!formData.appointmentDate) {
+        newErrors.appointmentDate = "Please select a preferred date";
+      }
+
+      if (!formData.appointmentTime) {
+        newErrors.appointmentTime = "Please select a preferred time";
+      }
     }
 
     setErrors(newErrors);
@@ -82,6 +131,9 @@ const Contact = () => {
           email: "",
           type: "professional",
           description: "",
+          serviceId: "",
+          appointmentDate: "",
+          appointmentTime: "",
         });
 
         // Reset success status after 3 seconds
@@ -92,6 +144,58 @@ const Contact = () => {
       }
     }
   };
+
+  // Get available dates (next 14 days excluding weekends)
+  const getAvailableDates = () => {
+    const dates = [];
+    const today = new Date();
+
+    for (let i = 0; i < 30; i++) {
+      const date = new Date();
+      date.setDate(today.getDate() + i);
+
+      // Skip weekends (0 is Sunday, 6 is Saturday)
+      if (date.getDay() !== 0 && date.getDay() !== 6) {
+        dates.push(date);
+      }
+    }
+
+    return dates;
+  };
+
+  // Format date for display
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Available time slots
+  const timeSlots = [
+    "09:00 AM",
+    "09:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "01:00 PM",
+    "01:30 PM",
+    "02:00 PM",
+    "02:30 PM",
+    "03:00 PM",
+    "03:30 PM",
+    "04:00 PM",
+    "04:30 PM",
+  ];
+
+  // Get the selected service
+  const selectedService = services.find(
+    (service) => service._id === formData.serviceId
+  );
 
   return (
     <section className="py-16 relative overflow-hidden bg-gradient-to-br from-[#E8EAF6] via-[#E0E7FF] to-[#EDE9FE]">
@@ -166,8 +270,9 @@ const Contact = () => {
                   Thank You!
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Your message has been sent successfully. I'll get back to you
-                  soon!
+                  {formData.serviceId
+                    ? "Your appointment request has been received. I'll confirm the details with you shortly!"
+                    : "Your message has been sent successfully. I'll get back to you soon!"}
                 </p>
                 <button
                   onClick={() => setFormStatus(null)}
@@ -299,6 +404,170 @@ const Contact = () => {
                   </div>
                 </div>
 
+                {/* Service Selection */}
+                <div className="mb-6">
+                  <label
+                    htmlFor="serviceId"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Select a Service (Optional)
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="serviceId"
+                      name="serviceId"
+                      value={formData.serviceId}
+                      onChange={handleChange}
+                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all appearance-none"
+                    >
+                      <option value="">-- Select a service --</option>
+                      {loading ? (
+                        <option disabled>Loading services...</option>
+                      ) : (
+                        services.map((service) => (
+                          <option key={service._id} value={service._id}>
+                            {service.title} ({service.price})
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Show selected service details */}
+                  {selectedService && (
+                    <div className="mt-3 p-3 bg-[#6A0DAD]/5 rounded-lg">
+                      <div className="flex items-start">
+                        <div className="text-[#6A0DAD] mt-1 mr-3">
+                          {selectedService.iconPath && (
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: selectedService.iconPath,
+                              }}
+                            />
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">
+                            {selectedService.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {selectedService.description}
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                            <span>Price: {selectedService.price}</span>
+                            <span>Timeframe: {selectedService.timeframe}</span>
+                            <span className="capitalize">
+                              Category: {selectedService.category}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Appointment booking fields (only shown when service is selected) */}
+                {formData.serviceId && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    transition={{ duration: 0.3 }}
+                    className="mb-6 p-4 bg-[#6A0DAD]/5 rounded-lg"
+                  >
+                    <h3 className="font-medium text-gray-900 mb-3">
+                      Book an Appointment
+                    </h3>
+
+                    {/* Date Selection */}
+                    <div className="mb-4">
+                      <label
+                        htmlFor="appointmentDate"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Preferred Date <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="appointmentDate"
+                        name="appointmentDate"
+                        value={formData.appointmentDate}
+                        onChange={handleChange}
+                        className={`w-full px-4 py-2 rounded-lg border ${
+                          errors.appointmentDate
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        } focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all`}
+                      >
+                        <option value="">Select a date</option>
+                        {getAvailableDates().map((date, index) => (
+                          <option
+                            key={index}
+                            value={date.toISOString().split("T")[0]}
+                          >
+                            {formatDate(date)}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.appointmentDate && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.appointmentDate}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Time Selection */}
+                    <div>
+                      <label
+                        htmlFor="appointmentTime"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Preferred Time <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="appointmentTime"
+                        name="appointmentTime"
+                        value={formData.appointmentTime}
+                        onChange={handleChange}
+                        className={`w-full px-4 py-2 rounded-lg border ${
+                          errors.appointmentTime
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        } focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all`}
+                      >
+                        <option value="">Select a time</option>
+                        {timeSlots.map((time, index) => (
+                          <option key={index} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.appointmentTime && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {errors.appointmentTime}
+                        </p>
+                      )}
+                    </div>
+
+                    <p className="mt-3 text-xs text-gray-500">
+                      Note: All appointments are in Eastern Standard Time (EST).
+                      After submission, I'll confirm availability or suggest
+                      alternative times if needed.
+                    </p>
+                  </motion.div>
+                )}
+
                 {/* Description */}
                 <div className="mb-6">
                   <label
@@ -316,7 +585,11 @@ const Contact = () => {
                     className={`w-full px-4 py-3 rounded-lg border ${
                       errors.description ? "border-red-500" : "border-gray-300"
                     } focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all resize-none`}
-                    placeholder="Tell me about your project, question or opportunity..."
+                    placeholder={
+                      formData.serviceId
+                        ? "Tell me about your project requirements, any specific needs, or questions about the selected service..."
+                        : "Tell me about your project, question or opportunity..."
+                    }
                   ></textarea>
                   {errors.description && (
                     <p className="mt-1 text-sm text-red-500">
@@ -363,7 +636,9 @@ const Contact = () => {
                       </>
                     ) : (
                       <>
-                        Submit Message
+                        {formData.serviceId
+                          ? "Request Appointment"
+                          : "Submit Message"}
                         <svg
                           className="w-5 h-5 ml-2"
                           fill="none"
