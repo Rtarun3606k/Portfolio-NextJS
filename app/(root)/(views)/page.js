@@ -60,19 +60,19 @@ export default function Home() {
 
       {/* Stats section with scroll animation */}
       <AnimatedSection>
-        <StatsPage />
+        <StatsPage showMore={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
-        <Projects />
+        <Projects showMore={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
-        <BlogsAndPosts limited={true} />
+        <BlogsAndPosts limited={true} showMore={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
-        <Events />
+        <Events showMore={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>

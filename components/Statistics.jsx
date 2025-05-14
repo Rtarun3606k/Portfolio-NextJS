@@ -8,7 +8,7 @@ import { Stats } from "@/_utils/Variables";
 import { getData, storeData } from "@/_utils/LocalStorage";
 
 // Client component since we're using hooks and animations
-export default function StatsPage() {
+export default function StatsPage({ showMore = false }) {
   const [stats, setStats] = useState();
 
   useEffect(() => {
@@ -439,53 +439,54 @@ export default function StatsPage() {
             </div>
           )}
         </div>
-
-        <motion.div
-          initial={{ opacity: 1 }} // Force initial opacity to 1
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.7 }}
-          className="text-center"
-        >
-          <Link
-            href="/About"
-            className="inline-flex items-center group relative"
+        {showMore === true ? (
+          <motion.div
+            initial={{ opacity: 1 }} // Force initial opacity to 1
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5, duration: 0.7 }}
+            className="text-center"
           >
-            <span className="text-[#5E60CE] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
-              Learn more about my journey
-            </span>
+            <Link
+              href="/About"
+              className="inline-flex items-center group relative"
+            >
+              <span className="text-[#5E60CE] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
+                Learn more about my journey
+              </span>
 
-            {/* Custom SVG circle with arrow */}
-            <div className="relative w-12 h-12">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
-              >
-                <circle
-                  cx="24"
-                  cy="24"
-                  r="18"
-                  fill="none"
-                  stroke="#5E60CE"
-                  strokeWidth="2"
-                  strokeDasharray="110 30"
-                  className="group-hover:stroke-[#7209B7] transition-all"
-                />
-                <path
-                  d="M20 16L28 24L20 32"
-                  stroke="#5E60CE"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:stroke-[#7209B7] transition-all"
-                />
-              </svg>
-              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
-            </div>
-          </Link>
-        </motion.div>
+              {/* Custom SVG circle with arrow */}
+              <div className="relative w-12 h-12">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 48 48"
+                  className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    fill="none"
+                    stroke="#5E60CE"
+                    strokeWidth="2"
+                    strokeDasharray="110 30"
+                    className="group-hover:stroke-[#7209B7] transition-all"
+                  />
+                  <path
+                    d="M20 16L28 24L20 32"
+                    stroke="#5E60CE"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:stroke-[#7209B7] transition-all"
+                  />
+                </svg>
+                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
+              </div>
+            </Link>
+          </motion.div>
+        ) : null}
       </div>
 
       <style jsx global>{`

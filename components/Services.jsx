@@ -8,7 +8,7 @@ import { getData, storeData } from "@/_utils/LocalStorage";
 import { get } from "mongoose";
 import parse from "html-react-parser"; // Import parse function
 
-const Services = () => {
+const Services = ({ showMore = false }) => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [services, setServices] = useState(ServicesData); // fallback
 
@@ -305,51 +305,53 @@ const Services = () => {
         </motion.div>
 
         {/* See more services link with circular arrow design */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center mt-12"
-        >
-          <Link
-            href="/Contact"
-            className="inline-flex items-center group relative"
+        {showMore === true ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-center mt-12"
           >
-            <span className="text-[#6A0DAD] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
-              Contact for more information
-            </span>
+            <Link
+              href="/Contact"
+              className="inline-flex items-center group relative"
+            >
+              <span className="text-[#6A0DAD] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
+                Contact for more information
+              </span>
 
-            {/* Custom SVG circle with arrow */}
-            <div className="relative w-12 h-12">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
-              >
-                <circle
-                  cx="24"
-                  cy="24"
-                  r="18"
-                  fill="none"
-                  stroke="#6A0DAD"
-                  strokeWidth="2"
-                  strokeDasharray="110 30"
-                  className="group-hover:stroke-[#7209B7] transition-all"
-                />
-                <path
-                  d="M20 16L28 24L20 32"
-                  stroke="#6A0DAD"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:stroke-[#7209B7] transition-all"
-                />
-              </svg>
-              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
-            </div>
-          </Link>
-        </motion.div>
+              {/* Custom SVG circle with arrow */}
+              <div className="relative w-12 h-12">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 48 48"
+                  className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    fill="none"
+                    stroke="#6A0DAD"
+                    strokeWidth="2"
+                    strokeDasharray="110 30"
+                    className="group-hover:stroke-[#7209B7] transition-all"
+                  />
+                  <path
+                    d="M20 16L28 24L20 32"
+                    stroke="#6A0DAD"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:stroke-[#7209B7] transition-all"
+                  />
+                </svg>
+                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
+              </div>
+            </Link>
+          </motion.div>
+        ) : null}
       </div>
     </section>
   );

@@ -11,6 +11,7 @@ import {
   FaChevronRight,
 } from "react-icons/fa";
 import { getData, storeData } from "@/_utils/LocalStorage";
+import { Fascinate } from "next/font/google";
 
 // Sample project data - replace with your actual projects
 const projectData1 = [
@@ -74,7 +75,7 @@ const projectData1 = [
 // const projectData =
 //   JSON.parse(localStorage.getItem("data")).value[4].projects || projectData1;
 
-const Projects = () => {
+const Projects = ({ showMore = false }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [width, setWidth] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -546,46 +547,48 @@ const Projects = () => {
         </div>
 
         {/* Link to All Projects */}
-        <div className="text-center mt-12">
-          <Link
-            href="/Projects"
-            className="inline-flex items-center group relative"
-          >
-            <span className="text-[#5E60CE] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
-              See all projects
-            </span>
+        {showMore === true ? (
+          <div className="text-center mt-12">
+            <Link
+              href="/Projects"
+              className="inline-flex items-center group relative"
+            >
+              <span className="text-[#5E60CE] font-poppins font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
+                See all projects
+              </span>
 
-            {/* Custom SVG circle with arrow */}
-            <div className="relative w-12 h-12">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
-              >
-                <circle
-                  cx="24"
-                  cy="24"
-                  r="18"
-                  fill="none"
-                  stroke="#5E60CE"
-                  strokeWidth="2"
-                  strokeDasharray="110 30"
-                  className="group-hover:stroke-[#7209B7] transition-all"
-                />
-                <path
-                  d="M20 16L28 24L20 32"
-                  stroke="#5E60CE"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:stroke-[#7209B7] transition-all"
-                />
-              </svg>
-              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
-            </div>
-          </Link>
-        </div>
+              {/* Custom SVG circle with arrow */}
+              <div className="relative w-12 h-12">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 48 48"
+                  className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    fill="none"
+                    stroke="#5E60CE"
+                    strokeWidth="2"
+                    strokeDasharray="110 30"
+                    className="group-hover:stroke-[#7209B7] transition-all"
+                  />
+                  <path
+                    d="M20 16L28 24L20 32"
+                    stroke="#5E60CE"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:stroke-[#7209B7] transition-all"
+                  />
+                </svg>
+                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
+              </div>
+            </Link>
+          </div>
+        ) : null}
       </div>
     </section>
   );

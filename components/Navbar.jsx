@@ -91,7 +91,7 @@ const Navbar = ({ userSession }) => {
                   icon: "https://img.icons8.com/ios-filled/50/services.png",
                 },
                 {
-                  name: "Blog",
+                  name: "Blogs",
                   path: "/Blog",
                   icon: "https://img.icons8.com/ios-filled/50/blog.png",
                 },
