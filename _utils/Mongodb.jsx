@@ -36,6 +36,7 @@ export async function getDatabases() {
   const Blogs = client.db("blogs");
   const Events = client.db("events");
   const Linkedin = client.db("linkedin");
+  const Contact = client.db("contact");
 
   return {
     UserDB,
@@ -49,6 +50,7 @@ export async function getDatabases() {
     blogsCollection: Blogs.collection("blogs"),
     eventsCollection: Events.collection("events"),
     linkedinCollection: Linkedin.collection("linkedin"),
+    contactCollection: Contact.collection("contact"),
   };
 }
 

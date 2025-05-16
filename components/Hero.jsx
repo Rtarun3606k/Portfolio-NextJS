@@ -27,40 +27,78 @@ const Hero = () => {
   useEffect(() => {
     const container = techStackRef.current;
     if (!container) return;
+
     let scrollAmount = 0;
     let isHovered = false;
-    let lastTimestamp = 0;
-    const SCROLL_INTERVAL = 16;
+    let isTouching = false;
+    let animationId;
+    let scrollSpeed = 0.15; // Reduced speed for smoother scrolling
 
-    const handleMouseEnter = () => (isHovered = true);
-    const handleMouseLeave = () => (isHovered = false);
-
-    container.addEventListener("mouseenter", handleMouseEnter);
-    container.addEventListener("mouseleave", handleMouseLeave);
-    container.addEventListener("touchstart", handleMouseEnter);
-    container.addEventListener("touchend", handleMouseLeave);
-
-    const scroll = (timestamp) => {
-      if (timestamp - lastTimestamp > SCROLL_INTERVAL) {
-        lastTimestamp = timestamp;
-        if (container && !isHovered) {
-          scrollAmount += 0.3;
-          container.scrollLeft = scrollAmount;
-          if (scrollAmount >= container.scrollWidth - container.clientWidth) {
-            scrollAmount = 0;
-          }
-        }
-      }
-      animationId = requestAnimationFrame(scroll);
+    // Handle mouse interactions
+    const handleMouseEnter = () => {
+      isHovered = true;
     };
 
-    let animationId = requestAnimationFrame(scroll);
+    const handleMouseLeave = () => {
+      isHovered = false;
+    };
+
+    // Handle touch interactions
+    const handleTouchStart = () => {
+      isTouching = true;
+      // Completely stop auto-scrolling during touch
+      cancelAnimationFrame(animationId);
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      // Resume auto-scrolling after a delay
+      setTimeout(() => {
+        if (!isHovered && !isTouching) {
+          animationId = requestAnimationFrame(step);
+        }
+      }, 1500); // Longer delay before resuming
+    };
+
+    // Add event listeners with passive: true for better performance
+    container.addEventListener("mouseenter", handleMouseEnter);
+    container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    container.addEventListener("touchend", handleTouchEnd);
+
+    // Smooth scrolling animation
+    const step = () => {
+      if (container && !isHovered && !isTouching) {
+        scrollAmount += scrollSpeed;
+
+        // Smoothly loop back to the start when reaching the end
+        if (scrollAmount >= container.scrollWidth - container.clientWidth) {
+          // Create a smooth transition back to the beginning
+          scrollSpeed *= 0.95; // Gradually slow down
+          if (scrollSpeed < 0.01) {
+            // Reset when almost stopped
+            scrollAmount = 0;
+            scrollSpeed = 0.15; // Reset to original speed
+          }
+        }
+
+        container.scrollLeft = scrollAmount;
+      }
+      animationId = requestAnimationFrame(step);
+    };
+
+    // Start the animation
+    animationId = requestAnimationFrame(step);
+
+    // Cleanup function
     return () => {
       cancelAnimationFrame(animationId);
       container.removeEventListener("mouseenter", handleMouseEnter);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      container.removeEventListener("touchstart", handleMouseEnter);
-      container.removeEventListener("touchend", handleMouseLeave);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
@@ -332,6 +370,7 @@ const Hero = () => {
               scrollbarWidth: "none",
               msOverflowStyle: "none",
               WebkitOverflowScrolling: "touch",
+              scrollBehavior: "smooth", // Add smooth scrolling behavior
             }}
           >
             {technologies.map((tech, index) => (
@@ -348,6 +387,7 @@ const Hero = () => {
                     alt={`${tech.name} icon`}
                     width={28}
                     height={28}
+                    loading="lazy"
                     style={{ maxWidth: "100%", height: "auto" }}
                   />
                 </div>

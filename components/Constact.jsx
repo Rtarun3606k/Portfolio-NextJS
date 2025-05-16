@@ -119,8 +119,43 @@ const Contact = () => {
       setFormStatus("submitting");
 
       try {
-        // This will be replaced with your actual API call later
-        // Simulate API call with timeout
+        // Create a FormData object for submission
+        const formDataObj = new FormData();
+
+        // Add all form fields to FormData
+        formDataObj.append("firstName", formData.firstName);
+        formDataObj.append("lastName", formData.lastName);
+        formDataObj.append("email", formData.email);
+        formDataObj.append("type", formData.type);
+        formDataObj.append("description", formData.description);
+
+        if (formData.serviceId) {
+          formDataObj.append("serviceId", formData.serviceId);
+        }
+
+        if (formData.appointmentDate) {
+          formDataObj.append("appointmentDate", formData.appointmentDate);
+        }
+
+        if (formData.appointmentTime) {
+          formDataObj.append("appointmentTime", formData.appointmentTime);
+        }
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/Contact`,
+          {
+            method: "POST",
+            // Do NOT set Content-Type when using FormData
+            body: formDataObj,
+          }
+        );
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+        console.log("Form submitted successfully:", data);
+
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         setFormStatus("success");
@@ -418,7 +453,7 @@ const Contact = () => {
                       name="serviceId"
                       value={formData.serviceId}
                       onChange={handleChange}
-                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all appearance-none"
+                      className="block text-black w-full px-4 py-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all appearance-none"
                     >
                       <option value="">-- Select a service --</option>
                       {loading ? (
@@ -504,13 +539,15 @@ const Contact = () => {
                         name="appointmentDate"
                         value={formData.appointmentDate}
                         onChange={handleChange}
-                        className={`w-full px-4 py-2 rounded-lg border ${
+                        className={`w-full px-4 py-2 rounded-lg border text-black ${
                           errors.appointmentDate
                             ? "border-red-500"
                             : "border-gray-300"
                         } focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all`}
                       >
-                        <option value="">Select a date</option>
+                        <option value="" className="text-black">
+                          Select a date
+                        </option>
                         {getAvailableDates().map((date, index) => (
                           <option
                             key={index}
@@ -540,7 +577,7 @@ const Contact = () => {
                         name="appointmentTime"
                         value={formData.appointmentTime}
                         onChange={handleChange}
-                        className={`w-full px-4 py-2 rounded-lg border ${
+                        className={`w-full px-4 py-2 rounded-lg border text-black ${
                           errors.appointmentTime
                             ? "border-red-500"
                             : "border-gray-300"
@@ -582,7 +619,7 @@ const Contact = () => {
                     rows="5"
                     value={formData.description}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${
+                    className={`w-full px-4 py-3 rounded-lg border text-black placeholder:text-gray-400 ${
                       errors.description ? "border-red-500" : "border-gray-300"
                     } focus:ring-2 focus:ring-[#6A0DAD]/30 focus:border-[#6A0DAD] outline-none transition-all resize-none`}
                     placeholder={
