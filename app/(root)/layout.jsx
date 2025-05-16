@@ -13,6 +13,7 @@ const Layout = async ({ children }) => {
       <ClientPageTransition />
       {children}
       <Footer />
+      {/* done */}
     </>
   );
 };
