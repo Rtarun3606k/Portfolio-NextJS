@@ -40,6 +40,10 @@ export const getData = (dataName) => {
     console.log("Data expired and removed from localStorage:", dataName);
     return null;
   }
+  if (item === undefined) {
+    console.log("Data is undefined:", dataName);
+    return null;
+  }
 
   // If not expired, return the value
   return item.value;
