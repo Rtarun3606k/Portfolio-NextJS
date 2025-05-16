@@ -27,24 +27,36 @@ export const getData = (dataName) => {
 
   // Return null if no item exists
   if (!itemStr) {
+    console.log(`No data found in localStorage for: ${dataName}`);
     return null;
   }
 
-  // Parse the item
-  const item = JSON.parse(itemStr);
+  try {
+    // Parse the item
+    const item = JSON.parse(itemStr);
 
-  // Check if the item has expired
-  if (Date.now() > item.expiry) {
-    // If expired, remove the item from localStorage and return null
+    // Check if the item is properly structured
+    if (!item || item.value === undefined) {
+      console.log(`Data is malformed for: ${dataName}`);
+      return null;
+    }
+
+    // Check if the item has expired
+    if (item.expiry && Date.now() > item.expiry) {
+      // If expired, remove the item from localStorage and return null
+      localStorage.removeItem(dataName);
+      console.log(`Data expired and removed from localStorage: ${dataName}`);
+      return null;
+    }
+
+    // If not expired and properly structured, return the value
+    return item.value;
+  } catch (error) {
+    console.error(
+      `Error parsing data from localStorage for: ${dataName}`,
+      error
+    );
     localStorage.removeItem(dataName);
-    console.log("Data expired and removed from localStorage:", dataName);
     return null;
   }
-  if (item === undefined) {
-    console.log("Data is undefined:", dataName);
-    return null;
-  }
-
-  // If not expired, return the value
-  return item.value;
 };
