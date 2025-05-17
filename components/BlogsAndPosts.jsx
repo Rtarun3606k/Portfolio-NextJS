@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { getData, storeData } from "@/_utils/LocalStorage";
+import { slugify } from "../_utils/slugify";
 
 const BlogsAndPosts = ({ limited = false, showMore = false }) => {
   const [activeTab, setActiveTab] = useState("blogs");
@@ -278,7 +279,7 @@ const BlogsAndPosts = ({ limited = false, showMore = false }) => {
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10"
               >
                 <Link
-                  href={blog.link || "/Blog/" + blog._id}
+                  href={blog.link || `/Blog/${blog._id}/${slugify(blog.title)}`}
                   rel="noopener noreferrer"
                 >
                   <div className="h-48 relative overflow-hidden">
