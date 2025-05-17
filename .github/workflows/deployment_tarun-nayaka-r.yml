@@ -43,6 +43,7 @@ jobs:
 
       - name: Prepare deployment package
         run: |
+          rm -rf build
           mkdir build
           cp -r .next public package.json package-lock.json build/
           cd build && zip -r ../nextjs.zip .
