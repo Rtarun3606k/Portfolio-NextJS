@@ -14,6 +14,7 @@ const Layout = async ({ children }) => {
       {children}
       <Footer />
       {/* done */}
+      {/* deploy to preod */}
     </>
   );
 };
