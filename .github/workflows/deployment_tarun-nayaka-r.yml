@@ -7,8 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  APPLICATION_PUBLISH_PROFILE: ${{ secrets.APP_PUBLISH_PROFILE }}
-  WEBAPP_NAME: "CREATED_AZURE_WEB_APP_NAME"
+  WEBAPP_NAME: "tarun-nayaka-r"
 
 jobs:
   build:
@@ -17,12 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
 
-      - name: npm install, build, and test
+      - name: Install dependencies and build
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
@@ -34,19 +33,21 @@ jobs:
           AZURE_STORAGE_CONTAINER_NAME: ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
-          WEBAPP_NAME: "tarun-nayaka-r"
 
         run: |
-          npm install
+          npm ci
           npm run build
-          mv ./build/static ./build/standalone/build
-          mv ./public ./build/standalone
 
-      - name: "Deploy to Azure Web App"
-        id: deploy-to-webapp
+      - name: Prepare zip package
+        run: |
+          mkdir deploy
+          cp -r build package.json package-lock.json public deploy/
+          if [ -f next.config.js ]; then cp next.config.js deploy/; fi
+          cd deploy && zip -r ../build.zip .
+
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.WEBAPP_NAME }}
-          slot-name: "Production"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./build/standalone
+          package: build.zip
