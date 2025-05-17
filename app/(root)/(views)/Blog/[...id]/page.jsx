@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { slugify } from "@/_utils/slugify";
 
 const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
   ssr: false,
@@ -26,16 +27,21 @@ const itemVariants = {
 };
 
 const Page = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [blogContent, setBlogContent] = useState("");
   const [blog, setBlog] = useState({});
   const [suggestedBlogs, setSuggestedBlogs] = useState([]);
 
+  // Extract the blog ID from the URL parameters
+  // The id parameter will be an array due to the [...id] catch-all route
+  const blogId = Array.isArray(params.id) ? params.id[0] : params.id;
+
   const addViews = async () => {
     try {
-      const res = await fetch(`/api/blogs/${id}`, {
+      const res = await fetch(`/api/blogs/${blogId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,13 +60,26 @@ const Page = () => {
     const fetchBlog = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/blogs/${id}`);
+        const res = await fetch(`/api/blogs/${blogId}`);
         if (!res.ok) {
           throw new Error(`Failed to fetch data: ${res.status}`);
         }
         const data = await res.json();
         setBlog(data);
         setBlogContent(data.content);
+
+        // Check if URL needs to be updated with the proper slug
+        const slug = slugify(data.title);
+        const expectedPath = `/Blog/${blogId}/${slug}`;
+        const currentPath = window.location.pathname;
+
+        // If we're on just the ID URL without the slug, redirect to the proper URL
+        if (
+          currentPath === `/Blog/${blogId}` ||
+          currentPath === `/Blog/${blogId}/`
+        ) {
+          router.replace(expectedPath);
+        }
       } catch (error) {
         console.error("Error fetching blog:", error);
         setError(error.message);
@@ -71,7 +90,7 @@ const Page = () => {
 
     const fetchSuggestedBlogs = async () => {
       try {
-        const res = await fetch(`/api/blogs/suggested?exclude=${id}`);
+        const res = await fetch(`/api/blogs/suggested?exclude=${blogId}`);
         if (!res.ok) {
           throw new Error("Failed to fetch suggested blogs");
         }
@@ -82,12 +101,18 @@ const Page = () => {
       }
     };
 
-    if (id) {
+    if (blogId) {
       fetchBlog();
-      addViews();
       fetchSuggestedBlogs();
     }
-  }, [id]);
+  }, [blogId, router]);
+
+  // Add views after the blog is loaded
+  useEffect(() => {
+    if (blog._id) {
+      addViews();
+    }
+  }, [blog]);
 
   if (loading) {
     return (
@@ -165,7 +190,7 @@ const Page = () => {
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10"
               >
-                <Link href={`/Blog/${blog._id}`}>
+                <Link href={`/Blog/${blog._id}/${slugify(blog.title)}`}>
                   <div className="h-48 relative overflow-hidden">
                     <Image
                       src={

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { slugify } from "../_utils/slugify";
 
 const BlogsClient = () => {
   const [blogs, setBlogs] = useState([]);
@@ -141,7 +142,7 @@ const BlogsClient = () => {
                     </span>
                     <div className="flex space-x-3">
                       <Link
-                        href={`/Blog/${blog._id}`}
+                        href={`/Blog/${blog._id}/${slugify(blog.title)}`}
                         className="text-[#FF4ECD] hover:text-[#FF6FD8]"
                       >
                         <svg
