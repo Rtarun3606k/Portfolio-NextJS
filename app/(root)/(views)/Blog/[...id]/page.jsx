@@ -1,8 +1,8 @@
-"user client";
-import React from "react";
-// import { generateMetadata } from "./generate";
 import PageBlog from "./BlogContent";
-// export { generateMetadata };
+import { generateMetadata } from "./generate";
+
+// Export the generateMetadata function to be used by Next.js
+export { generateMetadata };
 
 const page = () => {
   return <PageBlog />;
