@@ -43,7 +43,7 @@ jobs:
 
       - name: Prepare deployment package
         run: |
-          zip -r build.zip build
+          zip -r build.zip build package.json package-lock.json public
 
       - name: Deploy to Azure Web App using Publish Profile
         uses: azure/webapps-deploy@v3
