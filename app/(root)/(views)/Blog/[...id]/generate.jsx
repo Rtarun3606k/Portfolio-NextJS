@@ -18,14 +18,17 @@ export async function generateMetadata({ params }) {
   const blog = await res.json();
   const plainText = blog.content
     .replace(/[#_*`~>\-\[\]\(\)!\n]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
     .slice(0, 160);
+  const paddedDescription = plainText.padEnd(100, " ");
 
   return {
     title: blog.title,
-    description: plainText,
+    description: paddedDescription,
     openGraph: {
       title: blog.title,
-      description: plainText,
+      description: paddedDescription,
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/Blog/${blogId}/${slugify(
         blog.title
       )}`,
@@ -42,8 +45,10 @@ export async function generateMetadata({ params }) {
     twitter: {
       card: "summary_large_image",
       title: blog.title,
-      description: plainText,
-      images: [blog.featuredImage],
+      description: paddedDescription,
+      images: [
+        blog.featuredImage || "https://placehold.co/600x400?text=No+Image",
+      ],
     },
   };
 }
