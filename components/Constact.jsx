@@ -731,10 +731,10 @@ const Contact = () => {
             </div>
             <h3 className="font-medium text-gray-900 mb-1">Email</h3>
             <a
-              href="mailto:tarun@example.com"
-              className="text-[#6A0DAD] hover:text-[#7C3AED]"
+              href="mailto:r.tarunnayaka25042005@gmail.com"
+              className="text-[#6A0DAD] hover:text-[#7C3AED] flex flex-grow "
             >
-              tarun@example.com
+              r.tarunnayaka25042005{"\n"}@gmail.com
             </a>
           </div>
 
@@ -751,12 +751,12 @@ const Contact = () => {
             </div>
             <h3 className="font-medium text-gray-900 mb-1">LinkedIn</h3>
             <a
-              href="https://linkedin.com/in/tarunnayaka"
+              href="https://www.linkedin.com/in/tarun-nayaka-r-28612a27a/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#6A0DAD] hover:text-[#7C3AED]"
             >
-              linkedin.com/in/tarunnayaka
+              linkedin.com/in/tarun-nayaka-r-28612a27a/
             </a>
           </div>
 
@@ -773,12 +773,12 @@ const Contact = () => {
             </div>
             <h3 className="font-medium text-gray-900 mb-1">GitHub</h3>
             <a
-              href="https://github.com/tarunnayaka"
+              href="https://github.com/Rtarun3606k"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#6A0DAD] hover:text-[#7C3AED]"
             >
-              github.com/tarunnayaka
+              github.com/Rtarun3606k
             </a>
           </div>
         </motion.div>

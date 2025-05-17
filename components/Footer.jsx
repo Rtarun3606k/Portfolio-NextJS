@@ -21,31 +21,31 @@ const Footer = () => {
     {
       name: "LinkedIn",
       icon: "/linkedin.svg",
-      url: "https://linkedin.com/in/tarunnayaka",
+      url: "https://www.linkedin.com/in/tarun-nayaka-r-28612a27a/",
       color: "#0077b5",
     },
     {
       name: "GitHub",
       icon: "/github.svg",
-      url: "https://github.com/tarunnayaka",
+      url: "https://github.com/Rtarun3606k",
       color: "#333",
     },
     {
       name: "Twitter",
       icon: "/twitter.svg",
-      url: "https://twitter.com/tarunnayaka",
+      url: "https://x.com/Rtarun3606k",
       color: "#1DA1F2",
     },
     {
       name: "Medium",
       icon: "/medium.svg",
-      url: "https://medium.com/@tarunnayaka",
+      url: "https://medium.com/@r.tarunnayaka25042005",
       color: "#00AB6C",
     },
     {
       name: "Instagram",
       icon: "/instagram.svg",
-      url: "https://instagram.com/tarunnayaka",
+      url: "https://instagram.com/r.tarun_nayak",
       color: "#E1306C",
     },
   ];
@@ -160,10 +160,10 @@ const Footer = () => {
                   ></path>
                 </svg>
                 <a
-                  href="mailto:tarun@example.com"
+                  href="mailto:r.tarunnayaka25042005@gmail.com"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  tarun@example.com
+                  r.tarunnayaka25042005@gmail.com
                 </a>
               </li>
               <li className="flex items-start">
@@ -180,7 +180,7 @@ const Footer = () => {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   ></path>
                 </svg>
-                <span className="text-gray-300">+1 (555) 123-4567</span>
+                <span className="text-gray-300">+91 74839 97976</span>
               </li>
               <li className="flex items-start">
                 <svg
@@ -202,7 +202,7 @@ const Footer = () => {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   ></path>
                 </svg>
-                <span className="text-gray-300">San Francisco, CA</span>
+                <span className="text-gray-300">Bangalore, India</span>
               </li>
             </ul>
           </div>

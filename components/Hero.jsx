@@ -336,8 +336,8 @@ const Hero = () => {
             }`}
             style={{ animationDelay: "1.7s" }}
           >
-            Crafting stunning, responsive web applications and cloud solutions
-            for startups and personal brands.
+            Crafting stunning, responsive web , mobile applications and cloud
+            solutions for startups and personal brands.
           </p>
 
           <p
@@ -346,10 +346,13 @@ const Hero = () => {
             }`}
             style={{ animationDelay: "1.9s" }}
           >
-            Specialized in <span className="font-semibold">Next.js</span>,{" "}
-            <span className="font-semibold">React</span>, and{" "}
-            <span className="font-semibold">Azure Cloud</span> with 3+ years of
-            experience.
+            Specialized in{" "}
+            <span className="font-semibold">Python, Java Script</span>,{" "}
+            <span className="font-semibold">
+              MongoDB, PSQL, Firebase, Azure Cloud
+            </span>
+            , and <span className="font-semibold">Google Cloud Plartform</span>{" "}
+            with 3+ years of experience.
           </p>
         </div>
 
@@ -420,8 +423,16 @@ const Hero = () => {
             "REST APIs",
 
             "Next.js",
+            "Nginx",
+            "Apache",
+            "Apache Kafka",
             "React",
+            "React Native",
+            "Flutter",
+            "Fast API",
             "Azure",
+            "Google Cloud",
+            "Firebase",
             "TypeScript",
             "Tailwind CSS",
             "Node.js",
