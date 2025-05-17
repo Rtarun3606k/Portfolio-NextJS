@@ -33,7 +33,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: "22.x"
 
       - name: npm install, build, and test
         run: |
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write
@@ -68,7 +68,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -76,10 +76,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_20FABE0DEBC340C4B8400EF3DB406F63 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_678DE1ACA05145A885CDC9C6B69A1B0E }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'tarun-nayaka-r'
-          slot-name: 'Production'
-          package: .
+          app-name: "tarun-nayaka-r"
+          slot-name: "Production"
+          package: ./build/standalone
