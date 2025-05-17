@@ -42,9 +42,11 @@ jobs:
       - name: Build the app
         run: npm run build
 
-      - name: Zip deployment package
+      - name: Prepare deployment package
         run: |
-          zip -r build.zip . -x ".git/*" "node_modules/*" "build.zip"
+          mkdir deploy
+          cp -r build .next package.json package-lock.json public next.config.js deploy/
+          cd deploy && zip -r ../build.zip .
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
