@@ -3,7 +3,7 @@ name: Build and Deploy Next.js App to Azure
 on:
   push:
     branches:
-      - main
+      - deployment
   workflow_dispatch:
 
 env:
