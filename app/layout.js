@@ -35,7 +35,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/image.png", // Add your own OG image here
+        url: "/image.png", // Your OG image
         width: 1200,
         height: 630,
         alt: "Tarun Nayaka R - Fullstack Developer and Cloud Architect",
@@ -48,20 +48,18 @@ export const metadata = {
     description:
       "3+ years of expertise in React, Next.js, TypeScript, Python, Azure, and Google Cloud. Building scalable digital solutions.",
     creator: "@TarunNayakaR",
-    images: ["/og-image.jpg"], // Same as OG image
+    images: ["/image.png"], // Same as OG image for consistency
   },
   icons: {
     icon: "/image.png",
+    shortcut: "/image.png",
+    apple: "/image.png",
   },
 };
 
-// Create a separate client provider component
-function Providers({ children }) {
-  return <SessionProvider>{children}</SessionProvider>;
-}
+// Create a client component for SessionProvider
 
 // Make Providers a client component to avoid hydration issues
-Providers.displayName = "Providers";
 
 export default function RootLayout({ children }) {
   return (
@@ -69,7 +67,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${playfairDisplay.variable} ${poppins.variable} ${tagesschrift.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
