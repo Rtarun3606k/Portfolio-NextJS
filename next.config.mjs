@@ -3,8 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   distDir: "build",
   output: "standalone",
-  // CORS is handled in middleware.js to allow dynamic origin checking
-  // This is a fallback for environments where middleware might not run
+  // This is both a fallback for environments where middleware might not run
+  // and a supplementary configuration for CORS
   async headers() {
     return [
       {
@@ -12,8 +12,7 @@ const nextConfig = {
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          // We don't set a static Access-Control-Allow-Origin here because
-          // it's handled dynamically in the middleware
+          { key: "Access-Control-Allow-Origin", value: "*" }, // Allow any origin as fallback
           {
             key: "Access-Control-Allow-Methods",
             value: "GET,DELETE,PATCH,POST,PUT,OPTIONS",
