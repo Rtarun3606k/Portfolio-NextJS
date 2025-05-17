@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server";
 
-// List of allowed origins for CORS
+// List of allowed origins for CORS - restricted to just 3 URLs
 const allowedOrigins = [
   "https://tarunnayaka.me",
   "https://www.tarunnayaka.me",
-  "https://tarun-nayaka-r-g8fpf4e2dmd9e8dt.centralindia-01.azurewebsites.net",
   "http://localhost:3000",
-  "http://localhost:4000",
-  "http://localhost:8000",
-  "http://127.0.0.1:3000",
-  "http://127.0.0.1:4000",
-  "http://127.0.0.1:8000",
+  "https://tarun-nayaka-r-g8fpf4e2dmd9e8dt.centralindia-01.azurewebsites.net",
 ];
 
 /**
@@ -32,9 +27,15 @@ export function middleware(request) {
     console.log("➡️ Handling OPTIONS preflight request");
     const response = new NextResponse(null, { status: 204 });
 
-    // Allow all origins during development for easier debugging
-    // In production you would want to be more restrictive
-    response.headers.set("Access-Control-Allow-Origin", origin || "*");
+    // Only allow the three specified origins
+    if (origin && allowedOrigins.includes(origin)) {
+      console.log(`✅ Allowing preflight for origin: ${origin}`);
+      response.headers.set("Access-Control-Allow-Origin", origin);
+    } else {
+      console.log(`❌ Blocking preflight for origin: ${origin || "null"}`);
+      response.headers.set("Access-Control-Allow-Origin", "null");
+    }
+
     response.headers.set(
       "Access-Control-Allow-Methods",
       "GET,POST,PUT,DELETE,OPTIONS"
@@ -54,8 +55,15 @@ export function middleware(request) {
   console.log("➡️ Handling actual request:", request.method);
   const response = NextResponse.next();
 
-  // For now, allow all origins while debugging
-  response.headers.set("Access-Control-Allow-Origin", origin || "*");
+  // Only allow the three specified origins
+  if (origin && allowedOrigins.includes(origin)) {
+    console.log(`✅ Allowing request for origin: ${origin}`);
+    response.headers.set("Access-Control-Allow-Origin", origin);
+  } else {
+    console.log(`❌ Blocking request for origin: ${origin || "null"}`);
+    response.headers.set("Access-Control-Allow-Origin", "null");
+  }
+
   response.headers.set(
     "Access-Control-Allow-Methods",
     "GET,POST,PUT,DELETE,OPTIONS"

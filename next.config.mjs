@@ -12,7 +12,8 @@ const nextConfig = {
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" }, // Allow any origin as fallback
+          // We don't set a static Access-Control-Allow-Origin here because
+          // it's handled dynamically in the middleware to restrict to only 3 origins
           {
             key: "Access-Control-Allow-Methods",
             value: "GET,DELETE,PATCH,POST,PUT,OPTIONS",
