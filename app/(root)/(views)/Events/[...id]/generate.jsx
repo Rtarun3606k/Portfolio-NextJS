@@ -14,10 +14,17 @@ export async function generateMetadata({ params }) {
     return { title: "Event Not Found" };
   }
 
-  const event = await res.json();
+  const data = await res.json();
+  const event = data.event;
+
+  // Extract plain text description for meta tags
   const plainText = event.description
-    .replace(/[#_*`~>\-\[\]\(\)!\n]/g, " ")
-    .slice(0, 160);
+    ? event.description
+        .replace(/[#_*`~>\-\[\]\(\)!\n]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 160)
+    : "Learn more about this event hosted by " + event.host;
 
   return {
     title: event.name,
@@ -36,12 +43,24 @@ export async function generateMetadata({ params }) {
           alt: event.name,
         },
       ],
+      type: "article",
+      siteName: "Tarun Nayaka R",
     },
     twitter: {
       card: "summary_large_image",
       title: event.name,
       description: plainText,
-      images: [event.image],
+      images: [event.image || "https://placehold.co/600x400?text=No+Image"],
+      creator: "@tarunnayakar",
+    },
+    alternates: {
+      canonical: `${
+        process.env.NEXT_PUBLIC_BASE_URL
+      }/Events/${eventId}/${slugify(event.name)}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { EventsData } from "@/_utils/Variables";
 import { getData, storeData } from "@/_utils/LocalStorage";
+import { slugify } from "@/_utils/slugify";
 
 const Events = ({ showMore = false }) => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -304,8 +305,9 @@ const Events = ({ showMore = false }) => {
                   )}
 
                   <Link
-                    href={`/Events/${event._id || null}/${event.name || null}`}
-                    target="_blank"
+                    href={`/Events/${event._id || ""}/${
+                      event.name ? slugify(event.name) : ""
+                    }`}
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#dfd8e4e0] to-[#b9a9d3db] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
                   >

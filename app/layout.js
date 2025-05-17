@@ -64,6 +64,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/image.png" />
+        <link rel="apple-touch-icon" href="/image.png" />
+        <link rel="shortcut icon" href="/image.png" />
+        {/* <meta name="theme-color" content="#000000" /> */}
+        {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
+      </head>
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${playfairDisplay.variable} ${poppins.variable} ${tagesschrift.variable} antialiased`}
       >

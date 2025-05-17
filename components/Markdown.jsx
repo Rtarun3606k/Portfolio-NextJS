@@ -13,7 +13,7 @@ export default function Markdown({ source }) {
     <MarkdownPreview
       source={source}
       wrapperElement={{ "data-color-mode": "light" }}
-      style={{ backgroundColor: "white", color: "black" }}
+      style={{ backgroundColor: "#c7d2fe", color: "black" }}
     />
   );
 }
