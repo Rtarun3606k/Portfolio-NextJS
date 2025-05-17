@@ -45,7 +45,9 @@ jobs:
       - name: Prepare deployment package
         run: |
           mkdir deploy
-          cp -r build .next package.json package-lock.json public next.config.js deploy/
+          cp -r build package.json package-lock.json public deploy/
+          # Only copy next.config.js if it exists
+          if [ -f next.config.js ]; then cp next.config.js deploy/; fi
           cd deploy && zip -r ../build.zip .
 
       - name: Deploy to Azure Web App
