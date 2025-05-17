@@ -9,6 +9,7 @@ import BlogsAndPosts from "@/components/BlogsAndPosts";
 const BlogsClient = dynamic(() => import("@/components/BlogsClient"), {
   loading: () => (
     <div className="py-16 relative overflow-hidden">
+      {/* Head tags should not be used in client components with Next.js App Router */}
       <div className="container mx-auto px-4 relative z-10">
         <h1 className="text-black text-center text-5xl font-space-grotesk mb-3">
           My Blogs
@@ -22,9 +23,9 @@ const BlogsClient = dynamic(() => import("@/components/BlogsClient"), {
 });
 
 const BlogPage = () => {
+  // Title is managed through the Blog/layout.jsx metadata export
   return (
     <div>
-      {/* <BlogsClient /> */}
       <BlogsAndPosts />
     </div>
   );

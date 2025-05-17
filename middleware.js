@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 // List of allowed origins for CORS - restricted to just 3 URLs
+// Read from environment variable or use default values
 const allowedOrigins = [
   "https://tarunnayaka.me",
   "https://www.tarunnayaka.me",
