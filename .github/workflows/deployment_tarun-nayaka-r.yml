@@ -14,7 +14,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    env: # ✅ Inject secrets as env vars (add these in GitHub repo → Settings → Secrets)
+    env: # Inject your secrets here
       AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
       AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
       AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
@@ -43,10 +43,7 @@ jobs:
 
       - name: Prepare deployment package
         run: |
-          rm -rf build
-          mkdir build
-          cp -r .next public package.json package-lock.json build/
-          cd build && zip -r ../nextjs.zip .
+          zip -r build.zip build
 
       - name: Azure Login via OIDC
         uses: azure/login@v2
@@ -59,4 +56,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.WEBAPP_NAME }}
-          package: nextjs.zip
+          package: build.zip
