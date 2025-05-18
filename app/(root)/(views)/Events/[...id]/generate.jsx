@@ -26,6 +26,28 @@ export async function generateMetadata({ params }) {
         .slice(0, 160)
     : "Learn more about this event hosted by " + event.host;
 
+  // Create JSON-LD structured data for this event
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.name,
+    description: plainText,
+    startDate: event.date,
+    location: {
+      "@type": "Place",
+      name: event.location,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: event.location,
+      },
+    },
+    organizer: {
+      "@type": "Person",
+      name: event.host,
+    },
+    image: event.image || `${process.env.NEXT_PUBLIC_BASE_URL}/image.png`,
+  };
+
   return {
     title: event.name,
     description: plainText,
@@ -45,6 +67,9 @@ export async function generateMetadata({ params }) {
       ],
       type: "article",
       siteName: "Tarun Nayaka R",
+    },
+    other: {
+      "application/ld+json": JSON.stringify(jsonLd),
     },
     twitter: {
       card: "summary_large_image",

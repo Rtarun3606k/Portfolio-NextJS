@@ -23,6 +23,38 @@ export async function generateMetadata({ params }) {
     .slice(0, 160);
   const paddedDescription = plainText.padEnd(100, " ");
 
+  // Create JSON-LD structured data for this blog post
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog.title,
+    description: paddedDescription,
+    image:
+      blog.featuredImage || `${process.env.NEXT_PUBLIC_BASE_URL}/image.png`,
+    datePublished: blog.createdAt || new Date().toISOString(),
+    dateModified: blog.updatedAt || blog.createdAt || new Date().toISOString(),
+    author: {
+      "@type": "Person",
+      name: blog.author?.name || "Tarun Nayaka R",
+      url: process.env.NEXT_PUBLIC_BASE_URL,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Tarun Nayaka R",
+      url: process.env.NEXT_PUBLIC_BASE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/image.png`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${process.env.NEXT_PUBLIC_BASE_URL}/Blog/${blogId}/${slugify(
+        blog.title
+      )}`,
+    },
+  };
+
   return {
     title: blog.title,
     description: paddedDescription,
@@ -49,6 +81,9 @@ export async function generateMetadata({ params }) {
       images: [
         blog.featuredImage || "https://placehold.co/600x400?text=No+Image",
       ],
+    },
+    other: {
+      "application/ld+json": JSON.stringify(jsonLd),
     },
   };
 }
