@@ -1,8 +1,17 @@
-// app/Blog/[...id]/generate.js
+// Metadata generation for enhanced SEO
 import { slugify } from "@/_utils/slugify";
 
+/**
+ * Generate metadata for the blog page
+ * This function is called by Next.js to generate metadata for the page
+ * which improves SEO by providing rich metadata to search engines
+ */
 export async function generateMetadata({ params }) {
-  const blogId = Array.isArray(params.id) ? params.id[0] : params.id;
+  // With NextJS 15+, params should be awaited
+  const resolvedParams = await params;
+  const blogId = Array.isArray(resolvedParams.id)
+    ? resolvedParams.id[0]
+    : resolvedParams.id;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/${blogId}`,
@@ -58,16 +67,21 @@ export async function generateMetadata({ params }) {
   return {
     title: blog.title,
     description: paddedDescription,
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_BASE_URL || "https://tarunnayakar.com"
+    ),
     openGraph: {
       title: blog.title,
       description: paddedDescription,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/Blog/${blogId}/${slugify(
-        blog.title
-      )}`,
+      url: `/Blog/${blogId}/${slugify(blog.title)}`,
+      siteName: "Tarun Nayaka R",
+      locale: "en_US",
+      type: "article",
+      publishedTime: blog.createdAt || new Date().toISOString(),
+      authors: [blog.author || "Tarun Nayaka R"],
       images: [
         {
-          url:
-            blog.featuredImage || "https://placehold.co/600x400?text=No+Image",
+          url: blog.featuredImage || "/image.png",
           width: 1200,
           height: 630,
           alt: blog.title,
