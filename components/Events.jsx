@@ -8,7 +8,7 @@ import { EventsData } from "@/_utils/Variables";
 import { getData, storeData } from "@/_utils/LocalStorage";
 import { slugify } from "@/_utils/slugify";
 
-const Events = ({ showMore = false }) => {
+const Events = ({ showMore = false, limited = false }) => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [events, setEvents] = useState(EventsData);
 
@@ -185,105 +185,134 @@ const Events = ({ showMore = false }) => {
           animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
         >
-          {filteredEvents.map((event) => (
-            <motion.div
-              key={event.id || event._id}
-              variants={itemVariants}
-              className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 flex flex-col h-full"
-            >
-              <div className="h-48 relative overflow-hidden">
-                <Image
-                  src={event.image}
-                  alt={event.name}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-4 w-full">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium inline-block ${
-                      event.category === "upcoming"
-                        ? "bg-[#6A0DAD] text-white"
-                        : "bg-[#6B7280]/20 text-[#6B7280]"
-                    }`}
-                  >
-                    {event.category === "upcoming" ? "Upcoming" : "Past"}
-                  </span>
+          {(limited ? filteredEvents.slice(0, 6) : filteredEvents).map(
+            (event) => (
+              <motion.div
+                key={event.id || event._id}
+                variants={itemVariants}
+                className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 flex flex-col h-full"
+              >
+                <div className="h-48 relative overflow-hidden">
+                  <Image
+                    src={event.image}
+                    alt={event.name}
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-4 w-full">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium inline-block ${
+                        event.category === "upcoming"
+                          ? "bg-[#6A0DAD] text-white"
+                          : "bg-[#6B7280]/20 text-[#6B7280]"
+                      }`}
+                    >
+                      {event.category === "upcoming" ? "Upcoming" : "Past"}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="p-5 flex-grow flex flex-col justify-between">
-                <div>
-                  <h3 className="font-poppins font-semibold text-xl text-[#1F1F1F] mb-2">
-                    {event.name}
-                  </h3>
+                <div className="p-5 flex-grow flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-poppins font-semibold text-xl text-[#1F1F1F] mb-2">
+                      {event.name}
+                    </h3>
 
-                  <div className="flex items-center mb-3">
-                    <svg
-                      className="w-4 h-4 text-[#6A0DAD] mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
-                    </svg>
-                    <p className="text-[#6B7280] text-sm">{event.host}</p>
-                  </div>
-
-                  <div className="flex items-center mb-3">
-                    <svg
-                      className="w-4 h-4 text-[#6A0DAD] mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                    <p className="text-[#6B7280] text-sm">{event.date}</p>
-                  </div>
-
-                  <div className="flex items-center mb-4">
-                    <svg
-                      className="w-4 h-4 text-[#6A0DAD] mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                    <p className="text-[#6B7280] text-sm">{event.location}</p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {event.skills.map((skill, i) => (
-                      <span
-                        key={i}
-                        className="bg-[#6A0DAD]/10 text-[#6A0DAD] text-xs px-2 py-1 rounded-full"
+                    <div className="flex items-center mb-3">
+                      <svg
+                        className="w-4 h-4 text-[#6A0DAD] mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
                       >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+                      </svg>
+                      <p className="text-[#6B7280] text-sm">{event.host}</p>
+                    </div>
 
-                <div
-                  className={`mt-2 ${
-                    event.registerLink ? "" : "opacity-60"
-                  } gap-1`}
-                >
-                  {event.registerLink ? (
+                    <div className="flex items-center mb-3">
+                      <svg
+                        className="w-4 h-4 text-[#6A0DAD] mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                      <p className="text-[#6B7280] text-sm">{event.date}</p>
+                    </div>
+
+                    <div className="flex items-center mb-4">
+                      <svg
+                        className="w-4 h-4 text-[#6A0DAD] mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                      <p className="text-[#6B7280] text-sm">{event.location}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {event.skills.map((skill, i) => (
+                        <span
+                          key={i}
+                          className="bg-[#6A0DAD]/10 text-[#6A0DAD] text-xs px-2 py-1 rounded-full"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div
+                    className={`mt-2 ${
+                      event.registerLink ? "" : "opacity-60"
+                    } gap-1`}
+                  >
+                    {event.registerLink ? (
+                      <Link
+                        href={event.registerLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
+                      >
+                        Register Now
+                        <svg
+                          className="w-4 h-4 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          ></path>
+                        </svg>
+                      </Link>
+                    ) : (
+                      <div className="inline-flex items-center justify-center w-full py-2 px-4 bg-[#6B7280]/20 text-[#6B7280] font-medium rounded-lg cursor-not-allowed">
+                        Event Completed
+                      </div>
+                    )}
+
                     <Link
-                      href={event.registerLink}
-                      target="_blank"
+                      href={`/Events/${event._id || ""}/${
+                        event.name ? slugify(event.name) : ""
+                      }`}
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
+                      className="mt-2 inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#a164cbe0] to-[#6233addb] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
                     >
-                      Register Now
+                      Learn More
                       <svg
                         className="w-4 h-4 ml-2"
                         fill="none"
@@ -298,38 +327,11 @@ const Events = ({ showMore = false }) => {
                         ></path>
                       </svg>
                     </Link>
-                  ) : (
-                    <div className="inline-flex items-center justify-center w-full py-2 px-4 bg-[#6B7280]/20 text-[#6B7280] font-medium rounded-lg cursor-not-allowed">
-                      Event Completed
-                    </div>
-                  )}
-
-                  <Link
-                    href={`/Events/${event._id || ""}/${
-                      event.name ? slugify(event.name) : ""
-                    }`}
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#dfd8e4e0] to-[#b9a9d3db] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
-                  >
-                    Learn More
-                    <svg
-                      className="w-4 h-4 ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      ></path>
-                    </svg>
-                  </Link>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          )}
         </motion.div>
 
         {/* See more link with circular arrow design */}

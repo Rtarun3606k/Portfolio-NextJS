@@ -72,7 +72,7 @@ export default function Home() {
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
-        <Events showMore={true} />
+        <Events showMore={true} limited={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
