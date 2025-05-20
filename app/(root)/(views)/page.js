@@ -9,6 +9,7 @@ import BlogsAndPosts from "@/components/BlogsAndPosts";
 import Events from "@/components/Events";
 import Contact from "@/components/Constact";
 import Services from "@/components/Services";
+import WorkExperience from "@/components/WorkExperience";
 
 const AnimatedSection = ({ children, delay = 0.2, viewportAmount = 0.1 }) => {
   const ref = useRef(null);
@@ -54,13 +55,17 @@ export default function Home() {
       {/* Services section with increased visibility threshold for mobile */}
       <AnimatedSection viewportAmount={0.05}>
         <div className="w-full">
-          <Services />
+          <Services showMore={true} limited={true} />
         </div>
       </AnimatedSection>
 
       {/* Stats section with scroll animation */}
       <AnimatedSection>
         <StatsPage showMore={true} />
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.3}>
+        <WorkExperience limited={true} showMore={true} />
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>

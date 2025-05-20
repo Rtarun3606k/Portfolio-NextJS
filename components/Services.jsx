@@ -7,7 +7,7 @@ import { ServicesData } from "@/_utils/Variables";
 import { getData, storeData } from "@/_utils/LocalStorage";
 import parse from "html-react-parser";
 
-const Services = ({ showMore = false }) => {
+const Services = ({ showMore = false, limited = false }) => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [services, setServices] = useState(ServicesData); // fallback
   const [loading, setLoading] = useState(true);
@@ -220,76 +220,80 @@ const Services = ({ showMore = false }) => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
           >
-            {filteredServices.map((service) => (
-              <motion.div
-                layout
-                key={service.id || service._id}
-                variants={itemVariants}
-                className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 h-full"
-              >
-                <div className="p-6 h-full flex flex-col">
-                  <div className="flex items-center mb-4">
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#6A0DAD]/10 to-[#FF4ECD]/20 flex items-center justify-center mr-4 text-[#6A0DAD]">
-                      <div className="w-14 h-14 flex items-center justify-center">
-                        {typeof service.iconPath === "string"
-                          ? parse(String(service.iconPath))
-                          : service.iconPath}
+            {(limited ? filteredServices.slice(0, 6) : filteredServices).map(
+              (service) => (
+                <motion.div
+                  layout
+                  key={service.id || service._id}
+                  variants={itemVariants}
+                  className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 h-full"
+                >
+                  <div className="p-6 h-full flex flex-col">
+                    <div className="flex items-center mb-4">
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#6A0DAD]/10 to-[#FF4ECD]/20 flex items-center justify-center mr-4 text-[#6A0DAD]">
+                        <div className="w-14 h-14 flex items-center justify-center">
+                          {typeof service.iconPath === "string"
+                            ? parse(String(service.iconPath))
+                            : service.iconPath}
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-semibold text-[#1F1F1F] font-poppins">
+                        {service.title}
+                      </h3>
+                    </div>
+
+                    <p className="text-[#6B7280] mb-6 flex-grow">
+                      {service.description}
+                    </p>
+
+                    <div className="border-t border-gray-100 pt-4 mt-auto">
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm font-medium text-[#6B7280]">
+                          Price Range:
+                        </span>
+                        <span className="text-[#6A0DAD] font-semibold">
+                          {service.price}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-[#6B7280]">
+                          Timeframe:
+                        </span>
+                        <span className="text-gray-700">
+                          {service.timeframe}
+                        </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-semibold text-[#1F1F1F] font-poppins">
-                      {service.title}
-                    </h3>
-                  </div>
 
-                  <p className="text-[#6B7280] mb-6 flex-grow">
-                    {service.description}
-                  </p>
-
-                  <div className="border-t border-gray-100 pt-4 mt-auto">
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm font-medium text-[#6B7280]">
-                        Price Range:
-                      </span>
-                      <span className="text-[#6A0DAD] font-semibold">
-                        {service.price}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium text-[#6B7280]">
-                        Timeframe:
-                      </span>
-                      <span className="text-gray-700">{service.timeframe}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-gray-100">
-                    <div className="text-sm text-[#6B7280] mb-4">
-                      <span className="font-medium">Payment Methods:</span>{" "}
-                      PayPal, AirTM
-                    </div>
-                    <Link
-                      href="/Contact"
-                      className="inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
-                    >
-                      Request Quote
-                      <svg
-                        className="w-4 h-4 ml-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    <div className="mt-5 pt-4 border-t border-gray-100">
+                      <div className="text-sm text-[#6B7280] mb-4">
+                        <span className="font-medium">Payment Methods:</span>{" "}
+                        PayPal, AirTM
+                      </div>
+                      <Link
+                        href="/Contact"
+                        className="inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED] text-white font-medium rounded-lg transition-transform hover:scale-[1.02] hover:shadow-md"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        ></path>
-                      </svg>
-                    </Link>
+                        Request Quote
+                        <svg
+                          className="w-4 h-4 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          ></path>
+                        </svg>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            )}
           </motion.div>
         )}
 

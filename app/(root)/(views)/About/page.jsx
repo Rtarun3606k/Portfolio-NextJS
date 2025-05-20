@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import React from "react";
+import Workexperience from "@/components/WorkExperience";
 
 // Dynamically import the Statistics component
 const StatsWrapper = dynamic(() => import("@/components/Statistics"));
@@ -20,6 +21,7 @@ const Page = () => {
         }
       >
         <StatsWrapper />
+        <Workexperience limited={false} />
       </Suspense>
     </div>
   );
