@@ -37,6 +37,7 @@ export async function getDatabases() {
   const Events = client.db("events");
   const Linkedin = client.db("linkedin");
   const Contact = client.db("contact");
+  const WebVitals = client.db("webvitas");
 
   return {
     UserDB,
@@ -51,6 +52,7 @@ export async function getDatabases() {
     eventsCollection: Events.collection("events"),
     linkedinCollection: Linkedin.collection("linkedin"),
     contactCollection: Contact.collection("contact"),
+    webVitalsCollection: WebVitals.collection("webvitas"),
   };
 }
 

@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ClientPageTransition from "@/components/ClientPageTransition";
+import WebVitalsScriptt from "@/_utils/webVitasScript";
 
 import { auth } from "../auth";
 
@@ -11,6 +12,7 @@ const Layout = async ({ children }) => {
     <>
       <Navbar userSession={session} />
       <ClientPageTransition />
+      <WebVitalsScriptt />
       {children}
       <Footer />
       {/* done */}

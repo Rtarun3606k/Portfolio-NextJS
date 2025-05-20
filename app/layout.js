@@ -55,6 +55,7 @@ export const metadata = {
     shortcut: "/image.png",
     apple: "/image.png",
   },
+  manifest: "/site.webmanifest",
 };
 
 // Create a client component for SessionProvider
