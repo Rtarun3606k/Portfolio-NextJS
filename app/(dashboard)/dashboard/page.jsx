@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FaProjectDiagram, FaTools, FaChartPie, FaPlus } from "react-icons/fa";
+import {
+  FaProjectDiagram,
+  FaTools,
+  FaChartPie,
+  FaPlus,
+  FaBriefcase,
+} from "react-icons/fa";
 
 export default function Dashboard() {
   // Count state for dashboard metrics (you can replace with real data from API)
