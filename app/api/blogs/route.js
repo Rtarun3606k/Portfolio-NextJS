@@ -18,6 +18,7 @@ export async function GET(request) {
 
     const blogs = await blogsCollection
       .find({}, { projection: { content: 0 } })
+      .sort({ createdAt: -1 })
       .toArray();
 
     return NextResponse.json({ blogs: blogs }, { status: 200 });

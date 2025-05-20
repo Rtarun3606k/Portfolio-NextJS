@@ -8,7 +8,10 @@ async function getHandler() {
     const { eventsCollection } = await getDatabases();
 
     // Get all events
-    const events = await eventsCollection.find({}).toArray();
+    const events = await eventsCollection
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
 
     // Return events
     return NextResponse.json({ events }, { status: 200 });

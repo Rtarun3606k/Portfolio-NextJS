@@ -2,7 +2,12 @@
 
 import { useEffect } from "react";
 import initWebVitals, { WebVitalsTracker } from "./webVitals";
+import { Suspense } from "react";
 
 export default function WebVitalsScriptt() {
-  return <WebVitalsTracker />; // This component doesn't render anything visible
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WebVitalsTracker />
+    </Suspense>
+  ); // This component doesn't render anything visible
 }

@@ -131,7 +131,10 @@ async function getHandler() {
     const { projectsCollection } = await getDatabases();
 
     // Get all projects
-    const projects = await projectsCollection.find({}).toArray();
+    const projects = await projectsCollection
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
 
     // Return projects
     return NextResponse.json({ projects }, { status: 200 });
