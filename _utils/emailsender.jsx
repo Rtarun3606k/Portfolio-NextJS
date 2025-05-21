@@ -192,7 +192,7 @@ async function sendConfirmationEmail(formData) {
         appointmentDetails: appointmentDetails,
         description: formData.description || "Not provided",
         buttonText: "Visit My Portfolio",
-        portfolioLink: "https://tarunnyayaka.me",
+        portfolioLink: "https://tarunnayaka.me",
         linkedinLink: "https://www.linkedin.com/in/tarun-nayaka-r-28612a27a/",
         githubLink: "https://github.com/Rtarun3606k",
         twitterLink: "https://x.com/Rtarun3606k",
