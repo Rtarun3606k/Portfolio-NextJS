@@ -412,7 +412,7 @@ async function sendConfirmationEmail(formData) {
         githubLink: "https://github.com/Rtarun3606k",
         twitterLink: "https://x.com/Rtarun3606k",
         year: new Date().getFullYear().toString(),
-        address: "Sampangi Rama Nagara Bangalore 560027, India",
+        address: "Sampangi Rama Nagara Bangalore 560027, Karnataka, India",
       },
     });
 
