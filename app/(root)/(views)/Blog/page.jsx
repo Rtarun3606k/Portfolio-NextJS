@@ -4,6 +4,7 @@ import React from "react";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import BlogsAndPosts from "@/components/BlogsAndPosts";
+import NewsletterSubscribe from "@/components/NewsletterSubscribe";
 
 // Dynamically import the BlogsClient component
 const BlogsClient = dynamic(() => import("@/components/BlogsClient"), {
@@ -27,6 +28,7 @@ const BlogPage = () => {
   return (
     <div>
       <BlogsAndPosts />
+      <NewsletterSubscribe />
     </div>
   );
 };

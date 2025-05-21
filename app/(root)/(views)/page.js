@@ -10,6 +10,7 @@ import Events from "@/components/Events";
 import Contact from "@/components/Constact";
 import Services from "@/components/Services";
 import WorkExperience from "@/components/WorkExperience";
+import NewsletterSubscribe from "@/components/NewsletterSubscribe";
 
 const AnimatedSection = ({ children, delay = 0.2, viewportAmount = 0.1 }) => {
   const ref = useRef(null);
@@ -82,6 +83,10 @@ export default function Home() {
 
       <AnimatedSection delay={0.3}>
         <Contact />
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.3}>
+        <NewsletterSubscribe />
       </AnimatedSection>
       {/* You can add more sections with scroll animations */}
       {/* 

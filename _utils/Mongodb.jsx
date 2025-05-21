@@ -39,6 +39,7 @@ export async function getDatabases() {
   const Contact = client.db("contact");
   const WebVitals = client.db("webvitas");
   const Positions = client.db("positions");
+  const Subscriptions = client.db("subscriptions");
 
   return {
     UserDB,
@@ -56,6 +57,7 @@ export async function getDatabases() {
     contactCollection: Contact.collection("contact"),
     webVitalsCollection: WebVitals.collection("webvitas"),
     positionsCollection: Positions.collection("positions"),
+    subscriptionsCollection: Subscriptions.collection("subscriptions"),
   };
 }
 

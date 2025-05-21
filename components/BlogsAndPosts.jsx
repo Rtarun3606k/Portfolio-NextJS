@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getData, storeData } from "@/_utils/LocalStorage";
 import { slugify } from "../_utils/slugify";
+import NewsletterSubscribe from "./NewsletterSubscribe";
 
 const BlogsAndPosts = ({ limited = false, showMore = false }) => {
   const [activeTab, setActiveTab] = useState("blogs");

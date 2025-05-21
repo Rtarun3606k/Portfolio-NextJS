@@ -6,6 +6,7 @@ import { slugify } from "@/_utils/slugify";
 import BlogClientContent from "./BlogClientContent";
 import Script from "next/script";
 import { updateViews } from "./actions";
+import NewsletterWrapper from "@/components/NewsletterWrapper";
 
 // Server component for better SEO
 const PageBlog = async ({ id, params }) => {
@@ -152,6 +153,11 @@ const PageBlog = async ({ id, params }) => {
         suggestedBlogs={suggestedBlogs}
         updateViews={updateViews}
       />
+
+      {/* Newsletter subscription component */}
+      <div className="my-16">
+        <NewsletterWrapper />
+      </div>
 
       {suggestedBlogs.length > 0 && (
         <div className="mt-16">
