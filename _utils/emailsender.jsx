@@ -205,7 +205,7 @@ async function sendConfirmationEmail(formData) {
     return true;
   } catch (error) {
     console.error("Error sending confirmation email:", error);
-    return false;
+    return error;
   }
 }
 
