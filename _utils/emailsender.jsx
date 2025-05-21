@@ -217,7 +217,11 @@ export async function sendEmailTO(formData) {
 
     if (result) {
       console.log("Email confirmation process completed successfully");
-      return { success: true };
+      return {
+        success: true,
+        message: "Email sent successfully",
+        result: result,
+      };
     } else {
       console.log("Email confirmation process failed");
       return {
