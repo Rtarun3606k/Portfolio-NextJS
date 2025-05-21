@@ -19,8 +19,6 @@ async function sendEmail({
   htmlFilePath,
   replacements = {},
 }) {
-  const logs = ["Starting email sending process..."];
-
   try {
     console.log("Starting email sending process...");
 
@@ -35,16 +33,6 @@ async function sendEmail({
       },
     };
 
-    logs.push(
-      `Transport config: ${JSON.stringify({
-        ...transportConfig,
-        auth: {
-          user: transportConfig.auth.user,
-          pass: transportConfig.auth.pass ? "****" : null,
-        },
-      })}`
-    );
-
     const transporter = nodemailer.createTransport(transportConfig);
 
     // Use embedded template instead of loading from file
@@ -53,8 +41,6 @@ async function sendEmail({
     // If no HTML content is provided but htmlFilePath is (indicating template usage intent),
     // use the built-in template
     if (!html && htmlFilePath) {
-      logs.push("Using built-in email template instead of loading from file");
-
       // Built-in email template (copied from your HTML)
       html = `
       <!DOCTYPE html>
@@ -176,151 +162,96 @@ async function sendEmail({
         </body>
       </html>
       `;
-
-      logs.push("Email template loaded from embedded content");
     }
 
     // If neither content nor path is provided, use a simple fallback
     if (!html) {
-      const logMsg = "No HTML content provided, using simple fallback";
-      console.log(logMsg);
-      logs.push(logMsg);
+      console.log("No HTML content provided, using simple fallback");
       html = "<h1>Hello {{name}}</h1><p>This is a test email.</p>";
     }
 
     // Replace placeholders in HTML content
     if (html && Object.keys(replacements).length > 0) {
-      const logMsg = "Replacing placeholders in HTML content";
-      console.log(logMsg);
-      logs.push(logMsg);
-
-      const placeholderKeys = Object.keys(replacements);
-      logs.push(`Replacements keys: ${placeholderKeys.join(", ")}`);
+      console.log("Replacing placeholders in HTML content");
 
       for (const [key, value] of Object.entries(replacements)) {
         if (value !== undefined && value !== null) {
           const regex = new RegExp(`{{${key}}}`, "g");
-          const matches = html.match(regex);
-          logs.push(
-            `Placeholder {{${key}}}: ${
-              matches ? matches.length : 0
-            } matches found`
-          );
           html = html.replace(regex, value);
         }
       }
     }
 
     // Replace any remaining template variables with empty strings
-    const remainingPlaceholders = html.match(/{{[^{}]+}}/g);
-    if (remainingPlaceholders) {
-      logs.push(
-        `Remaining placeholders found: ${remainingPlaceholders.join(", ")}`
-      );
-    }
     html = html.replace(/{{[^{}]+}}/g, "");
 
-    logs.push(`Sending email to: ${to}`);
-    logs.push(`Email subject: ${subject}`);
     console.log(`Sending email to: ${to}`);
     console.log(`Email subject: ${subject}`);
 
     // Send email
-    try {
-      const info = await transporter.sendMail({
-        from,
-        to,
-        subject,
-        html,
-      });
+    const info = await transporter.sendMail({
+      from,
+      to,
+      subject,
+      html,
+    });
 
-      const successMsg = `Email sent successfully: ${info.messageId}`;
-      console.log(successMsg);
-      logs.push(successMsg);
+    console.log(`Email sent successfully: ${info.messageId}`);
 
-      return {
-        success: true,
-        messageId: info.messageId,
-        logs,
-        emailInfo: info,
-      };
-    } catch (mailError) {
-      logs.push(`Mail sending error: ${mailError.message}`);
-      logs.push(`Mail error code: ${mailError.code || "unknown"}`);
-      logs.push(`Mail error stack: ${mailError.stack}`);
-
-      // Check for common SMTP errors
-      if (mailError.code === "EAUTH") {
-        logs.push(
-          "Authentication error: Check your SMTP username and password"
-        );
-      } else if (mailError.code === "ESOCKET") {
-        logs.push("Socket error: Check your SMTP host and port");
-      } else if (mailError.code === "ECONNECTION") {
-        logs.push(
-          "Connection error: Check your network and SMTP server availability"
-        );
-      }
-
-      throw mailError;
-    }
+    return {
+      success: true,
+      messageId: info.messageId,
+      emailInfo: info,
+    };
   } catch (error) {
     console.error("Error sending email:", error);
     return {
       success: false,
       error: {
         message: error.message,
-        stack: error.stack,
         code: error.code || null,
         name: error.name,
       },
-      logs,
     };
   }
 }
 
-// Keep the getservices function as is
 const getservices = async (serviceId, formData) => {
-  // Same implementation as before
-  // ...
-  // Implementation not changed
-};
+  try {
+    console.log(`Fetching service details for ID: ${serviceId}`);
 
-// Use built-in template instead of file path
-// const responseTemplate = "_emailTemplates/template1.html";
+    const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/services/${serviceId}`;
+    const request = await fetch(apiUrl, { method: "GET" });
+
+    if (!request.ok) {
+      throw new Error(`Network response was not ok: ${request.status}`);
+    }
+
+    const data = await request.json();
+
+    // Update formData with service information
+    formData.title = data.title;
+    formData.serviceDesc = data.description;
+    formData.price = data.price;
+    formData.timeframe = data.timeframe;
+
+    return { data };
+  } catch (error) {
+    console.error("Error fetching service:", error);
+    return {
+      error: {
+        message: error.message,
+        code: error.code || null,
+        name: error.name,
+      },
+    };
+  }
+};
 
 // Example code for sending email with this template
 async function sendConfirmationEmail(formData) {
-  const logs = ["Preparing to send confirmation email"];
-
   try {
     console.log("Preparing to send confirmation email");
-
-    // Log environment variables (safely)
-    logs.push(`Current working directory: ${process.cwd()}`);
-    logs.push(
-      `NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || "not set"}`
-    );
-    logs.push(
-      `SMTP_HOST: ${process.env.SMTP_HOST || "default: smtp.gmail.com"}`
-    );
-    logs.push(`SMTP_PORT: ${process.env.SMTP_PORT || "default: 587"}`);
-    logs.push(`SMTP_SECURE: ${process.env.SMTP_SECURE || "default: false"}`);
-    logs.push(`SMTP_USER is ${process.env.SMTP_USER ? "set" : "not set"}`);
-    logs.push(
-      `SMTP_PASSWORD is ${process.env.SMTP_PASSWORD ? "set" : "not set"}`
-    );
-
-    logs.push(
-      `Form data received: ${JSON.stringify({
-        ...formData,
-        email: formData.email || "not provided",
-        serviceId: formData.serviceId || "not provided",
-        name:
-          formData.name ||
-          `${formData.firstName || ""} ${formData.lastName || ""}`,
-      })}`
-    );
 
     // First, fetch service details if needed - only if serviceId exists
     if (
@@ -328,22 +259,12 @@ async function sendConfirmationEmail(formData) {
       formData.serviceId !== null &&
       (!formData.title || !formData.price || !formData.timeframe)
     ) {
-      logs.push(
-        "Service ID present but details missing - fetching service information"
-      );
       console.log(
         "Service ID present but details missing - fetching service information"
       );
       try {
-        const serviceResult = await getservices(formData.serviceId, formData);
-        if (serviceResult.logs) {
-          logs.push(...serviceResult.logs);
-        }
-        if (serviceResult.error) {
-          logs.push("Failed to fetch service details, continuing without them");
-        }
+        await getservices(formData.serviceId, formData);
       } catch (error) {
-        logs.push(`Failed to fetch service details: ${error.message}`);
         console.error(
           "Failed to fetch service details, continuing without them:",
           error
@@ -357,8 +278,6 @@ async function sendConfirmationEmail(formData) {
 
     // Only add service details if we have a title (which indicates service info is available)
     if (formData.serviceId && formData.title) {
-      logs.push("Service information found, adding service details to email");
-
       serviceDetails = `
         <p><strong>Selected Service:</strong> ${
           formData.title || "Not specified"
@@ -370,10 +289,6 @@ async function sendConfirmationEmail(formData) {
 
       // Only add appointment details if we have appointment info
       if (formData.appointmentDate && formData.appointmentTime) {
-        logs.push(
-          "Appointment information found, adding appointment details to email"
-        );
-
         appointmentDetails = `<p><strong>Appointment:</strong> ${
           formData.appointmentDate
         } at ${
@@ -383,9 +298,6 @@ async function sendConfirmationEmail(formData) {
         }</p>`;
       }
     }
-
-    // Instead of using a path, indicate we want to use the built-in template
-    logs.push("Using built-in email template instead of loading from file");
 
     // Send the email - pass null for htmlFilePath to trigger use of built-in template
     const emailResult = await sendEmail({
@@ -416,92 +328,64 @@ async function sendConfirmationEmail(formData) {
       },
     });
 
-    // Include email result logs
-    if (emailResult.logs) {
-      logs.push(...emailResult.logs);
-    }
-
     if (emailResult.success) {
-      logs.push("Confirmation email sent successfully");
       console.log("Confirmation email sent successfully");
       return {
         success: true,
-        logs,
         messageId: emailResult.messageId,
         emailInfo: emailResult.emailInfo,
       };
     } else {
-      logs.push(`Email sending failed: ${emailResult.error?.message}`);
       return {
         success: false,
         error: emailResult.error,
-        logs,
       };
     }
   } catch (error) {
-    logs.push(`Error sending confirmation email: ${error.message}`);
-    logs.push(`Stack: ${error.stack}`);
     console.error("Error sending confirmation email:", error);
     return {
       success: false,
       error: {
         message: error.message,
-        stack: error.stack,
         code: error.code || null,
         name: error.name,
       },
-      logs,
     };
   }
 }
 
 // Main execution function
 export async function sendEmailTO(formData) {
-  const logs = ["Starting email confirmation process"];
-
   try {
     console.log("Starting email confirmation process");
     const result = await sendConfirmationEmail(formData);
 
-    // Include any logs from the confirmation email function
-    if (result.logs) {
-      logs.push(...result.logs);
-    }
-
     if (result.success) {
-      logs.push("Email confirmation process completed successfully");
       console.log("Email confirmation process completed successfully");
       return {
         success: true,
         message: "Email sent successfully",
         result: result,
-        logs,
       };
     } else {
-      logs.push("Email confirmation process failed");
       console.log("Email confirmation process failed");
       return {
         success: false,
         message: "Failed to send confirmation email",
         error: result.error,
         result: result,
-        logs,
       };
     }
   } catch (error) {
-    logs.push(`Unhandled error in main process: ${error.message}`);
-    logs.push(`Stack: ${error.stack}`);
     console.error("Unhandled error in main process:", error);
     return {
       success: false,
       message: error.message,
       error: {
         message: error.message,
-        stack: error.stack,
         code: error.code || null,
         name: error.name,
       },
-      logs,
     };
   }
 }
