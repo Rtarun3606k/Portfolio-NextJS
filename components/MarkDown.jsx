@@ -395,10 +395,12 @@ export default function MarkdownEditor({ id }) {
           placeholder: "Write your markdown content here...",
         }}
         previewOptions={{
-          className: "bg-white text-black",
+          style: { color: "black", backgroundColor: "#c7d2fe" },
         }}
         visibleDragbar={false}
-        data-color-mode="light"
+        // data-color-mode="light"
+        wrapperElement={{ "data-color-mode": "light" }}
+        style={{ backgroundColor: "#c7d2fe", color: "black" }}
       />
 
       <div className="mt-4 p-4 bg-[#FDFDFD] shadow rounded border border-[#C71585]">
@@ -406,7 +408,7 @@ export default function MarkdownEditor({ id }) {
         <MarkdownPreview
           source={value}
           wrapperElement={{ "data-color-mode": "light" }}
-          style={{ backgroundColor: "white", color: "black" }}
+          style={{ backgroundColor: "#c7d2fe", color: "black" }}
         />
       </div>
 
