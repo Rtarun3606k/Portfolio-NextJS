@@ -106,7 +106,7 @@ const NewsletterSubscribe = ({ usedINBlogs = false }) => {
       )}
       {/* Card with backdrop blur and semi-transparent white background */}
       <center>
-        <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8 border border-lavender-300 max-w-[55%] ">
+        <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8 border border-lavender-300 max-w-[90%] sm:max-w-[75%] lg:max-w-[55%] ">
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-lavender-100 mb-4">
               <svg

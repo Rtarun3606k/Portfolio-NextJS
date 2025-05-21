@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import { commands } from "@uiw/react-md-editor";
-import { FaImage } from "react-icons/fa";
+import { FaImage, FaPlus, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,9 @@ export default function MarkdownEditor({ id }) {
   const [blogDetails, setBlogDetails] = useState({
     title: "",
     author: "",
+    categories: [],
   });
+  const [newCategory, setNewCategory] = useState("");
   const [blogImage, setBlogImage] = useState(null);
   const [blogImageUrl, setBlogImageUrl] = useState("");
   const [isImageHovered, setIsImageHovered] = useState(false);
@@ -47,6 +49,7 @@ export default function MarkdownEditor({ id }) {
         setBlogDetails({
           title: data.title || "",
           author: data.author || "",
+          categories: data.categories || [],
         });
         setBlogImageUrl(data.featuredImage || "");
         setIsEditing(true);
@@ -60,6 +63,39 @@ export default function MarkdownEditor({ id }) {
 
     fetchBlog();
   }, [id]);
+
+  // Handle category management
+  const addCategory = () => {
+    if (!newCategory.trim()) return;
+
+    // Prevent duplicates
+    if (blogDetails.categories.includes(newCategory.trim())) {
+      alert("This category already exists");
+      return;
+    }
+
+    setBlogDetails({
+      ...blogDetails,
+      categories: [...blogDetails.categories, newCategory.trim()],
+    });
+    setNewCategory("");
+  };
+
+  const removeCategory = (indexToRemove) => {
+    setBlogDetails({
+      ...blogDetails,
+      categories: blogDetails.categories.filter(
+        (_, index) => index !== indexToRemove
+      ),
+    });
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addCategory();
+    }
+  };
 
   // Handle image upload to Azure Blob Storage with best practices
   const uploadImageToAzure = async (file) => {
@@ -253,6 +289,7 @@ export default function MarkdownEditor({ id }) {
         author: blogDetails.author,
         content: value,
         featuredImage: blogImageUrl,
+        categories: blogDetails.categories,
         updatedAt: new Date().toISOString(),
       };
 
@@ -356,6 +393,50 @@ export default function MarkdownEditor({ id }) {
           }
           className="w-full p-2 border border-[#C71585] rounded text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#5E60CE]"
         />
+
+        {/* Categories input and display section */}
+        <div className="border border-[#C71585] rounded p-2 bg-white">
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Add a category"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="flex-grow p-2 border-none text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#5E60CE]"
+            />
+            <button
+              onClick={addCategory}
+              className="ml-2 p-2 bg-[#5E60CE] hover:bg-[#7209B7] text-white rounded transition-colors duration-300"
+              type="button"
+            >
+              <FaPlus />
+            </button>
+          </div>
+
+          {/* Display existing categories */}
+          <div className="mt-2 flex flex-wrap gap-2">
+            {blogDetails.categories.map((category, index) => (
+              <div
+                key={index}
+                className="flex items-center bg-[#f0e6fa] px-3 py-1 rounded-full text-sm"
+              >
+                <span className="text-black">{category}</span>
+                <button
+                  onClick={() => removeCategory(index)}
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  type="button"
+                >
+                  <FaTimes size={12} />
+                </button>
+              </div>
+            ))}
+            {blogDetails.categories.length === 0 && (
+              <p className="text-gray-500 text-sm">No categories added yet</p>
+            )}
+          </div>
+        </div>
+
         <div className="flex items-center space-x-2">
           <input
             type="file"
@@ -398,8 +479,7 @@ export default function MarkdownEditor({ id }) {
           style: { color: "black", backgroundColor: "#c7d2fe" },
         }}
         visibleDragbar={false}
-        // data-color-mode="light"
-        wrapperElement={{ "data-color-mode": "light" }}
+        data-color-mode="light" // Correct way to set the color mode
         style={{ backgroundColor: "#c7d2fe", color: "black" }}
       />
 
@@ -442,9 +522,26 @@ export default function MarkdownEditor({ id }) {
             <h2 className="text-2xl font-bold text-[#1C1C1C] mb-2">
               {blogDetails.title || "Your Blog Title"}
             </h2>
-            <p className="text-[#5E60CE] mb-4">
+            <p className="text-[#5E60CE] mb-2">
               By {blogDetails.author || "Author Name"}
             </p>
+
+            {/* Categories display */}
+            <div className="mb-3 flex flex-wrap gap-1">
+              {blogDetails.categories.length > 0 ? (
+                blogDetails.categories.map((category, index) => (
+                  <span
+                    key={index}
+                    className="inline-block px-2 py-1 bg-[#f0e6fa] text-[#000000] text-xs rounded-full"
+                  >
+                    {category}
+                  </span>
+                ))
+              ) : (
+                <span className="text-black text-sm">No categories</span>
+              )}
+            </div>
+
             <div className="line-clamp-3 text-[#1C1C1C]">
               <MarkdownPreview
                 source={value}

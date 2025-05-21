@@ -304,6 +304,21 @@ const BlogsAndPosts = ({ limited = false, showMore = false }) => {
                         </>
                       )}
                     </div>
+                    <div className="flex flex-wrap gap-2 items-center text-sm mb-3">
+                      {blog?.categories?.map((category, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-[#f0e6fa] text-[#5E60CE] rounded-full text-sm font-medium hover:bg-[#e6d8f5] transition-colors duration-200 shadow-sm"
+                        >
+                          {category}
+                        </span>
+                      ))}
+                      {(!blog?.categories || blog.categories.length === 0) && (
+                        <span className="text-gray-400 italic text-sm">
+                          No categories
+                        </span>
+                      )}
+                    </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="bg-[#6A0DAD]/10 text-[#6A0DAD] px-3 py-1 rounded-full font-medium">
                         {blog.views.toLocaleString()} views
