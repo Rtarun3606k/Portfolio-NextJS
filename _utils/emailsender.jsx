@@ -21,9 +21,11 @@ async function sendEmail({
   htmlFilePath,
   replacements = {},
 }) {
+  // Initialize logs array at the start of the function
+  const logs = ["Starting email sending process..."];
+
   try {
     console.log("Starting email sending process...");
-    const logs = ["Starting email sending process..."];
 
     // Create transporter
     const transportConfig = {
@@ -60,6 +62,7 @@ async function sendEmail({
         const resolvedPath = path.resolve(process.cwd(), htmlFilePath);
         logs.push(`Resolved template path: ${resolvedPath}`);
 
+        // Check if file exists
         try {
           const fileExists = await fs
             .access(resolvedPath)
@@ -68,7 +71,7 @@ async function sendEmail({
           logs.push(`File exists check: ${fileExists}`);
 
           if (!fileExists) {
-            // Try to list files in the directory to help diagnose the issue
+            // List files in directory to help diagnose the issue
             try {
               const dir = path.dirname(resolvedPath);
               const files = await fs.readdir(dir);
@@ -154,7 +157,7 @@ async function sendEmail({
       return {
         success: true,
         messageId: info.messageId,
-        logs: logs,
+        logs, // Return logs array
         emailInfo: info,
       };
     } catch (mailError) {
@@ -187,13 +190,15 @@ async function sendEmail({
         code: error.code || null,
         name: error.name,
       },
-      logs: logs || [],
+      logs, // Return logs array even in error case
     };
   }
 }
 
 const getservices = async (serviceId, formData) => {
+  // Initialize logs array at the start of the function
   const logs = [`Fetching service details for ID: ${serviceId}`];
+
   try {
     console.log(`Fetching service details for ID: ${serviceId}`);
 
@@ -249,7 +254,9 @@ const responseTemplate = "_emailTemplates/template1.html";
 
 // Example code for sending email with this template
 async function sendConfirmationEmail(formData) {
+  // Initialize logs array at the start of the function
   const logs = ["Preparing to send confirmation email"];
+
   try {
     console.log("Preparing to send confirmation email");
 
@@ -415,7 +422,9 @@ async function sendConfirmationEmail(formData) {
 
 // Main execution function
 export async function sendEmailTO(formData) {
+  // Initialize logs array at the start of the function
   const logs = ["Starting email confirmation process"];
+
   try {
     console.log("Starting email confirmation process");
     const result = await sendConfirmationEmail(formData);
@@ -432,7 +441,7 @@ export async function sendEmailTO(formData) {
         success: true,
         message: "Email sent successfully",
         result: result,
-        logs: logs,
+        logs,
       };
     } else {
       logs.push("Email confirmation process failed");
@@ -442,7 +451,7 @@ export async function sendEmailTO(formData) {
         message: "Failed to send confirmation email",
         error: result.error,
         result: result,
-        logs: logs,
+        logs,
       };
     }
   } catch (error) {
@@ -458,7 +467,7 @@ export async function sendEmailTO(formData) {
         code: error.code || null,
         name: error.name,
       },
-      logs: logs,
+      logs,
     };
   }
 }
