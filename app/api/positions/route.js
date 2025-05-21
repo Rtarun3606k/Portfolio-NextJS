@@ -38,7 +38,7 @@ async function getHandler() {
     // Get all positions and sort by startDate in descending order (newest first)
     const positions = await positionsCollection
       .find({})
-      .sort({ startDate: -1 })
+      .sort({ isCurrent: -1, startDate: -1 })
       .toArray();
 
     return NextResponse.json({ positions }, { status: 200 });
