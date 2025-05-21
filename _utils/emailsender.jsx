@@ -220,7 +220,11 @@ export async function sendEmailTO(formData) {
       return { success: true };
     } else {
       console.log("Email confirmation process failed");
-      return { success: false, message: "Failed to send confirmation email" };
+      return {
+        success: false,
+        message: "Failed to send confirmation email",
+        result: result,
+      };
     }
   } catch (error) {
     console.error("Unhandled error in main process:", error);
