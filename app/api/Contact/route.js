@@ -1,3 +1,4 @@
+import { sendEmailTO } from "@/_utils/emailsender";
 import { getDatabases } from "@/_utils/Mongodb";
 import { NextResponse } from "next/server";
 
@@ -38,6 +39,10 @@ export async function POST(request) {
     const { contactCollection } = await getDatabases();
 
     const result = await contactCollection.insertOne(contactData);
+
+    // if (formData.get("serviceId") !== null) {
+    await sendEmailTO(contactData);
+    // }
 
     return NextResponse.json(
       {

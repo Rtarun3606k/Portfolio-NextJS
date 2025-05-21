@@ -16,6 +16,7 @@ const Contact = () => {
     serviceId: "", // New field for selected service
     appointmentDate: "", // New field for appointment date
     appointmentTime: "", // New field for appointment time
+    serviceName: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -112,6 +113,7 @@ const Contact = () => {
     }
   };
 
+  // In the handleSubmit function, modify the form data preparation
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -119,28 +121,45 @@ const Contact = () => {
       setFormStatus("submitting");
 
       try {
-        // Create a FormData object for submission
+        // Get service details if a service is selected
+        const selectedService = services.find(
+          (service) => service._id === formData.serviceId
+        );
+
+        // Create a FormData object with all required fields
         const formDataObj = new FormData();
 
-        // Add all form fields to FormData
+        // Add basic form fields
         formDataObj.append("firstName", formData.firstName);
         formDataObj.append("lastName", formData.lastName);
         formDataObj.append("email", formData.email);
         formDataObj.append("type", formData.type);
         formDataObj.append("description", formData.description);
+        formDataObj.append(
+          "name",
+          `${formData.firstName} ${formData.lastName}`
+        );
 
-        if (formData.serviceId) {
-          formDataObj.append("serviceId", formData.serviceId);
+        // Add service-related fields if a service is selected
+        if (selectedService) {
+          formDataObj.append("serviceId", selectedService._id);
+          formDataObj.append("serviceName", selectedService.title); // Add service title
+          formDataObj.append("serviceTimeframe", selectedService.timeframe); // Add service timeframe
+          formDataObj.append("serviceDescription", selectedService.description); // Add service description
+          formDataObj.append("servicePrice", selectedService.price); // Add service price
+
+          // Add appointment details if provided
+          if (formData.appointmentDate) {
+            formDataObj.append("appointmentDate", formData.appointmentDate);
+          }
+
+          if (formData.appointmentTime) {
+            formDataObj.append("appointmentTime", formData.appointmentTime);
+          }
         }
 
-        if (formData.appointmentDate) {
-          formDataObj.append("appointmentDate", formData.appointmentDate);
-        }
-
-        if (formData.appointmentTime) {
-          formDataObj.append("appointmentTime", formData.appointmentTime);
-        }
-
+        // Send the request
+        // console.log("Sending form data:", formData);
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/Contact`,
           {
@@ -149,6 +168,7 @@ const Contact = () => {
             body: formDataObj,
           }
         );
+        // console.log("Sending form data obj:", formDataObj);
 
         const data = await response.json();
         if (!response.ok) {

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thank You for Contacting Me</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f7;
+      }
+      .header {
+        background: linear-gradient(to right, #6a0dad, #7c3aed);
+        color: white;
+        padding: 25px;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 4px 6px rgba(106, 13, 173, 0.1);
+      }
+      .content {
+        padding: 25px;
+        background: white;
+        border: 1px solid #eee;
+        border-top: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 12px;
+        color: #666;
+        background-color: #f9f9f9;
+        border-radius: 0 0 8px 8px;
+        border: 1px solid #eee;
+        border-top: none;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: linear-gradient(to right, #6a0dad, #7c3aed);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 20px 0;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(106, 13, 173, 0.2);
+        transition: all 0.3s ease;
+      }
+      .button:hover {
+        box-shadow: 0 4px 8px rgba(106, 13, 173, 0.3);
+        transform: translateY(-2px);
+      }
+      .details {
+        background-color: #f8f5ff;
+        border-left: 4px solid #6a0dad;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+      }
+      .social-links {
+        margin-top: 15px;
+      }
+      .social-links a {
+        display: inline-block;
+        margin: 0 10px;
+        color: #6a0dad;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
+    </div>
+    <div class="content">
+      <p>Hello {{name}},</p>
+      <p>{{message}}</p>
+
+      <div class="details">
+        <p><strong>Request Details:</strong></p>
+        <!-- <p><strong>Category:</strong> {{type}}</p> -->
+        {{serviceDetails}} {{appointmentDetails}}
+        <p><strong>Your message:</strong> {{description}}</p>
+      </div>
+
+      <p>
+        I'll review your request and get back to you as soon as possible. Please
+        feel free to reach out if you have any other questions in the meantime.
+      </p>
+
+      <center>
+        <p>
+          <a href="{{portfolioLink}}" class="button" style="color: white"
+            >{{buttonText}}</a
+          >
+        </p>
+
+        <div class="social-links">
+          <p>Connect with me:</p>
+          <a href="{{linkedinLink}}">LinkedIn</a>
+          <a href="{{githubLink}}">GitHub</a>
+          <a href="{{twitterLink}}">Twitter</a>
+        </div>
+      </center>
+    </div>
+    <div class="footer">
+      <p>© {{year}} Tarun Nayaka R. All rights reserved.</p>
+      <p>{{address}}</p>
+    </div>
+  </body>
+</html>
