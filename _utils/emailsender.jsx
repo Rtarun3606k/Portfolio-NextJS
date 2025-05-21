@@ -23,9 +23,10 @@ async function sendEmail({
 }) {
   try {
     console.log("Starting email sending process...");
+    const logs = ["Starting email sending process..."];
 
     // Create transporter
-    const transporter = nodemailer.createTransport({
+    const transportConfig = {
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port: parseInt(process.env.SMTP_PORT || "587"),
       secure: process.env.SMTP_SECURE === "true",
@@ -33,78 +34,189 @@ async function sendEmail({
         user: process.env.SMTP_USER || "r.tarunnayaka25042005@gmail.com",
         pass: process.env.SMTP_PASSWORD || null,
       },
-    });
+    };
+
+    logs.push(
+      `Transport config: ${JSON.stringify({
+        ...transportConfig,
+        auth: {
+          user: transportConfig.auth.user,
+          pass: transportConfig.auth.pass ? "****" : null,
+        },
+      })}`
+    );
+
+    const transporter = nodemailer.createTransport(transportConfig);
 
     // Get HTML content from file if path is provided
     let html = htmlContent;
     if (htmlFilePath && !htmlContent) {
       try {
-        console.log(`Reading HTML template from: ${htmlFilePath}`);
+        const logMsg = `Reading HTML template from: ${htmlFilePath}`;
+        console.log(logMsg);
+        logs.push(logMsg);
+
         // Use path.resolve to handle relative paths
         const resolvedPath = path.resolve(process.cwd(), htmlFilePath);
+        logs.push(`Resolved template path: ${resolvedPath}`);
+
+        try {
+          const fileExists = await fs
+            .access(resolvedPath)
+            .then(() => true)
+            .catch(() => false);
+          logs.push(`File exists check: ${fileExists}`);
+
+          if (!fileExists) {
+            // Try to list files in the directory to help diagnose the issue
+            try {
+              const dir = path.dirname(resolvedPath);
+              const files = await fs.readdir(dir);
+              logs.push(`Files in directory ${dir}: ${files.join(", ")}`);
+            } catch (dirErr) {
+              logs.push(`Could not read directory: ${dirErr.message}`);
+            }
+          }
+        } catch (accessErr) {
+          logs.push(`File access error: ${accessErr.message}`);
+        }
+
         html = await fs.readFile(resolvedPath, "utf8");
+        logs.push("HTML template loaded successfully");
         console.log("HTML template loaded successfully");
       } catch (fileError) {
-        console.error("Error reading HTML file:", fileError);
+        const errorMsg = `Error reading HTML file: ${fileError.message}`;
+        console.error(errorMsg);
+        logs.push(errorMsg);
+        logs.push(`Stack: ${fileError.stack}`);
         throw new Error(`Failed to read HTML template: ${fileError.message}`);
       }
     }
 
     // If no HTML content is available, use a simple fallback
     if (!html) {
-      console.log("No HTML content provided, using fallback");
+      const logMsg = "No HTML content provided, using fallback";
+      console.log(logMsg);
+      logs.push(logMsg);
       html = "<h1>Hello {{name}}</h1><p>This is a test email.</p>";
     }
 
     // Replace placeholders in HTML content
     if (html && Object.keys(replacements).length > 0) {
-      console.log("Replacing placeholders in HTML content");
+      const logMsg = "Replacing placeholders in HTML content";
+      console.log(logMsg);
+      logs.push(logMsg);
+
+      const placeholderKeys = Object.keys(replacements);
+      logs.push(`Replacements keys: ${placeholderKeys.join(", ")}`);
+
       for (const [key, value] of Object.entries(replacements)) {
         if (value !== undefined && value !== null) {
           const regex = new RegExp(`{{${key}}}`, "g");
+          const matches = html.match(regex);
+          logs.push(
+            `Placeholder {{${key}}}: ${
+              matches ? matches.length : 0
+            } matches found`
+          );
           html = html.replace(regex, value);
         }
       }
     }
 
     // Replace any remaining template variables with empty strings
+    const remainingPlaceholders = html.match(/{{[^{}]+}}/g);
+    if (remainingPlaceholders) {
+      logs.push(
+        `Remaining placeholders found: ${remainingPlaceholders.join(", ")}`
+      );
+    }
     html = html.replace(/{{[^{}]+}}/g, "");
 
+    logs.push(`Sending email to: ${to}`);
+    logs.push(`Email subject: ${subject}`);
     console.log(`Sending email to: ${to}`);
     console.log(`Email subject: ${subject}`);
 
     // Send email
-    const info = await transporter.sendMail({
-      from,
-      to,
-      subject,
-      html,
-    });
+    try {
+      const info = await transporter.sendMail({
+        from,
+        to,
+        subject,
+        html,
+      });
 
-    console.log("Email sent successfully:", info.messageId);
-    return { success: true, messageId: info.messageId };
+      const successMsg = `Email sent successfully: ${info.messageId}`;
+      console.log(successMsg);
+      logs.push(successMsg);
+
+      return {
+        success: true,
+        messageId: info.messageId,
+        logs: logs,
+        emailInfo: info,
+      };
+    } catch (mailError) {
+      logs.push(`Mail sending error: ${mailError.message}`);
+      logs.push(`Mail error code: ${mailError.code || "unknown"}`);
+      logs.push(`Mail error stack: ${mailError.stack}`);
+
+      // Check for common SMTP errors
+      if (mailError.code === "EAUTH") {
+        logs.push(
+          "Authentication error: Check your SMTP username and password"
+        );
+      } else if (mailError.code === "ESOCKET") {
+        logs.push("Socket error: Check your SMTP host and port");
+      } else if (mailError.code === "ECONNECTION") {
+        logs.push(
+          "Connection error: Check your network and SMTP server availability"
+        );
+      }
+
+      throw mailError;
+    }
   } catch (error) {
     console.error("Error sending email:", error);
-    throw error;
+    return {
+      success: false,
+      error: {
+        message: error.message,
+        stack: error.stack,
+        code: error.code || null,
+        name: error.name,
+      },
+      logs: logs || [],
+    };
   }
 }
 
 const getservices = async (serviceId, formData) => {
+  const logs = [`Fetching service details for ID: ${serviceId}`];
   try {
     console.log(`Fetching service details for ID: ${serviceId}`);
-    const request = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/services/${serviceId}`,
-      {
-        method: "GET",
-      }
-    );
+
+    const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/services/${serviceId}`;
+    logs.push(`API URL: ${apiUrl}`);
+
+    const request = await fetch(apiUrl, {
+      method: "GET",
+    });
+
+    logs.push(`API response status: ${request.status}`);
 
     if (!request.ok) {
+      const errorText = await request
+        .text()
+        .catch(() => "Could not read response text");
+      logs.push(`Error response body: ${errorText}`);
       throw new Error(`Network response was not ok: ${request.status}`);
     }
 
     const data = await request.json();
-    console.log("Service data retrieved:", data);
+    logs.push("Service data retrieved successfully");
+    logs.push(`Service data: ${JSON.stringify(data)}`);
 
     // Update formData with service information
     formData.title = data.title;
@@ -112,10 +224,24 @@ const getservices = async (serviceId, formData) => {
     formData.price = data.price;
     formData.timeframe = data.timeframe;
 
-    return data;
+    return {
+      data,
+      logs,
+    };
   } catch (error) {
     console.error("Error fetching service:", error);
-    throw error;
+    logs.push(`Error fetching service: ${error.message}`);
+    logs.push(`Error stack: ${error.stack}`);
+
+    return {
+      error: {
+        message: error.message,
+        stack: error.stack,
+        code: error.code || null,
+        name: error.name,
+      },
+      logs,
+    };
   }
 };
 
@@ -123,8 +249,35 @@ const responseTemplate = "_emailTemplates/template1.html";
 
 // Example code for sending email with this template
 async function sendConfirmationEmail(formData) {
+  const logs = ["Preparing to send confirmation email"];
   try {
     console.log("Preparing to send confirmation email");
+
+    // Log environment variables (safely)
+    logs.push(`Current working directory: ${process.cwd()}`);
+    logs.push(
+      `NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || "not set"}`
+    );
+    logs.push(
+      `SMTP_HOST: ${process.env.SMTP_HOST || "default: smtp.gmail.com"}`
+    );
+    logs.push(`SMTP_PORT: ${process.env.SMTP_PORT || "default: 587"}`);
+    logs.push(`SMTP_SECURE: ${process.env.SMTP_SECURE || "default: false"}`);
+    logs.push(`SMTP_USER is ${process.env.SMTP_USER ? "set" : "not set"}`);
+    logs.push(
+      `SMTP_PASSWORD is ${process.env.SMTP_PASSWORD ? "set" : "not set"}`
+    );
+
+    logs.push(
+      `Form data received: ${JSON.stringify({
+        ...formData,
+        email: formData.email || "not provided",
+        serviceId: formData.serviceId || "not provided",
+        name:
+          formData.name ||
+          `${formData.firstName || ""} ${formData.lastName || ""}`,
+      })}`
+    );
 
     // First, fetch service details if needed - only if serviceId exists
     if (
@@ -132,12 +285,22 @@ async function sendConfirmationEmail(formData) {
       formData.serviceId !== null &&
       (!formData.title || !formData.price || !formData.timeframe)
     ) {
+      logs.push(
+        "Service ID present but details missing - fetching service information"
+      );
       console.log(
         "Service ID present but details missing - fetching service information"
       );
       try {
-        await getservices(formData.serviceId, formData);
+        const serviceResult = await getservices(formData.serviceId, formData);
+        if (serviceResult.logs) {
+          logs.push(...serviceResult.logs);
+        }
+        if (serviceResult.error) {
+          logs.push("Failed to fetch service details, continuing without them");
+        }
       } catch (error) {
+        logs.push(`Failed to fetch service details: ${error.message}`);
         console.error(
           "Failed to fetch service details, continuing without them:",
           error
@@ -151,6 +314,8 @@ async function sendConfirmationEmail(formData) {
 
     // Only add service details if we have a title (which indicates service info is available)
     if (formData.serviceId && formData.title) {
+      logs.push("Service information found, adding service details to email");
+
       serviceDetails = `
         <p><strong>Selected Service:</strong> ${
           formData.title || "Not specified"
@@ -162,6 +327,10 @@ async function sendConfirmationEmail(formData) {
 
       // Only add appointment details if we have appointment info
       if (formData.appointmentDate && formData.appointmentTime) {
+        logs.push(
+          "Appointment information found, adding appointment details to email"
+        );
+
         appointmentDetails = `<p><strong>Appointment:</strong> ${
           formData.appointmentDate
         } at ${
@@ -172,12 +341,16 @@ async function sendConfirmationEmail(formData) {
       }
     }
 
+    // Template path
+    const templatePath = responseTemplate;
+    logs.push(`Email template path: ${templatePath}`);
+
     // Send the email
-    await sendEmail({
+    const emailResult = await sendEmail({
       to: formData.email,
       from: "r.tarunnayaka25042005@gmail.com",
       subject: "Thank You for Contacting Me",
-      htmlFilePath: responseTemplate,
+      htmlFilePath: templatePath,
       replacements: {
         title: "Thank You for Your Message",
         subtitle: formData.serviceId
@@ -201,37 +374,91 @@ async function sendConfirmationEmail(formData) {
       },
     });
 
-    console.log("Confirmation email sent successfully");
-    return true;
+    // Include email result logs
+    if (emailResult.logs) {
+      logs.push(...emailResult.logs);
+    }
+
+    if (emailResult.success) {
+      logs.push("Confirmation email sent successfully");
+      console.log("Confirmation email sent successfully");
+      return {
+        success: true,
+        logs,
+        messageId: emailResult.messageId,
+        emailInfo: emailResult.emailInfo,
+      };
+    } else {
+      logs.push(`Email sending failed: ${emailResult.error?.message}`);
+      return {
+        success: false,
+        error: emailResult.error,
+        logs,
+      };
+    }
   } catch (error) {
+    logs.push(`Error sending confirmation email: ${error.message}`);
+    logs.push(`Stack: ${error.stack}`);
     console.error("Error sending confirmation email:", error);
-    return error;
+    return {
+      success: false,
+      error: {
+        message: error.message,
+        stack: error.stack,
+        code: error.code || null,
+        name: error.name,
+      },
+      logs,
+    };
   }
 }
 
 // Main execution function
 export async function sendEmailTO(formData) {
+  const logs = ["Starting email confirmation process"];
   try {
     console.log("Starting email confirmation process");
     const result = await sendConfirmationEmail(formData);
 
-    if (result) {
+    // Include any logs from the confirmation email function
+    if (result.logs) {
+      logs.push(...result.logs);
+    }
+
+    if (result.success) {
+      logs.push("Email confirmation process completed successfully");
       console.log("Email confirmation process completed successfully");
       return {
         success: true,
         message: "Email sent successfully",
         result: result,
+        logs: logs,
       };
     } else {
+      logs.push("Email confirmation process failed");
       console.log("Email confirmation process failed");
       return {
         success: false,
         message: "Failed to send confirmation email",
+        error: result.error,
         result: result,
+        logs: logs,
       };
     }
   } catch (error) {
+    logs.push(`Unhandled error in main process: ${error.message}`);
+    logs.push(`Stack: ${error.stack}`);
     console.error("Unhandled error in main process:", error);
-    return { success: false, message: error.message };
+    return {
+      success: false,
+      message: error.message,
+      error: {
+        message: error.message,
+        stack: error.stack,
+        code: error.code || null,
+        name: error.name,
+      },
+      logs: logs,
+    };
   }
 }
