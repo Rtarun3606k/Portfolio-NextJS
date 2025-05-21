@@ -41,13 +41,14 @@ export async function POST(request) {
     const result = await contactCollection.insertOne(contactData);
 
     // if (formData.get("serviceId") !== null) {
-    await sendEmailTO(contactData);
+    const mssage = await sendEmailTO(contactData);
     // }
 
     return NextResponse.json(
       {
         message: "Contact message sent successfully",
         id: result.insertedId,
+        mssage: mssage,
       },
       { status: 201 }
     );
