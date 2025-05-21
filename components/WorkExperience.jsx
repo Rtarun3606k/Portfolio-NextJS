@@ -69,11 +69,14 @@ export default function WorkExperience({ limited = false, showMore = false }) {
       </div>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
+          <span className="inline-block bg-[#5E60CE]/10 px-4 py-1 rounded-full text-[#5E60CE] font-medium mb-4">
+            My Journey
+          </span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold font-poppins text-[#1F1F1F] mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED]"
+            className="text-4xl md:text-5xl font-bold font-playfair  text-[#1F1F1F] mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#6A0DAD] to-[#7C3AED]"
           >
             Work Experience
           </motion.h2>

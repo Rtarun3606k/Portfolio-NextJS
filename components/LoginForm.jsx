@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { SetClientAuth } from "@/_utils/Dashboard";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -27,13 +28,29 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      // Simulate a brief loading delay for better user experience
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (!formData.email || !formData.password) {
+        setError("Please fill in all fields.");
+        setLoading(false);
+        return;
+      }
 
-      console.log("Auto-login successful - public access granted");
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      // Always redirect to dashboard - no real authentication
-      router.push("/dashboard");
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        console.log("Admin login successful");
+        SetClientAuth(true);
+        router.push("/dashboard");
+      } else {
+        setError(data.message || "Invalid credentials. Please try again.");
+      }
     } catch (err) {
       console.error("Error:", err);
       setError("An error occurred. Please try again.");
@@ -101,28 +118,6 @@ export default function LoginForm() {
           </button>
         </div>
       </form>
-
-      <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">
-          Don't have an account?{" "}
-          <Link
-            href="/Register"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            Register here
-          </Link>
-        </p>
-
-        {/* Direct access link for user convenience */}
-        <p className="text-sm text-gray-600 mt-2">
-          <Link
-            href="/dashboard"
-            className="font-medium text-green-600 hover:text-green-500"
-          >
-            Access Dashboard Directly
-          </Link>
-        </p>
-      </div>
     </div>
   );
 }

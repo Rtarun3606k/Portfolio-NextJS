@@ -1,84 +1,77 @@
 import { NextResponse } from "next/server";
 
-// List of allowed origins for CORS - restricted to just 3 URLs
-// Read from environment variable or use default values
-const allowedOrigins = [
-  "https://tarunnayaka.me",
-  "https://www.tarunnayaka.me",
-  "http://localhost:3000",
-  "https://tarun-nayaka-r-g8fpf4e2dmd9e8dt.centralindia-01.azurewebsites.net",
-];
-
-/**
- * CORS middleware for Next.js
- */
 export function middleware(request) {
-  console.log("⭐ Middleware executing for path:", request.nextUrl.pathname);
+  const path = request.nextUrl.pathname;
 
-  // Only apply CORS to API routes
-  if (!request.nextUrl.pathname.startsWith("/api")) {
-    return NextResponse.next();
+  // Handle dashboard protection
+  if (path.startsWith("/dashboard")) {
+    // Check for the admin session cookie
+    const cookie = request.cookies.get("admin_session");
+
+    // If no cookie exists, redirect to login
+    if (!cookie) {
+      return NextResponse.redirect(new URL("/Login", request.url));
+    }
   }
 
-  const origin = request.headers.get("origin");
-  console.log("🔍 Origin:", origin);
+  // Handle CORS for API routes
+  if (path.startsWith("/api")) {
+    // Get the origin from the request
+    const origin = request.headers.get("origin");
 
-  // Handle OPTIONS preflight requests
-  if (request.method === "OPTIONS") {
-    console.log("➡️ Handling OPTIONS preflight request");
-    const response = new NextResponse(null, { status: 204 });
+    // Handle preflight requests (OPTIONS)
+    if (request.method === "OPTIONS") {
+      const response = new NextResponse(null, { status: 204 });
 
-    // Only allow the three specified origins
-    if (origin && allowedOrigins.includes(origin)) {
-      console.log(`✅ Allowing preflight for origin: ${origin}`);
+      // Set CORS headers
+      if (origin) {
+        response.headers.set("Access-Control-Allow-Origin", origin);
+      } else {
+        response.headers.set("Access-Control-Allow-Origin", "*");
+      }
+
+      response.headers.set(
+        "Access-Control-Allow-Methods",
+        "GET,DELETE,PATCH,POST,PUT,OPTIONS"
+      );
+      response.headers.set(
+        "Access-Control-Allow-Headers",
+        "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
+      );
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+      response.headers.set("Access-Control-Max-Age", "86400");
+
+      return response;
+    }
+
+    // For regular API requests
+    const response = NextResponse.next();
+
+    // Set CORS headers
+    if (origin) {
       response.headers.set("Access-Control-Allow-Origin", origin);
     } else {
-      console.log(`❌ Blocking preflight for origin: ${origin || "null"}`);
-      response.headers.set("Access-Control-Allow-Origin", "null");
+      response.headers.set("Access-Control-Allow-Origin", "*");
     }
 
     response.headers.set(
       "Access-Control-Allow-Methods",
-      "GET,POST,PUT,DELETE,OPTIONS"
+      "GET,DELETE,PATCH,POST,PUT,OPTIONS"
     );
     response.headers.set(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version"
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
     );
     response.headers.set("Access-Control-Allow-Credentials", "true");
-    response.headers.set("Access-Control-Max-Age", "86400");
 
-    console.log("✅ Preflight response headers set");
     return response;
   }
 
-  // For actual requests
-  console.log("➡️ Handling actual request:", request.method);
-  const response = NextResponse.next();
-
-  // Only allow the three specified origins
-  if (origin && allowedOrigins.includes(origin)) {
-    console.log(`✅ Allowing request for origin: ${origin}`);
-    response.headers.set("Access-Control-Allow-Origin", origin);
-  } else {
-    console.log(`❌ Blocking request for origin: ${origin || "null"}`);
-    response.headers.set("Access-Control-Allow-Origin", "null");
-  }
-
-  response.headers.set(
-    "Access-Control-Allow-Methods",
-    "GET,POST,PUT,DELETE,OPTIONS"
-  );
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
-  response.headers.set("Access-Control-Allow-Credentials", "true");
-
-  console.log("✅ Response headers set");
-  return response;
+  // For all other routes
+  return NextResponse.next();
 }
 
+// Configure which paths should trigger this middleware
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/dashboard/:path*", "/api/:path*"],
 };
