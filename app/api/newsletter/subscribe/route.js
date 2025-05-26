@@ -1,33 +1,77 @@
 import { getDatabases } from "../../../../_utils/Mongodb";
+import { sendWelcomeEmail } from "../../../../_utils/emailsender";
 
 export async function POST(request) {
-  const { email } = await request.json();
+  try {
+    const { email, name } = await request.json();
 
-  const { subscriptionsCollection } = await getDatabases();
+    if (!email) {
+      return new Response(JSON.stringify({ message: "Email is required" }), {
+        status: 400,
+      });
+    }
 
-  const existingSubscription = await subscriptionsCollection.findOne({ email });
+    const { subscriptionsCollection } = await getDatabases();
 
-  if (existingSubscription) {
-    return new Response(JSON.stringify({ message: "Already subscribed" }), {
-      status: 400,
+    const existingSubscription = await subscriptionsCollection.findOne({
+      email,
     });
-  }
 
-  const result = await subscriptionsCollection.insertOne({
-    email,
-    createdAt: new Date(),
-  });
+    if (existingSubscription) {
+      return new Response(JSON.stringify({ message: "Already subscribed" }), {
+        status: 400,
+      });
+    }
 
-  if (result.acknowledged) {
-    return new Response(
-      JSON.stringify({ message: "Subscribed successfully" }),
-      {
-        status: 200,
+    // Insert subscription record
+    const result = await subscriptionsCollection.insertOne({
+      email,
+      name: name || "Subscriber",
+      createdAt: new Date(),
+      status: "active",
+    });
+
+    if (result.acknowledged) {
+      // Send welcome email asynchronously
+      try {
+        console.log("Sending welcome email to:", email);
+        const emailResult = await sendWelcomeEmail(
+          email,
+          name || "New Subscriber"
+        );
+
+        if (emailResult.success) {
+          console.log("Welcome email sent successfully");
+        } else {
+          console.error("Failed to send welcome email:", emailResult.error);
+        }
+      } catch (emailError) {
+        console.error("Error sending welcome email:", emailError);
+        // Don't fail the subscription if email fails
       }
+
+      return new Response(
+        JSON.stringify({
+          message: "Subscribed successfully",
+          welcomeEmailSent: true,
+        }),
+        {
+          status: 200,
+        }
+      );
+    } else {
+      return new Response(JSON.stringify({ message: "Subscription failed" }), {
+        status: 500,
+      });
+    }
+  } catch (error) {
+    console.error("Error subscribing to newsletter:", error);
+    return new Response(
+      JSON.stringify({
+        message: "Internal server error",
+        error: error.message,
+      }),
+      { status: 500 }
     );
-  } else {
-    return new Response(JSON.stringify({ message: "Subscription failed" }), {
-      status: 500,
-    });
   }
 }

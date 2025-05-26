@@ -306,6 +306,29 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-transparent hover:border-[#8a56ab] transition-all duration-300">
+          <div className="h-3 bg-[#6A0DAD]"></div>
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-[#1C1C1C]">News Letters</h3>
+              <div className="bg-[#6A0DAD]/10 p-3 rounded-full">
+                <FaBriefcase className="text-[#6A0DAD]" />
+              </div>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Manage your professional Newsletter.
+            </p>
+            <div className="flex justify-between items-center">
+              <Link
+                href="/dashboard/newsletter"
+                className="bg-white text-[#6A0DAD] border border-[#6A0DAD] hover:bg-[#6A0DAD] hover:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center"
+              >
+                <span>Manage Newsletters</span>
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Recent Activity Section - Optional */}
