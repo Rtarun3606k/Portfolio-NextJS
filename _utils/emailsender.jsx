@@ -9,6 +9,7 @@ import nodemailer from "nodemailer";
  * @param {string} [options.htmlContent] - HTML content as string (use this OR htmlFilePath)
  * @param {string} [options.htmlFilePath] - Path to HTML template file (use this OR htmlContent)
  * @param {Object} [options.replacements] - Key-value pairs for replacing placeholders in the HTML
+ * @param {boolean} [options.sendCopyToSender] - Whether to send a copy to the sender
  * @returns {Promise<Object>} - Result of the email sending operation
  */
 async function sendEmail({
@@ -18,6 +19,7 @@ async function sendEmail({
   htmlContent,
   htmlFilePath,
   replacements = {},
+  sendCopyToSender = false,
 }) {
   try {
     console.log("Starting email sending process...");
@@ -117,6 +119,13 @@ async function sendEmail({
               text-decoration: none;
               font-weight: bold;
             }
+            .copy-notice {
+              background-color: #e8f4fd;
+              border-left: 4px solid #0ea5e9;
+              padding: 15px;
+              margin: 20px 0;
+              border-radius: 0 5px 5px 0;
+            }
           </style>
         </head>
         <body>
@@ -154,6 +163,8 @@ async function sendEmail({
                 <a href="{{twitterLink}}">Twitter</a>
               </div>
             </center>
+            
+            {{copyNotice}}
           </div>
           <div class="footer">
             <p>© {{year}} Tarun Nayaka R. All rights reserved.</p>
@@ -188,7 +199,7 @@ async function sendEmail({
     console.log(`Sending email to: ${to}`);
     console.log(`Email subject: ${subject}`);
 
-    // Send email
+    // Send primary email to recipient
     const info = await transporter.sendMail({
       from,
       to,
@@ -196,12 +207,44 @@ async function sendEmail({
       html,
     });
 
-    console.log(`Email sent successfully: ${info.messageId}`);
+    console.log(`Email sent successfully to ${to}: ${info.messageId}`);
+
+    let copyInfo = null;
+
+    // Send copy to yourself if requested
+    if (sendCopyToSender) {
+      try {
+        console.log("Sending copy to sender...");
+
+        // Create modified content for the copy
+        const copyHtml = html.replace(
+          "{{copyNotice}}",
+          `<div class="copy-notice">
+            <p><strong>Note:</strong> This is a copy of the email sent to ${to}</p>
+            <p><strong>Sent at:</strong> ${new Date().toLocaleString()}</p>
+          </div>`
+        );
+
+        copyInfo = await transporter.sendMail({
+          from,
+          to: from, // Send to yourself
+          subject: `[COPY] ${subject}`,
+          html: copyHtml,
+        });
+
+        console.log(`Copy sent successfully to ${from}: ${copyInfo.messageId}`);
+      } catch (copyError) {
+        console.error("Error sending copy to sender:", copyError);
+        // Don't fail the main operation if copy fails
+      }
+    }
 
     return {
       success: true,
       messageId: info.messageId,
       emailInfo: info,
+      copyMessageId: copyInfo?.messageId || null,
+      copyEmailInfo: copyInfo || null,
     };
   } catch (error) {
     console.error("Error sending email:", error);
@@ -299,12 +342,13 @@ async function sendConfirmationEmail(formData) {
       }
     }
 
-    // Send the email - pass null for htmlFilePath to trigger use of built-in template
+    // Send the email with copy to yourself enabled
     const emailResult = await sendEmail({
       to: formData.email,
       from: "r.tarunnayaka25042005@gmail.com",
       subject: "Thank You for Contacting Me",
       htmlFilePath: "built-in-template", // This will trigger using the built-in template
+      sendCopyToSender: true, // Enable sending copy to yourself
       replacements: {
         title: "Thank You for Your Message",
         subtitle: formData.serviceId
@@ -325,15 +369,21 @@ async function sendConfirmationEmail(formData) {
         twitterLink: "https://x.com/Rtarun3606k",
         year: new Date().getFullYear().toString(),
         address: "Sampangi Rama Nagara Bangalore 560027, Karnataka, India",
+        copyNotice: "", // Will be replaced in copy email
       },
     });
 
     if (emailResult.success) {
       console.log("Confirmation email sent successfully");
+      if (emailResult.copyMessageId) {
+        console.log("Copy sent to sender successfully");
+      }
       return {
         success: true,
         messageId: emailResult.messageId,
         emailInfo: emailResult.emailInfo,
+        copyMessageId: emailResult.copyMessageId,
+        copyEmailInfo: emailResult.copyEmailInfo,
       };
     } else {
       return {
@@ -362,11 +412,17 @@ export async function sendEmailTO(formData) {
 
     if (result.success) {
       console.log("Email confirmation process completed successfully");
-      return {
+      const response = {
         success: true,
         message: "Email sent successfully",
         result: result,
       };
+
+      if (result.copyMessageId) {
+        response.message += " (copy sent to sender)";
+      }
+
+      return response;
     } else {
       console.log("Email confirmation process failed");
       return {
