@@ -6,6 +6,7 @@ import {
   fetchRecentBlogs,
   fetchUpcomingEvents,
 } from "./emailsender";
+import { getDatabases } from "./Mongodb"; // Adjust the import path as needed
 
 // Function to send newsletter to a specific user by ID
 async function PostSendNewsLetter(req, { params }) {
