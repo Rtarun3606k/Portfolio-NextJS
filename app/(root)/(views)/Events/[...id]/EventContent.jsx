@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { slugify } from "@/_utils/slugify";
 import Markdown from "@/components/Markdown";
+import { RemoveByAttr } from "@/_utils/ArrayOperation";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,23 +35,23 @@ const EventContent = () => {
   // Extract the event ID from the URL parameters
   const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  const addViews = async () => {
-    try {
-      const res = await fetch(`/api/events/${eventId}/views`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ views: event.views || 0 }),
-      });
+  // const addViews = async () => {
+  //   try {
+  //     const res = await fetch(`/api/events/${eventId}/views`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ views: event.views || 0 }),
+  //     });
 
-      if (!res.ok) {
-        console.error("Failed to update views");
-      }
-    } catch (error) {
-      console.error("Error updating views:", error);
-    }
-  };
+  //     if (!res.ok) {
+  //       console.error("Failed to update views");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating views:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -90,11 +91,16 @@ const EventContent = () => {
 
     const fetchSuggestedEvents = async () => {
       try {
-        const res = await fetch(`/api/events/suggested?exclude=${eventId}`);
+        // const res = await fetch(`/api/events/suggested?exclude=${eventId}`);
+        const res = await fetch(`/api/events`);
+
         if (!res.ok) {
           throw new Error("Failed to fetch suggested events");
         }
         const data = await res.json();
+        data.events = RemoveByAttr(data.events, "_id", eventId);
+        // data.events = data.events.sort((a, b) => b.views - a.views);
+        data.events = data.events.slice(0, 6); // Limit to 6 suggested events
         setSuggestedEvents(data.events || []);
       } catch (error) {
         console.error("Error fetching suggested events:", error);
@@ -108,11 +114,11 @@ const EventContent = () => {
   }, [eventId, router]);
 
   // Add views after the event is loaded
-  useEffect(() => {
-    if (event._id) {
-      addViews();
-    }
-  }, [event]);
+  // useEffect(() => {
+  //   if (event._id) {
+  //     addViews();
+  //   }
+  // }, [event]);
 
   if (loading) {
     return (
@@ -218,7 +224,7 @@ const EventContent = () => {
 
         {suggestedEvents.length > 0 && (
           <motion.div variants={itemVariants} className="mt-12">
-            <h3 className="text-2xl font-bold mb-4">
+            <h3 className="text-2xl font-bold mb-4 font-playfair text-[#2c0356a6] text-center">
               More Events You Might Like
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
@@ -263,27 +269,46 @@ const EventContent = () => {
           </motion.div>
         )}
 
-        <motion.div variants={itemVariants} className="mt-8 mb-4">
+        <div className="text-center mt-12">
           <Link
             href="/Events"
-            className="inline-flex items-center text-[#6A0DAD] hover:underline"
+            className="inline-flex items-center group relative"
           >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              ></path>
-            </svg>
-            Back to All Events
+            <span className="text-[#6A0DAD] font-medium text-lg mr-4 group-hover:text-[#7209B7] transition-all">
+              Back to Events
+            </span>
+
+            {/* Custom SVG circle with arrow */}
+            <div className="relative w-12 h-12">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                className="absolute top-0 left-0 transition-transform duration-500 group-hover:rotate-180"
+              >
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="18"
+                  fill="none"
+                  stroke="#6A0DAD"
+                  strokeWidth="2"
+                  strokeDasharray="110 30"
+                  className="group-hover:stroke-[#7209B7] transition-all"
+                />
+                <path
+                  d="M20 16L28 24L20 32"
+                  stroke="#6A0DAD"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="group-hover:stroke-[#7209B7] transition-all"
+                />
+              </svg>
+              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-[#7209B7] transition-opacity"></div>
+            </div>
           </Link>
-        </motion.div>
+        </div>
       </motion.div>
     </main>
   );

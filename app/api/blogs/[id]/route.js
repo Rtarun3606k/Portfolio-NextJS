@@ -15,7 +15,7 @@ export async function GET(request, { params }) {
 
     // Fetch the blog post by ID
     const blogPost = await blogsCollection.findOne({ _id: new ObjectId(id) });
-    console.log("Blog post:", blogPost);
+    // console.log("Blog post:", blogPost);
 
     if (!blogPost) {
       return NextResponse.json(

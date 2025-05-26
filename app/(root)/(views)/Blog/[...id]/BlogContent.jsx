@@ -7,6 +7,8 @@ import BlogClientContent from "./BlogClientContent";
 import Script from "next/script";
 import { updateViews } from "./actions";
 import NewsletterWrapper from "@/components/NewsletterWrapper";
+import { getData } from "@/_utils/LocalStorage";
+import { RemoveByAttr } from "@/_utils/ArrayOperation";
 
 // Server component for better SEO
 const PageBlog = async ({ id, params }) => {
@@ -49,19 +51,34 @@ const PageBlog = async ({ id, params }) => {
     blog = await blogRes.json();
 
     // Fetch suggested blogs
-    const suggestedRes = await fetch(
-      `${baseUrl}/api/blogs/suggested?exclude=${blogId}`,
-      {
-        cache: "no-store",
-        next: { tags: ["blogs"] }, // For on-demand revalidation
-      }
-    );
+    // const suggestedRes = await fetch(
+    //   `${baseUrl}/api/blogs/suggested?exclude=${blogId}`,
+    //   {
+    //     cache: "no-store",
+    //     next: { tags: ["blogs"] }, // For on-demand revalidation
+    //   }
+    // );
+    var suggestedRes = null;
 
+    suggestedRes = await fetch(`${baseUrl}/api/blogs`);
     if (suggestedRes.ok) {
       suggestedBlogs = await suggestedRes.json();
+      suggestedBlogs.blogs = RemoveByAttr(suggestedBlogs.blogs, "_id", blogId);
+      suggestedBlogs.blogs = suggestedBlogs.blogs.sort(
+        (a, b) => b.views - a.views
+      );
+      console.log("Suggested blogs fetched successfully:", suggestedBlogs);
     } else {
       console.error("Failed to fetch suggested blogs:", suggestedRes.status);
     }
+
+    // const suggestedRes = await getData;
+
+    // if (suggestedRes.ok) {
+    //   suggestedBlogs = await suggestedRes.json();
+    // } else {
+    //   console.error("Failed to fetch suggested blogs:", suggestedRes.status);
+    // }
   } catch (error) {
     console.error("Error fetching data:", error);
     notFound();
@@ -155,18 +172,15 @@ const PageBlog = async ({ id, params }) => {
       />
 
       {/* Newsletter subscription component */}
-      <div className="my-16">
-        <NewsletterWrapper />
-      </div>
 
-      {suggestedBlogs.length > 0 && (
+      {suggestedBlogs.blogs.length > 0 && (
         <div className="mt-16">
           <h2 className="text-2xl font-bold mb-6 text-black">
             Related Articles
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {suggestedBlogs.map((suggestedBlog) => (
+            {suggestedBlogs.blogs.map((suggestedBlog) => (
               <div
                 key={suggestedBlog._id}
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10"
@@ -232,6 +246,9 @@ const PageBlog = async ({ id, params }) => {
           </div>
         </div>
       )}
+      <div className="my-16">
+        <NewsletterWrapper />
+      </div>
 
       <div className="text-center mt-12">
         <Link href="/Blog" className="inline-flex items-center group relative">
