@@ -67,7 +67,7 @@ const PageBlog = async ({ id, params }) => {
       suggestedBlogs.blogs = suggestedBlogs.blogs.sort(
         (a, b) => b.views - a.views
       );
-      console.log("Suggested blogs fetched successfully:", suggestedBlogs);
+      // console.log("Suggested blogs fetched successfully:", suggestedBlogs);
     } else {
       console.error("Failed to fetch suggested blogs:", suggestedRes.status);
     }
