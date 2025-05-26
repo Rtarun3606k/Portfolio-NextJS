@@ -28,6 +28,7 @@ export const ClearClientAuth = () => {
   try {
     localStorage.removeItem("isAuthenticated");
     return true;
+    // // Optionally, you can also clear other related items if needed
   } catch (error) {
     console.error("Error clearing client auth state:", error);
     return false;
