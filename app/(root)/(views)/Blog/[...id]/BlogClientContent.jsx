@@ -65,6 +65,8 @@ const BlogClientContent = ({ blog, suggestedBlogs, updateViews }) => {
         wrapperElement={{ "data-color-mode": "light" }}
         style={{ backgroundColor: "#c7d2fe", color: "black" }}
       />
+
+      {/* <ReactMarkdown>{blog.content}</ReactMarkdown> */}
     </motion.div>
   );
 };
