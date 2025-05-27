@@ -33,7 +33,7 @@ const ViewCounter = ({ blog }) => {
           console.error("Error updating view count:", error);
         }
       }
-      console.log("View count updated for blog:", blog._id);
+      // console.log("View count updated for blog:", blog._id);
       // Mark component as loaded for animations
       setIsLoaded(true);
     }

@@ -26,7 +26,7 @@ export const EventIDFetch = async (id) => {
   );
 
   if (!response.ok) {
-    console.log("Error fetching event data:", response);
+    // console.log("Error fetching event data:", response);
     throw new Error("Failed to fetch event data");
   }
 

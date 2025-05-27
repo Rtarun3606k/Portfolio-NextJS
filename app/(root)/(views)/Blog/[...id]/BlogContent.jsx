@@ -15,6 +15,7 @@ import ViewCounter from "./ViewCounter";
 // Server component for better SEO
 const PageBlog = async ({ id, params }) => {
   // With NextJS 15+, params should be awaited
+  // console.log("Params:", params);
   const resolvedParams = params ? await params : undefined;
 
   // Extract the blog ID from the URL parameters

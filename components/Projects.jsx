@@ -90,7 +90,7 @@ const Projects = ({ showMore = false }) => {
       try {
         if (getData("projects") !== null) {
           const data = getData("projects");
-          console.log("Fetched services from localStorage:", data);
+          // console.log("Fetched services from localStorage:", data);
           setProjectData(data);
           return;
         } else {
@@ -101,7 +101,7 @@ const Projects = ({ showMore = false }) => {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched services:", data.projects);
+          // console.log("Fetched services:", data.projects);
           storeData("projects", data.projects);
           setProjectData(data.projects);
         }

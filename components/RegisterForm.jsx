@@ -39,7 +39,7 @@ export default function RegisterForm() {
       // Simulate a brief loading delay for better user experience
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      console.log("Auto-registration successful - public access granted");
+      // console.log("Auto-registration successful - public access granted");
 
       // Always redirect to dashboard - no real authentication
       router.push("/dashboard");

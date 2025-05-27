@@ -14,7 +14,7 @@ export const storeData = (dataName, data) => {
 
   // Store the object in localStorage
   localStorage.setItem(dataName, JSON.stringify(item));
-  console.log("Data stored in localStorage with 30-minute expiration:", data);
+  // console.log("Data stored in localStorage with 30-minute expiration:", data);
 };
 
 /**
@@ -27,7 +27,7 @@ export const getData = (dataName) => {
 
   // Return null if no item exists
   if (!itemStr) {
-    console.log(`No data found in localStorage for: ${dataName}`);
+    // console.log(`No data found in localStorage for: ${dataName}`);
     return null;
   }
 
@@ -37,7 +37,7 @@ export const getData = (dataName) => {
 
     // Check if the item is properly structured
     if (!item || item.value === undefined) {
-      console.log(`Data is malformed for: ${dataName}`);
+      // console.log(`Data is malformed for: ${dataName}`);
       return null;
     }
 
@@ -45,7 +45,7 @@ export const getData = (dataName) => {
     if (item.expiry && Date.now() > item.expiry) {
       // If expired, remove the item from localStorage and return null
       localStorage.removeItem(dataName);
-      console.log(`Data expired and removed from localStorage: ${dataName}`);
+      // console.log(`Data expired and removed from localStorage: ${dataName}`);
       return null;
     }
 
@@ -62,7 +62,7 @@ export const getData = (dataName) => {
 };
 
 export const SetAdminAccess = (data) => {
-  console.log("Setting admin access in localStorage:", data);
+  // console.log("Setting admin access in localStorage:", data);
   // Create an object that includes the data and the expiration time
   const item = {
     value: data,
@@ -72,7 +72,7 @@ export const SetAdminAccess = (data) => {
 
   // Store the object in localStorage
   localStorage.setItem("adminAccess", JSON.stringify(item));
-  console.log("Data stored in localStorage with 30-minute expiration:", data);
+  // console.log("Data stored in localStorage with 30-minute expiration:", data);
 };
 
 export const GetAdminAccess = () => {
@@ -95,7 +95,7 @@ export const GetAdminAccess = () => {
 
     // Return null if no adminAccess cookie exists
     if (!cookies.adminAccess) {
-      console.log(`No cookie found for: adminAccess`);
+      // console.log(`No cookie found for: adminAccess`);
       return null;
     }
 
@@ -104,7 +104,7 @@ export const GetAdminAccess = () => {
 
     // Check if the item is properly structured
     if (!item || item.value === undefined) {
-      console.log(`Cookie data is malformed for: adminAccess`);
+      // console.log(`Cookie data is malformed for: adminAccess`);
       return null;
     }
 
@@ -113,7 +113,7 @@ export const GetAdminAccess = () => {
       // If expired, remove the cookie and return null
       document.cookie =
         "adminAccess=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      console.log(`Cookie expired and removed: adminAccess`);
+      // console.log(`Cookie expired and removed: adminAccess`);
       return null;
     }
 

@@ -299,7 +299,7 @@ export default function MarkdownEditor({ id }) {
         : `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`;
       const method = isEditing ? "PATCH" : "POST";
 
-      console.log(`${isEditing ? "Updating" : "Creating"} blog post:`, body);
+      // console.log(`${isEditing ? "Updating" : "Creating"} blog post:`, body);
       const res = await fetch(endpoint, {
         method: method,
         headers: {
@@ -317,10 +317,10 @@ export default function MarkdownEditor({ id }) {
       }
 
       const data = await res.json();
-      console.log(
-        `Blog post ${isEditing ? "updated" : "created"} successfully:`,
-        data
-      );
+      // console.log(
+      //   `Blog post ${isEditing ? "updated" : "created"} successfully:`,
+      //   data
+      // );
       alert(`Blog post ${isEditing ? "updated" : "created"} successfully`);
 
       // Navigate back to blogs dashboard

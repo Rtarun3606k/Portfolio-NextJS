@@ -31,7 +31,7 @@ const Contact = () => {
         setLoading(true);
         if (getData("services") !== null) {
           const data = getData("services");
-          console.log("Fetched services from localStorage:", data);
+          // console.log("Fetched services from localStorage:", data);
           setServices(data);
         } else {
           const response = await fetch(
@@ -41,7 +41,7 @@ const Contact = () => {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched services:", data.services);
+          // console.log("Fetched services:", data.services);
           storeData("services", data.services);
           setServices(data.services);
         }
@@ -174,7 +174,7 @@ const Contact = () => {
         if (!response.ok) {
           throw new Error(data.error || "Something went wrong");
         }
-        console.log("Form submitted successfully:", data);
+        // console.log("Form submitted successfully:", data);
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
