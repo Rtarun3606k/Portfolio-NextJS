@@ -9,6 +9,7 @@ import { updateViews } from "./actions";
 import NewsletterWrapper from "@/components/NewsletterWrapper";
 import { getData } from "@/_utils/LocalStorage";
 import { RemoveByAttr } from "@/_utils/ArrayOperation";
+import BlogMarkdown from "@/components/BlogMarkdown";
 
 // Server component for better SEO
 const PageBlog = async ({ id, params }) => {
@@ -164,12 +165,14 @@ const PageBlog = async ({ id, params }) => {
         )}
       </div>
 
+      <BlogMarkdown content={blog.content} />
+
       {/* Client component for interactive elements */}
-      <BlogClientContent
+      {/* <BlogClientContent
         blog={blog}
         suggestedBlogs={suggestedBlogs}
         updateViews={updateViews}
-      />
+      /> */}
 
       {/* Newsletter subscription component */}
 
