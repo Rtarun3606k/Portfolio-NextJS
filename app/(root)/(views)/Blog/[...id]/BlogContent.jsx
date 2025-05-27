@@ -10,6 +10,7 @@ import NewsletterWrapper from "@/components/NewsletterWrapper";
 import { getData } from "@/_utils/LocalStorage";
 import { RemoveByAttr } from "@/_utils/ArrayOperation";
 import BlogMarkdown from "@/components/BlogMarkdown";
+import ViewCounter from "./ViewCounter";
 
 // Server component for better SEO
 const PageBlog = async ({ id, params }) => {
@@ -166,6 +167,7 @@ const PageBlog = async ({ id, params }) => {
       </div>
 
       <BlogMarkdown content={blog.content} />
+      <ViewCounter blog={blog} />
 
       {/* Client component for interactive elements */}
       {/* <BlogClientContent
