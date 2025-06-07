@@ -17,7 +17,7 @@ export async function GET(request) {
     const { blogsCollection } = await getDatabases();
 
     const blogs = await blogsCollection
-      .find({}, { projection: { content: 0 } })
+      .find({ draft: false }, { projection: { content: 0 } })
       .sort({ createdAt: -1 })
       .toArray();
 

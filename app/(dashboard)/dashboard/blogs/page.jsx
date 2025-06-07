@@ -17,7 +17,7 @@ const BlogsManagement = () => {
     const fetchBlogs = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs/admin`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch blogs");

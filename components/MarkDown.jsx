@@ -276,11 +276,13 @@ export default function MarkdownEditor({ id }) {
       input.click();
     });
 
-  const onSave = async () => {
+  const onSave = async (draft = false) => {
+    setIsUploading(true);
     try {
       // Validate required fields
       if (!blogDetails.title || !blogDetails.author || !value) {
         alert("Title, author, and content are required fields");
+        setIsUploading(false);
         return;
       }
 
@@ -291,6 +293,7 @@ export default function MarkdownEditor({ id }) {
         featuredImage: blogImageUrl,
         categories: blogDetails.categories,
         updatedAt: new Date().toISOString(),
+        draft: draft, // Add draft status
       };
 
       // Determine if we're creating or updating
@@ -299,7 +302,6 @@ export default function MarkdownEditor({ id }) {
         : `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`;
       const method = isEditing ? "PATCH" : "POST";
 
-      // console.log(`${isEditing ? "Updating" : "Creating"} blog post:`, body);
       const res = await fetch(endpoint, {
         method: method,
         headers: {
@@ -308,32 +310,55 @@ export default function MarkdownEditor({ id }) {
         body: JSON.stringify(body),
       });
 
+      // Check if the response is ok before trying to parse JSON
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(
-          errorData.error ||
-            `Failed to ${isEditing ? "update" : "create"} blog post`
-        );
+        // Try to parse error JSON, but handle empty responses
+        let errorMessage;
+        try {
+          const errorData = await res.json();
+          errorMessage =
+            errorData.error ||
+            `Failed to ${isEditing ? "update" : "create"} blog post`;
+        } catch (jsonError) {
+          // If JSON parsing fails, use status text
+          errorMessage = `Server returned ${res.status}: ${
+            res.statusText || "Unknown error"
+          }`;
+        }
+        throw new Error(errorMessage);
       }
 
-      const data = await res.json();
-      // console.log(
-      //   `Blog post ${isEditing ? "updated" : "created"} successfully:`,
-      //   data
-      // );
-      alert(`Blog post ${isEditing ? "updated" : "created"} successfully`);
+      // Check if response has content before parsing JSON
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        try {
+          const data = await res.json();
+          // Process the data if needed
+        } catch (jsonError) {
+          console.warn(
+            "Could not parse JSON response, but request was successful"
+          );
+        }
+      }
+
+      alert(
+        `Blog post ${isEditing ? "updated" : "created"} successfully${
+          draft ? " as draft" : ""
+        }`
+      );
 
       // Navigate back to blogs dashboard
       router.push("/dashboard/blogs");
     } catch (error) {
       console.error(
         `Error ${isEditing ? "updating" : "creating"} blog post:`,
-        error.message
+        error.message || "Unknown error"
       );
-      alert(`Error: ${error.message}`);
+      alert(`Error: ${error.message || "Unknown error"}`);
+    } finally {
+      setIsUploading(false);
     }
   };
-
   // Clean up object URLs on unmount to prevent memory leaks
   useEffect(() => {
     return () => {
@@ -564,7 +589,7 @@ export default function MarkdownEditor({ id }) {
         </Link>
         <button
           className="px-4 py-2 bg-[#5E60CE] hover:bg-[#7209B7] text-white rounded transition-colors duration-300"
-          onClick={onSave}
+          onClick={() => onSave()}
           disabled={isUploading}
         >
           {isUploading
@@ -572,6 +597,17 @@ export default function MarkdownEditor({ id }) {
             : isEditing
             ? "Update Blog"
             : "Save Blog"}
+        </button>
+        <button
+          className="px-4 py-2 bg-[#5E60CE] hover:bg-[#7209B7] text-white rounded transition-colors duration-300"
+          onClick={() => onSave(true)}
+          disabled={isUploading}
+        >
+          {isUploading
+            ? "Drafting..."
+            : isEditing
+            ? "Update Draft Blog"
+            : "Draft Blog"}
         </button>
       </div>
     </div>
