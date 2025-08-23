@@ -1,6 +1,7 @@
 // This file previously set up NextAuth authentication
 // Now it provides mock authentication functions for compatibility
 
+
 // Public user that will be used for all requests
 const publicUser = {
   id: "public-user",
