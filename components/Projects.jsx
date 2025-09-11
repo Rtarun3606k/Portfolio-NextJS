@@ -428,11 +428,11 @@ const Projects = ({ showMore = false }) => {
                         </span> */}
                         {/* <img src={project?.imageUrl} alt="no image" /> */}
 
-                        <img
-{/*                           src="https://walkez.blob.core.windows.net/projects/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png" */}
-                        src={project?.imageUrl}
-                          alt="no iamge"
-                        />
+                      <img
+  // src="https://***.blob.core.windows.net/***/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png"
+  src={project?.imageUrl}
+  alt="no iamge"
+/>
                       </div>
                     </div>
 
