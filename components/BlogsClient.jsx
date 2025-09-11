@@ -22,7 +22,7 @@ const BlogsClient = () => {
           throw new Error("Failed to fetch blogs");
         }
         const data = await response.json();
-        console.log(data.blogs);
+        // console.log(data.blogs);
         setBlogs(data.blogs);
       } catch (error) {
         console.error("Error:", error);

@@ -21,7 +21,7 @@ const Services = ({ showMore = false, limited = false }) => {
         // Check if data exists in localStorage first
         const cachedData = getData("services");
         if (cachedData) {
-          console.log("Using cached services from localStorage");
+          // console.log("Using cached services from localStorage");
           setServices(cachedData);
           setLoading(false);
           return;
@@ -37,7 +37,7 @@ const Services = ({ showMore = false, limited = false }) => {
         }
 
         const data = await response.json();
-        console.log("Fetched services from API");
+        // console.log("Fetched services from API");
 
         // Store in localStorage for future use
         storeData("services", data.services);

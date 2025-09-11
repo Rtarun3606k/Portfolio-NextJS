@@ -17,7 +17,7 @@ const Events = ({ showMore = false, limited = false }) => {
       try {
         if (getData("events") !== null) {
           const data = getData("events");
-          console.log("Fetched services from localStorage:", data);
+          // console.log("Fetched services from localStorage:", data);
           setEvents(data);
           return;
         } else {
@@ -28,7 +28,7 @@ const Events = ({ showMore = false, limited = false }) => {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched services:", data.events);
+          // console.log("Fetched services:", data.events);
           storeData("events", data.events);
           setEvents(data.events);
         }

@@ -16,7 +16,7 @@ export default function StatsPage({ showMore = false }) {
       try {
         if (getData("statistics") !== null) {
           const data = getData("statistics");
-          console.log("Fetched services from localStorage:", data);
+          // console.log("Fetched services from localStorage:", data);
           setStats(data);
           return;
         } else {
@@ -27,7 +27,7 @@ export default function StatsPage({ showMore = false }) {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched services:", data.statistics);
+          // console.log("Fetched services:", data.statistics);
           storeData("statistics", data.statistics);
           setStats(data.statistics);
         }

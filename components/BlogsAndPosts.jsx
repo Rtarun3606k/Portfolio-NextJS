@@ -63,7 +63,7 @@ const BlogsAndPosts = ({ limited = false, showMore = false }) => {
       try {
         if (getData("blogs") !== null) {
           const data = getData("blogs");
-          console.log("Fetched services from localStorage blogs:", data);
+          // console.log("Fetched services from localStorage blogs:", data);
           setBlogs(data);
           return;
         } else {
@@ -74,7 +74,7 @@ const BlogsAndPosts = ({ limited = false, showMore = false }) => {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched services:", data.blogs);
+          // console.log("Fetched services:", data.blogs);
           storeData("blogs", data.blogs);
           setBlogs(data.blogs);
         }
@@ -138,7 +138,7 @@ const BlogsAndPosts = ({ limited = false, showMore = false }) => {
       try {
         if (getData("linkedinPosts") !== null) {
           const data = getData("linkedinPosts");
-          console.log("Fetched services from localStorage:", data);
+          // console.log("Fetched services from localStorage:", data);
           setLinkedinPosts(data);
           return;
         } else {
@@ -149,7 +149,7 @@ const BlogsAndPosts = ({ limited = false, showMore = false }) => {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched services:", data.posts);
+          // console.log("Fetched services:", data.posts);
           storeData("linkedinPosts", data.posts);
           setLinkedinPosts(data.posts);
         }

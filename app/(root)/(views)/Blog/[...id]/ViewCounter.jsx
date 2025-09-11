@@ -1,22 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+
+import React, { use, useEffect, useState } from "react";
+import { updateViews } from "./actions";
 import { useRouter } from "next/navigation";
 import { slugify } from "@/_utils/slugify";
-import { motion } from "framer-motion";
 
-// Dynamic import of markdown preview component
-const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
-  ssr: false,
-});
-
-// Animation variants for interactive elements
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const BlogClientContent = ({ blog, suggestedBlogs, updateViews }) => {
+const ViewCounter = ({ blog }) => {
   const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -44,31 +33,14 @@ const BlogClientContent = ({ blog, suggestedBlogs, updateViews }) => {
           console.error("Error updating view count:", error);
         }
       }
-
+      // console.log("View count updated for blog:", blog._id);
       // Mark component as loaded for animations
       setIsLoaded(true);
     }
 
     handleViewCount();
   }, [blog, router, updateViews]);
-
-  return (
-    <motion.div
-      initial="hidden"
-      animate={isLoaded ? "visible" : "hidden"}
-      variants={fadeInUp}
-      transition={{ duration: 0.5 }}
-      className="prose prose-lg max-w-none"
-    >
-      <MarkdownPreview
-        source={blog.content}
-        wrapperElement={{ "data-color-mode": "light" }}
-        style={{ backgroundColor: "#c7d2fe", color: "black" }}
-      />
-
-      {/* <ReactMarkdown>{blog.content}</ReactMarkdown> */}
-    </motion.div>
-  );
+  return null;
 };
 
-export default BlogClientContent;
+export default ViewCounter;

@@ -15,7 +15,7 @@ export default function WorkExperience({ limited = false, showMore = false }) {
       try {
         if (getData("positions") !== null) {
           const data = getData("positions");
-          console.log("Fetched positions from localStorage:", data);
+          // console.log("Fetched positions from localStorage:", data);
           setPositions(data);
           return;
         } else {
@@ -26,7 +26,7 @@ export default function WorkExperience({ limited = false, showMore = false }) {
             throw new Error("Network response was not ok");
           }
           const data = await response.json();
-          console.log("Fetched positions:", data.positions);
+          // console.log("Fetched positions:", data.positions);
           storeData("positions", data.positions);
           setPositions(data.positions);
         }
