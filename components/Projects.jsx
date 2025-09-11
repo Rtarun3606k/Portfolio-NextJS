@@ -429,7 +429,8 @@ const Projects = ({ showMore = false }) => {
                         {/* <img src={project?.imageUrl} alt="no image" /> */}
 
                         <img
-                          src="https://walkez.blob.core.windows.net/projects/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png"
+{/*                           src="https://walkez.blob.core.windows.net/projects/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png" */}
+                        src={project?.imageUrl}
                           alt="no iamge"
                         />
                       </div>
