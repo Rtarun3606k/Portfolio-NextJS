@@ -95,7 +95,7 @@ const Projects = ({ showMore = false }) => {
           return;
         } else {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects` // Replace with your API endpoint
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`, // Replace with your API endpoint
           );
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -208,7 +208,7 @@ const Projects = ({ showMore = false }) => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + projectData.length) % projectData.length
+      (prevIndex) => (prevIndex - 1 + projectData.length) % projectData.length,
     );
     setTimeout(() => setIsAnimating(false), 500); // Match with animation duration
   };
@@ -387,19 +387,19 @@ const Projects = ({ showMore = false }) => {
                     project.position === "left"
                       ? "enterFromLeft"
                       : project.position === "right"
-                      ? "enterFromRight"
-                      : "center"
+                        ? "enterFromRight"
+                        : "center"
                   }
                   animate={variant}
                   exit={
                     project.position === "left"
                       ? "exitToLeft"
                       : project.position === "right"
-                      ? "exitToRight"
-                      : project.position === "center" &&
-                        currentIndex > project.id
-                      ? "exitToLeft"
-                      : "exitToRight"
+                        ? "exitToRight"
+                        : project.position === "center" &&
+                            currentIndex > project.id
+                          ? "exitToLeft"
+                          : "exitToRight"
                   }
                   className={`absolute top-0 left-0 right-0 w-full md:w-[60%] lg:w-[55%] max-w-2xl mx-auto h-full`} // Reduced width for center card
                   style={{
@@ -428,11 +428,8 @@ const Projects = ({ showMore = false }) => {
                         </span> */}
                         {/* <img src={project?.imageUrl} alt="no image" /> */}
 
-                        <img
-{/*                           src="https://walkez.blob.core.windows.net/projects/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png" */}
-                        src={project?.imageUrl}
-                          alt="no iamge"
-                        />
+                        {/*                           src="https://walkez.blob.core.windows.net/projects/1746435456870-Microsoft-Learner-Badge-Guinness-World-Record-Holder.png" */}
+                        <img src={project?.imageUrl} alt="no iamge" />
                       </div>
                     </div>
 

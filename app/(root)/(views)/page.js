@@ -53,13 +53,6 @@ export default function Home() {
       {/* Hero section doesn't need scroll animation since it's visible on page load */}
       <Hero />
 
-      {/* Services section with increased visibility threshold for mobile */}
-      <AnimatedSection viewportAmount={0.05}>
-        <div className="w-full">
-          <Services showMore={true} limited={true} />
-        </div>
-      </AnimatedSection>
-
       {/* Stats section with scroll animation */}
       <AnimatedSection>
         <StatsPage showMore={true} />
@@ -75,6 +68,13 @@ export default function Home() {
 
       <AnimatedSection delay={0.3}>
         <BlogsAndPosts limited={true} showMore={true} />
+      </AnimatedSection>
+
+      {/* Services section with increased visibility threshold for mobile */}
+      <AnimatedSection viewportAmount={0.05}>
+        <div className="w-full">
+          <Services showMore={true} limited={true} />
+        </div>
       </AnimatedSection>
 
       <AnimatedSection delay={0.3}>
