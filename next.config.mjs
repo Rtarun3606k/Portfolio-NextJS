@@ -61,6 +61,7 @@ const nextConfig = {
       },
     ],
   },
+  // check if the environment is production or not
 };
 
 export default nextConfig;
