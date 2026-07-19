@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  distDir: "build",
+  // reactStrictMode: true,
+ // distDir: "build",
   output: "standalone",
   // This is both a fallback for environments where middleware might not run
   // and a supplementary configuration for CORS
