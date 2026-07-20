@@ -33,7 +33,11 @@ const BlogClientContent = ({ blog, suggestedBlogs, updateViews }) => {
           const expectedPath = `/Blog/${blog._id}/${slug}`;
           const currentPath = window.location.pathname;
 
-          // If we're on just the ID URL without the slug, redirect to the proper URL
+          // console.log("Current Path:", currentPath);
+          // console.log("Expected Path:", expectedPath);
+          // console.log("Blog ID:", blog._id);
+          // console.log("Blog Title:", blog.title);
+          // // If we're on just the ID URL without the slug, redirect to the proper URL
           if (
             currentPath === `/Blog/${blog._id}` ||
             currentPath === `/Blog/${blog._id}/`

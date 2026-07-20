@@ -5,11 +5,9 @@ import { ObjectId } from "mongodb";
 export async function GET(request, { params }) {
   try {
     const { blogsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
-    // Check if ID is valid ObjectId
     if (!ObjectId.isValid(id)) {
-      console.error("Invalid blog ID:", id);
       return NextResponse.json({ error: "Invalid blog ID" }, { status: 400 });
     }
 
@@ -20,7 +18,7 @@ export async function GET(request, { params }) {
     if (!blogPost) {
       return NextResponse.json(
         { error: "Blog post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -29,7 +27,7 @@ export async function GET(request, { params }) {
     console.error("Error fetching blog post:", error);
     return NextResponse.json(
       { error: "Failed to fetch blog post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -37,33 +35,30 @@ export async function GET(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { blogsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
-    // Check if ID is valid ObjectId
     if (!ObjectId.isValid(id)) {
-      console.error("Invalid blog ID:", id);
       return NextResponse.json({ error: "Invalid blog ID" }, { status: 400 });
     }
-
     // Delete the blog post by ID
     const result = await blogsCollection.deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
       return NextResponse.json(
         { error: "Blog post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
       { message: "Blog post deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error deleting blog post:", error);
     return NextResponse.json(
       { error: "Failed to delete blog post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -71,11 +66,9 @@ export async function DELETE(request, { params }) {
 export async function PATCH(request, { params }) {
   try {
     const { blogsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
-    // Check if ID is valid ObjectId
     if (!ObjectId.isValid(id)) {
-      console.error("Invalid blog ID:", id);
       return NextResponse.json({ error: "Invalid blog ID" }, { status: 400 });
     }
 
@@ -84,25 +77,25 @@ export async function PATCH(request, { params }) {
     // Update the blog post by ID
     const result = await blogsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: data }
+      { $set: data },
     );
 
     if (result.modifiedCount === 0) {
       return NextResponse.json(
         { error: "Blog post not found or no changes made" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
       { message: "Blog post updated successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error updating blog post:", error);
     return NextResponse.json(
       { error: "Failed to update blog post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -110,21 +103,10 @@ export async function PATCH(request, { params }) {
 export async function POST(request, { params }) {
   try {
     // Input validation - ensure ID is provided
-    const id = params.id;
-    if (!id) {
-      return NextResponse.json(
-        { error: "Blog ID is required" },
-        { status: 400 }
-      );
-    }
+    const { id } = await params;
 
-    // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
-      console.error("Invalid blog ID format:", id);
-      return NextResponse.json(
-        { error: "Invalid blog ID format" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid blog ID" }, { status: 400 });
     }
 
     // Get database connection
@@ -135,7 +117,7 @@ export async function POST(request, { params }) {
     if (!blog) {
       return NextResponse.json(
         { error: "Blog post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -145,14 +127,14 @@ export async function POST(request, { params }) {
     // Use atomic update operation with $inc for better concurrency handling
     const result = await blogsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $inc: { views: 1 } } // Increment views by 1
+      { $inc: { views: 1 } }, // Increment views by 1
     );
 
     // Check if document was updated
     if (result.matchedCount === 0) {
       return NextResponse.json(
         { error: "Blog post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -163,7 +145,7 @@ export async function POST(request, { params }) {
         previousViews: currentViews,
         currentViews: currentViews + 1,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     // Enhanced error logging
@@ -175,7 +157,7 @@ export async function POST(request, { params }) {
         error: "Failed to update blog post views",
         message: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
