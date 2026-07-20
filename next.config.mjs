@@ -56,7 +56,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "**blob.core.windows.net",
+        hostname: "walkez.blob.core.windows.net",
         pathname: "**",
       },
     ],

@@ -55,7 +55,7 @@ export default function PositionCard({
     if (position.responsibilities && position.responsibilities.length > 0) {
       // Reset refs array to match number of responsibilities
       responsibilityRefs.current = position.responsibilities.map(
-        (_, i) => responsibilityRefs.current[i] || createRef()
+        (_, i) => responsibilityRefs.current[i] || createRef(),
       );
 
       // Check which responsibilities overflow
@@ -127,13 +127,13 @@ export default function PositionCard({
       <div className="p-5 border-b border-gray-200 flex items-center">
         <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center mr-4 relative">
           {position.logoUrl && !imageError ? (
-            <Image
+            <img
               src={position.logoUrl}
               alt={`${position.companyName} logo`}
-              fill
+              // fill
               style={{ objectFit: "cover" }}
               className="rounded-lg"
-              onError={() => setImageError(true)}
+              // onError={() => setImageError(true)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-100 to-purple-200">
@@ -202,7 +202,7 @@ export default function PositionCard({
           </ul>
 
           {position.responsibilities.some(
-            (_, index) => responsibilitiesOverflow[index]
+            (_, index) => responsibilitiesOverflow[index],
           ) && (
             <button
               onClick={() =>

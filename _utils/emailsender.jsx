@@ -99,7 +99,7 @@ async function sendEmail({
           `<div class="copy-notice">
             <p><strong>Note:</strong> This is a copy of the email sent to ${to}</p>
             <p><strong>Sent at:</strong> ${new Date().toLocaleString()}</p>
-          </div>`
+          </div>`,
         );
 
         copyInfo = await transporter.sendMail({
@@ -857,10 +857,10 @@ function generateBlogPostsHTML(blogs) {
       <div class="item">
         <div class="item-meta">
           ${blog.author || "Tarun Nayaka R"} • ${
-        blog.createdAt
-          ? new Date(blog.createdAt).toLocaleDateString()
-          : "Recently"
-      } • ${blog.views || 0} views
+            blog.createdAt
+              ? new Date(blog.createdAt).toLocaleDateString()
+              : "Recently"
+          } • ${blog.views || 0} views
         </div>
         <h3>${blog.title}</h3>
         <p>${plainTextContent}</p>
@@ -969,7 +969,7 @@ async function sendNewsletterDigest(email, name = "Subscriber") {
         eventsSeeMore,
         year: new Date().getFullYear().toString(),
         unsubscribeLink: `${baseUrl}/unsubscribe?email=${encodeURIComponent(
-          email
+          email,
         )}`,
       },
     });
@@ -1010,7 +1010,7 @@ async function sendWelcomeEmail(email, name = "New Subscriber") {
         twitterLink: "https://x.com/Rtarun3606k",
         year: new Date().getFullYear().toString(),
         unsubscribeLink: `${baseUrl}/unsubscribe?email=${encodeURIComponent(
-          email
+          email,
         )}`,
       },
     });
@@ -1073,14 +1073,14 @@ async function sendConfirmationEmail(formData) {
       (!formData.title || !formData.price || !formData.timeframe)
     ) {
       console.log(
-        "Service ID present but details missing - fetching service information"
+        "Service ID present but details missing - fetching service information",
       );
       try {
         await getservices(formData.serviceId, formData);
       } catch (error) {
         console.error(
           "Failed to fetch service details, continuing without them:",
-          error
+          error,
         );
       }
     }
@@ -1096,8 +1096,8 @@ async function sendConfirmationEmail(formData) {
           formData.title || "Not specified"
         }</p>
         <p><strong>Service Details:</strong> ${formData.timeframe || "N/A"} | ${
-        formData.price || "N/A"
-      }</p>
+          formData.price || "N/A"
+        }</p>
       `;
 
       // Only add appointment details if we have appointment info
@@ -1222,4 +1222,5 @@ export {
   sendWelcomeEmail,
   fetchRecentBlogs,
   fetchUpcomingEvents,
+  sendEmail,
 };
