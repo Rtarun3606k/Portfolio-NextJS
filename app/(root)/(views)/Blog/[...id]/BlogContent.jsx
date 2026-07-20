@@ -22,10 +22,10 @@ const PageBlog = async ({ id, params }) => {
   const blogId = id
     ? id
     : resolvedParams?.id
-    ? Array.isArray(resolvedParams.id)
-      ? resolvedParams.id[0]
-      : resolvedParams.id
-    : undefined;
+      ? Array.isArray(resolvedParams.id)
+        ? resolvedParams.id[0]
+        : resolvedParams.id
+      : undefined;
 
   if (!blogId) {
     notFound();
@@ -68,7 +68,7 @@ const PageBlog = async ({ id, params }) => {
       suggestedBlogs = await suggestedRes.json();
       suggestedBlogs.blogs = RemoveByAttr(suggestedBlogs.blogs, "_id", blogId);
       suggestedBlogs.blogs = suggestedBlogs.blogs.sort(
-        (a, b) => b.views - a.views
+        (a, b) => b.views - a.views,
       );
       // console.log("Suggested blogs fetched successfully:", suggestedBlogs);
     } else {
@@ -156,12 +156,13 @@ const PageBlog = async ({ id, params }) => {
       <div className="mb-8">
         {blog.featuredImage && (
           <div className="relative h-64 md:h-96 w-full mb-6 rounded-xl overflow-hidden">
-            <Image
+            <img
               src={blog.featuredImage}
               alt={blog.title}
-              fill
+              // fill
               style={{ objectFit: "cover" }}
-              priority
+              // priority
+              // unoptimized
             />
           </div>
         )}
@@ -193,18 +194,18 @@ const PageBlog = async ({ id, params }) => {
               >
                 <Link
                   href={`/Blog/${suggestedBlog._id}/${slugify(
-                    suggestedBlog.title
+                    suggestedBlog.title,
                   )}`}
                 >
                   <div className="h-48 relative overflow-hidden">
-                    <Image
+                    <img
                       src={
                         suggestedBlog.featuredImage ||
                         "https://placehold.co/600x400?text=No+Image"
                       }
                       alt={suggestedBlog.title}
-                      fill
                       style={{ objectFit: "cover" }}
+                      // fill
                       className="transition-transform duration-500 hover:scale-105"
                     />
                   </div>
@@ -221,7 +222,7 @@ const PageBlog = async ({ id, params }) => {
                           <span className="mx-2">&middot;</span>
                           <span>
                             {new Date(
-                              suggestedBlog.createdAt
+                              suggestedBlog.createdAt,
                             ).toLocaleDateString()}
                           </span>
                         </>

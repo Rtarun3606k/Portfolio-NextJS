@@ -22,7 +22,7 @@ const Events = ({ showMore = false, limited = false }) => {
           return;
         } else {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/events` // Replace with your API endpoint
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, // Replace with your API endpoint
           );
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -193,10 +193,10 @@ const Events = ({ showMore = false, limited = false }) => {
                 className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-[#6A0DAD]/10 flex flex-col h-full"
               >
                 <div className="h-48 relative overflow-hidden">
-                  <Image
+                  <img
                     src={event.image}
                     alt={event.name}
-                    fill
+                    // fill
                     style={{ objectFit: "cover" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -330,7 +330,7 @@ const Events = ({ showMore = false, limited = false }) => {
                   </div>
                 </div>
               </motion.div>
-            )
+            ),
           )}
         </motion.div>
 
