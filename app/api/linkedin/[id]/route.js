@@ -8,13 +8,13 @@ import { deleteFromAzure, getBlobNameFromUrl } from "../../Components/Azure";
 async function getHandler(request, { params }) {
   try {
     const { linkedinCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid LinkedIn post ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -24,7 +24,7 @@ async function getHandler(request, { params }) {
     if (!post) {
       return NextResponse.json(
         { error: "LinkedIn post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -33,7 +33,7 @@ async function getHandler(request, { params }) {
     console.error("Error fetching LinkedIn post:", error);
     return NextResponse.json(
       { error: "Failed to fetch LinkedIn post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -42,13 +42,13 @@ async function getHandler(request, { params }) {
 async function deleteHandler(request, { params }) {
   try {
     const { linkedinCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid LinkedIn post ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -58,7 +58,7 @@ async function deleteHandler(request, { params }) {
     if (!post) {
       return NextResponse.json(
         { error: "LinkedIn post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -70,7 +70,7 @@ async function deleteHandler(request, { params }) {
     if (result.deletedCount === 0) {
       return NextResponse.json(
         { error: "Failed to delete LinkedIn post" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -87,7 +87,7 @@ async function deleteHandler(request, { params }) {
       } catch (imageError) {
         console.error(
           "Error deleting LinkedIn post image from Azure:",
-          imageError
+          imageError,
         );
         // Continue with success response even if image deletion fails
       }
@@ -95,13 +95,13 @@ async function deleteHandler(request, { params }) {
 
     return NextResponse.json(
       { message: "LinkedIn post deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error deleting LinkedIn post:", error);
     return NextResponse.json(
       { error: "Failed to delete LinkedIn post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -110,14 +110,14 @@ async function deleteHandler(request, { params }) {
 async function putHandler(request, { params }) {
   try {
     const { linkedinCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
     const updateData = await request.json();
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid LinkedIn post ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -125,7 +125,7 @@ async function putHandler(request, { params }) {
     if (!updateData.title || !updateData.description) {
       return NextResponse.json(
         { error: "Title and description are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -135,25 +135,25 @@ async function putHandler(request, { params }) {
     // Update the post
     const result = await linkedinCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: updateData }
+      { $set: updateData },
     );
 
     if (result.matchedCount === 0) {
       return NextResponse.json(
         { error: "LinkedIn post not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
       { message: "LinkedIn post updated successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error updating LinkedIn post:", error);
     return NextResponse.json(
       { error: "Failed to update LinkedIn post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

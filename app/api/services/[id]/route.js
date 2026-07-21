@@ -6,13 +6,13 @@ import { ObjectId } from "mongodb";
 // Handler function for deleting a service
 async function deleteHandler(request, { params }) {
   try {
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid service ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -22,6 +22,7 @@ async function deleteHandler(request, { params }) {
     const result = await servicesCollection.deleteOne({
       _id: new ObjectId(id),
     });
+    console.log("Delete result:", result);
 
     // Check if the service was found and deleted
     if (result.deletedCount === 0) {
@@ -31,26 +32,26 @@ async function deleteHandler(request, { params }) {
     // Return success response
     return NextResponse.json(
       { message: "Service deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error deleting service:", error);
     return NextResponse.json(
       { error: "Failed to delete service" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 async function gethandler(request, { params }) {
   try {
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid service ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -72,7 +73,7 @@ async function gethandler(request, { params }) {
     console.error("Error fetching service:", error);
     return NextResponse.json(
       { error: "Failed to fetch service" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

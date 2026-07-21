@@ -8,7 +8,7 @@ import { deleteFromAzure, getBlobNameFromUrl } from "../../Components/Azure";
 async function getHandler(request, { params }) {
   try {
     const { eventsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
     console.log("Fetching event with ID:", id);
 
     // Check if ID is valid ObjectId
@@ -28,7 +28,7 @@ async function getHandler(request, { params }) {
     console.error("Error fetching event:", error);
     return NextResponse.json(
       { error: "Failed to fetch event" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -37,7 +37,7 @@ async function getHandler(request, { params }) {
 async function deleteHandler(request, { params }) {
   try {
     const { eventsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
     // Check if ID is valid ObjectId
     if (!ObjectId.isValid(id)) {
@@ -57,7 +57,7 @@ async function deleteHandler(request, { params }) {
     if (result.deletedCount === 0) {
       return NextResponse.json(
         { error: "Failed to delete event" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -78,13 +78,13 @@ async function deleteHandler(request, { params }) {
 
     return NextResponse.json(
       { message: "Event deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error deleting event:", error);
     return NextResponse.json(
       { error: "Failed to delete event" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -93,7 +93,7 @@ async function deleteHandler(request, { params }) {
 async function putHandler(request, { params }) {
   try {
     const { eventsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
     const eventData = await request.json();
 
     // Check if ID is valid ObjectId
@@ -113,7 +113,7 @@ async function putHandler(request, { params }) {
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -123,7 +123,7 @@ async function putHandler(request, { params }) {
     // Update the event
     const result = await eventsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: eventData }
+      { $set: eventData },
     );
 
     if (result.matchedCount === 0) {
@@ -132,13 +132,13 @@ async function putHandler(request, { params }) {
 
     return NextResponse.json(
       { message: "Event updated successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error updating event:", error);
     return NextResponse.json(
       { error: "Failed to update event" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

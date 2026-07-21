@@ -6,13 +6,13 @@ import { ObjectId } from "mongodb";
 // Handler function for deleting a project
 async function deleteHandler(request, { params }) {
   try {
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid project ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -37,13 +37,13 @@ async function deleteHandler(request, { params }) {
     // Return success response
     return NextResponse.json(
       { message: "Project deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error deleting project:", error);
     return NextResponse.json(
       { error: "Failed to delete project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -57,7 +57,7 @@ async function getHandler(request, { params }) {
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid project ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -77,7 +77,7 @@ async function getHandler(request, { params }) {
     console.error("Error fetching project:", error);
     return NextResponse.json(
       { error: "Failed to fetch project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

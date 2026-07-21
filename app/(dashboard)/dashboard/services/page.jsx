@@ -12,7 +12,7 @@ export default function ServicesList() {
     async function fetchServices() {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/services`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/services`,
         );
         if (!response.ok) {
           throw new Error("Failed to fetch services");
@@ -31,13 +31,13 @@ export default function ServicesList() {
   }, []);
 
   const handleDeleteService = async (id) => {
-    if (window.confirm("Are you sure you want to delete this service?")) {
+    if (window.confirm("Are you sure you want to delete this service?" + id)) {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/services/${id}`,
           {
             method: "DELETE",
-          }
+          },
         );
 
         if (response.ok) {

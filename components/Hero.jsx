@@ -215,7 +215,7 @@ const Hero = () => {
             }`}
             style={{ animationDelay: "2.5s" }}
           >
-            <span className="text-base sm:text-lg font-bold">15+</span>
+            <span className="text-base sm:text-lg font-bold">40+</span>
             <span className="text-[10px] sm:text-xs">Projects</span>
           </div>
         </div>

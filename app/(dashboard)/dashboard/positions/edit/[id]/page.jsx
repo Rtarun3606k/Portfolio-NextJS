@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import PositionForm from "@/components/PositionForm";
 
-export default function EditPosition({ params }) {
+export default function EditPosition() {
   const router = useRouter();
-  const { id } = params;
+  const { id } = useParams(); // Get the position ID from the URL parameters
   const [position, setPosition] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -16,7 +16,7 @@ export default function EditPosition({ params }) {
     async function fetchPosition() {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/positions/${id}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/positions/${id}`,
         );
 
         if (!response.ok) {

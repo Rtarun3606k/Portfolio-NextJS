@@ -8,13 +8,13 @@ import { deleteFromAzure, getBlobNameFromUrl } from "../../Components/Azure";
 async function getHandler(request, { params }) {
   try {
     const { positionsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid position ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ async function getHandler(request, { params }) {
     if (!position) {
       return NextResponse.json(
         { error: "Position not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -35,7 +35,7 @@ async function getHandler(request, { params }) {
     console.error("Error fetching position:", error);
     return NextResponse.json(
       { error: "Failed to fetch position" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -44,13 +44,13 @@ async function getHandler(request, { params }) {
 async function deleteHandler(request, { params }) {
   try {
     const { positionsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid position ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -62,7 +62,7 @@ async function deleteHandler(request, { params }) {
     if (!position) {
       return NextResponse.json(
         { error: "Position not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -74,7 +74,7 @@ async function deleteHandler(request, { params }) {
     if (result.deletedCount === 0) {
       return NextResponse.json(
         { error: "Failed to delete position" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -96,13 +96,13 @@ async function deleteHandler(request, { params }) {
 
     return NextResponse.json(
       { message: "Position deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error deleting position:", error);
     return NextResponse.json(
       { error: "Failed to delete position" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -111,7 +111,7 @@ async function deleteHandler(request, { params }) {
 async function putHandler(request, { params }) {
   try {
     const { positionsCollection } = await getDatabases();
-    const id = params.id;
+    const { id } = await params;
     const formData = await request.formData();
     const updateData = {};
     let logoFile = null;
@@ -133,7 +133,7 @@ async function putHandler(request, { params }) {
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid position ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -149,7 +149,7 @@ async function putHandler(request, { params }) {
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -159,7 +159,7 @@ async function putHandler(request, { params }) {
     } else if (!updateData.endDate) {
       return NextResponse.json(
         { error: "End date is required for non-current positions" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -174,7 +174,7 @@ async function putHandler(request, { params }) {
     if (!currentPosition) {
       return NextResponse.json(
         { error: "Position not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -187,7 +187,7 @@ async function putHandler(request, { params }) {
         const uploadResult = await uploadToAzure(
           logoFile,
           logoFile.name,
-          "positions"
+          "positions",
         );
 
         if (uploadResult.success) {
@@ -211,14 +211,14 @@ async function putHandler(request, { params }) {
           console.error("Azure upload failed:", uploadResult.error);
           return NextResponse.json(
             { error: "Failed to upload logo" },
-            { status: 500 }
+            { status: 500 },
           );
         }
       } catch (uploadError) {
         console.error("Error uploading position logo:", uploadError);
         return NextResponse.json(
           { error: "Error uploading logo: " + uploadError.message },
-          { status: 500 }
+          { status: 500 },
         );
       }
     } else {
@@ -229,25 +229,25 @@ async function putHandler(request, { params }) {
     // Update the position
     const result = await positionsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: updateData }
+      { $set: updateData },
     );
 
     if (result.matchedCount === 0) {
       return NextResponse.json(
         { error: "Position not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
       { message: "Position updated successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error updating position:", error);
     return NextResponse.json(
       { error: "Failed to update position" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
